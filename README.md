@@ -1,11 +1,13 @@
-# Grupo-C1I-022019 -- ViandasYa
-Repositorio para Desarrollo de Software UNQ - 2019
+# Grupo-C1I-022019 -- ViandasYa -- Front End
+Repository for Software Development class UNQ - 2019
 Frontend
 
-|**Integrantes**|**GitHub**|**Email**|
+|**Members**|**GitHub**|**Email**|
 |---------------|----------|---------|
 |Federico Martinez|fedejmartinez|fedejmartinez@gmail.com|
 |Tomás	Hurrell|HurrellT|hurrelltomas@gmail.com|
+
+
 
 
 
