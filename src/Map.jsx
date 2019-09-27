@@ -12,7 +12,7 @@ class MapComponent extends Component {
     lng: -58.37175,
     zoom: 13,
   }
-  road = [L.latLng(-34.61053, -58.37175), L.latLng(-34.61053, -58.37175)]
+  road = [L.latLng(-34.61053, -58.37175), L.latLng(-34.71023, -58.33155)]
   map = React.createRef();
   defaultIcon = L.icon({
     iconUrl: icon,
