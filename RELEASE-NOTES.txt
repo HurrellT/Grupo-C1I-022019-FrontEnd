@@ -1,0 +1,11 @@
+---------------------------------------------------------------------
+TAG Grupo-C1I-022019-Entrega-1
+---------------------------------------------------------------------
+NEW FEATURES
+* Map Example Placeholder
+
+KNOWN ISSUES
+* Cannot change points to get different directions
+
+NOTES
+* This map is acting as an example and as a placeholder
