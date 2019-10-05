@@ -5,6 +5,7 @@ import 'leaflet-routing-machine/src';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 
 class RoutingMachine extends MapLayer {
+
   createLeafletElement() {
     const { color, map, road } = this.props;
 
@@ -26,10 +27,15 @@ class RoutingMachine extends MapLayer {
     })
     .addTo(map.current.leafletElement);
 
-    leafletElement.hide(); // hide road describtion
+    //leafletElement.hide(); // hide road describtion
 
     return leafletElement.getPlan();
   }
+
+  updateLeafletElement(fromProps, { waypoints }) {
+    this.leafletElement.setWaypoints(waypoints);
+  }
+
 }
 
 export default withLeaflet(RoutingMachine);

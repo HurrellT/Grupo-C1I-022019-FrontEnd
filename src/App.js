@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import MapComponent from './Map';
+import ViandasYaNavBar from "./NavBar/ViandasYaNavBar";
 import './App.css';
 
 class App extends Component {
   render() {
     return (
-      <div className="map">
-        <MapComponent />
-      </div>
+        <div>
+          <ViandasYaNavBar />
+        </div>
     );
   }
 }
