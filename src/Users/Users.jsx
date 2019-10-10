@@ -1,7 +1,9 @@
 import React from 'react'
 import axios from 'axios'
-import Table from "reactstrap/es/Table";
-import Button from "reactstrap/es/Button";
+import { Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup } from 'reactstrap';
+import Label from "reactstrap/es/Label";
+import Col from "reactstrap/es/Col";
+import Input from "reactstrap/es/Input";
 
 class Users extends React.Component {
 
@@ -9,9 +11,12 @@ class Users extends React.Component {
         super(props)
 
         this.state = {
-            users: []
+            users: [],
+            newUserModal: false
         }
     }
+
+    //METHODS
 
     componentDidMount() {
         //TODO: CHANGE THIS WITH THE HEROKU URL
@@ -27,6 +32,14 @@ class Users extends React.Component {
             })
     }
 
+    toggleNewUserModal() {
+        this.setState({
+            newUserModal: true
+        })
+    }
+
+    //RENDER
+
     render() {
         const {users, errorMsg} = this.state
 
@@ -34,6 +47,39 @@ class Users extends React.Component {
             <div>
                 <h1>Users</h1>
 
+                {/* EDIT MODAL */}
+                <div>
+                    <Button color="primary" onClick={this.toggleNewUserModal.bind(this)}>
+                        Nuevo Usuario
+                    </Button>
+                    <Modal isOpen={this.state.newUserModal} toggle={this.toggleNewUserModal.bind(this)}>
+                        <ModalHeader toggle={this.toggleNewUserModal.bind(this)}>
+                            Añadir un nuevo Usuario
+                        </ModalHeader>
+                        <ModalBody>
+
+                            <Form>
+                                <FormGroup row>
+                                    <Label for="name" sm={2}>Nombre</Label>
+                                    <Col sm={10}>
+                                        <Input name="name" id="name" placeholder="Escriba su primer nombre"/>
+                                    </Col>
+                                </FormGroup>
+                            </Form>
+
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="primary" onClick={this.toggleNewUserModal.bind(this)}>
+                                Do Something
+                            </Button>{' '}
+                            <Button color="secondary" onClick={this.toggleNewUserModal.bind(this)}>
+                                Cancel
+                            </Button>
+                        </ModalFooter>
+                    </Modal>
+                </div>
+
+                {/* USER CRUD TABLE */}
                 <Table>
                     <thead>
                     <tr>
@@ -48,6 +94,7 @@ class Users extends React.Component {
                     </tr>
                     </thead>
 
+                    {/* USER INFO FETCHED FROM SERVER */}
                     <tbody>
                     {users.map(user =>
                         <tr key={user.id}>
