@@ -110,6 +110,14 @@ class Users extends React.Component {
             })
     }
 
+    deleteBook(id) {
+        axios.delete('http://localhost:8080/user/' + id)
+            .then((response) => {
+                this._refreshUsers();
+            })
+    }
+
+
     _refreshUsers() {
         //TODO: CHANGE THIS WITH THE HEROKU URL
         // axios.get('http://viandas-ya.herokuapp.com/users')
@@ -412,7 +420,8 @@ class Users extends React.Component {
                                                     user.email, user.phone, user.accountCredit)}>
                                             Editar
                                         </Button>
-                                        <Button color='danger' size='sm'>
+                                        <Button color='danger' size='sm'
+                                                onClick={this.deleteBook.bind(this, user.id)}>
                                             Borrar
                                         </Button>
                                     </td>
