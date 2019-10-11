@@ -20,7 +20,7 @@ class Users extends React.Component {
 
     componentDidMount() {
         //TODO: CHANGE THIS WITH THE HEROKU URL
-        axios.get('http://localhost:8080/users')
+        axios.get('http://viandas-ya.herokuapp.com/users')
             .then(response => {
                 this.setState({
                     users: response.data
