@@ -1,27 +1,34 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Route, Link, BrowserRouter as Router } from 'react-router-dom'
-import './index.css';
-import * as serviceWorker from './serviceWorker';
-import 'bootstrap/dist/css/bootstrap.min.css';
+// src/index.js
 
-import App from './App';
-import Users from './Users/Users'
-import Map from './Map/Map'
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
+import * as serviceWorker from "./serviceWorker";
+import { Auth0Provider } from "./react-auth0-spa";
+import config from "./auth_config.json";
 
-const routing = (
-    <Router>
-        <div>
-            <Route path="/" component={App}/>
-            <Route path="/map" component={Map}/>
-            <Route path="/users" component={Users}/>
-        </div>
-    </Router>
-)
+// A function that routes the user to the right place
+// after login
+const onRedirectCallback = appState => {
+    window.history.replaceState(
+        {},
+        document.title,
+        appState && appState.targetUrl
+            ? appState.targetUrl
+            : window.location.pathname
+    );
+};
 
-ReactDOM.render(routing, document.getElementById('root'));
+ReactDOM.render(
+    <Auth0Provider
+        domain={config.domain}
+        client_id={config.clientId}
+        redirect_uri={window.location.origin}
+        onRedirectCallback={onRedirectCallback}
+    >
+        <App />
+    </Auth0Provider>,
+    document.getElementById("root")
+);
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
 serviceWorker.unregister();
