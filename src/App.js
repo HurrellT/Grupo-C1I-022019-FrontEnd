@@ -10,6 +10,7 @@ import Map from "./components/Map/Map";
 import ClientAccount from "./components/Users/ClientAccount";
 import ProviderAccount from "./components/Users/ProviderAccount";
 import './App.css';
+import Users from "./components/Users/Users";
 
 function App() {
     const { loading } = useAuth0();
@@ -39,6 +40,7 @@ function App() {
                     <Route path="/" exact />
                     <PrivateRoute path="/profile" component={Profile} />
                     <PrivateRoute path="/map" component={Map} />
+                    <PrivateRoute path="/users" component={Users} />
                     <PrivateRoute path="/clientAccount" component={ClientAccount} />
                     <PrivateRoute path="/providerAccount" component={ProviderAccount} />
                 </Switch>
