@@ -8,9 +8,9 @@ import Profile from "./components/Profile";
 import PrivateRoute from "./components/PrivateRoute";
 import Map from "./components/Map/Map";
 import ClientAccount from "./components/Users/ClientAccount";
-import ProviderAccount from "./components/Users/ProviderAccount";
 import './App.css';
 import Users from "./components/Users/Users";
+import Providers from "./components/Users/Providers";
 
 function App() {
     const { loading } = useAuth0();
@@ -41,8 +41,9 @@ function App() {
                     <PrivateRoute path="/profile" component={Profile} />
                     <PrivateRoute path="/map" component={Map} />
                     <PrivateRoute path="/users" component={Users} />
+                    {/* TODO: USERS ES TEMPORAL */}
                     <PrivateRoute path="/clientAccount" component={ClientAccount} />
-                    <PrivateRoute path="/providerAccount" component={ProviderAccount} />
+                    <PrivateRoute path="/providers" component={Providers} />
                 </Switch>
             </BrowserRouter>
         </div>

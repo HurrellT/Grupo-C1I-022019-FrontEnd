@@ -12,6 +12,8 @@ class Users extends React.Component {
     constructor(props) {
         super(props)
 
+        this.homeRoute = this.homeRoute.bind(this);
+
         this.state = {
             users: [],
             newUserData: {
@@ -48,12 +50,6 @@ class Users extends React.Component {
     toggleNewUserModal() {
         this.setState({
             newUserModal: !this.state.newUserModal
-        })
-    }
-
-    toggleEditUserModal() {
-        this.setState({
-            editUserModal: !this.state.editUserModal
         })
     }
 
@@ -138,6 +134,11 @@ class Users extends React.Component {
                 console.log(error)
                 this.setState({errorMsg: 'Error retreiving data'})
             })
+    }
+
+    homeRoute() {
+        let path = `/`;
+        this.props.history.push(path);
     }
 
     //TODO: Depending on the user role (client, provider) you see the table with all
@@ -265,7 +266,7 @@ class Users extends React.Component {
                     <Button color="primary" onClick={this.updateClient.bind(this)}>
                         Editar Usuario
                     </Button>{' '}
-                    <Button color="secondary" onClick={this.toggleEditUserModal.bind(this)}>
+                    <Button color="secondary" onClick={this.homeRoute.bind(this)}>
                         Cancelar
                     </Button>
                 </Row>

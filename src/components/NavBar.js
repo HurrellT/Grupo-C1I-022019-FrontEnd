@@ -43,16 +43,20 @@ const NavBar = () => {
                         <NavItem>
                             <NavLink href="/map">Mapa</NavLink>
                         </NavItem>
+                        {/*<NavItem>*/}
+                        {/*    <NavLink href="/users">Usuarios</NavLink>*/}
+                        {/*</NavItem>*/}
                         <NavItem>
-                            <NavLink href="/users">Usuarios</NavLink>
+                            <NavLink href="/providers">Proveedores</NavLink>
                         </NavItem>
                         <UncontrolledDropdown nav inNavbar>
                             <DropdownToggle nav caret>
-                                Usuarios
+                                Cuenta
                             </DropdownToggle>
                             <DropdownMenu right>
-                                <DropdownItem href="/providerAccount">Proveedor</DropdownItem>
-                                <DropdownItem href="/clientAccount">Cliente</DropdownItem>
+                                {/*<DropdownItem href="/providerAccount">Proveedor</DropdownItem>*/}
+                                <DropdownItem href="/clientAccount">Mis datos</DropdownItem>
+                                {/* TODO:AGREGAR EL ID PARA IDENTIFICAR AL USUARIO LOGGEADO */}
                                 {/*<DropdownItem divider />*/}
                             </DropdownMenu>
                         </UncontrolledDropdown>
