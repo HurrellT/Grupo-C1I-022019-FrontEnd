@@ -78,6 +78,7 @@ class Providers extends React.Component {
             },
             newUserModal: false,
             editUserModal: false,
+            accountCreditModal: false,
             errorMessages: []
         }
     }
@@ -97,6 +98,12 @@ class Providers extends React.Component {
     toggleEditUserModal() {
         this.setState({
             editUserModal: !this.state.editUserModal
+        })
+    }
+
+    toggleAccountCreditModal() {
+        this.setState({
+            accountCreditModal: !this.state.accountCreditModal
         })
     }
 
@@ -140,12 +147,27 @@ class Providers extends React.Component {
 
     editUser(id, name, state, address, email, phone,
              logo, latitude, longitude, description, website,
-             officeHoursFrom, officeHoursTo, officeDaysFrom, officeDaysTo, accountCredit, delivery) {
+             officeHoursFrom, officeHoursTo, officeDaysFrom,
+             officeDaysTo, accountCredit, delivery) {
+        this.setState({
+            editUserData: {id, name, state, address, email, phone,
+                            logo, latitude, longitude, description, website,
+                            officeHoursFrom, officeHoursTo, officeDaysFrom,
+                            officeDaysTo, accountCredit, delivery},
+            editUserModal: !this.state.editUserModal
+        })
+    }
+
+    editAccountCredit(id, name, state, address, email, phone,
+                      logo, latitude, longitude, description, website,
+                      officeHoursFrom, officeHoursTo, officeDaysFrom,
+                      officeDaysTo, accountCredit, delivery) {
         this.setState({
             editUserData: {id, name, state, address, email, phone,
                 logo, latitude, longitude, description, website,
-                officeHoursFrom, officeHoursTo, officeDaysFrom, officeDaysTo, accountCredit, delivery},
-            editUserModal: !this.state.editUserModal
+                officeHoursFrom, officeHoursTo, officeDaysFrom,
+                officeDaysTo, accountCredit, delivery},
+            accountCreditModal: !this.state.accountCreditModal
         })
     }
 
@@ -162,6 +184,7 @@ class Providers extends React.Component {
                 this._refreshUsers();
                 this.setState({
                     editUserModal: false,
+                    accountCreditModal: false,
                     editUserData: {
                         name: '',
                         state: '',
@@ -626,6 +649,42 @@ class Providers extends React.Component {
                 </Modal>
 
 
+                {/* EDIT ACCOUNT CREDIT */}
+
+                <Modal isOpen={this.state.accountCreditModal} toggle={this.toggleAccountCreditModal.bind(this)}>
+                    <ModalHeader toggle={this.toggleAccountCreditModal.bind(this)}>
+                        Cargar / Retirar credito para {this.state.editUserData.name}
+                    </ModalHeader>
+                    <ModalBody>
+
+                        <Form>
+
+                            {/* ACCOUNT CREDIT */}
+
+                            <FormGroup row>
+                                <Label for="accountCredit" sm={2}>Credito</Label>
+                                <Col sm={10}>
+                                    <Input name="accountCredit" id="accountCredit" placeholder="Credito"
+                                           value={this.state.editUserData.accountCredit}
+                                           onChange={this.updateEditUserField('accountCredit')}/>
+                                </Col>
+                            </FormGroup>
+
+                        </Form>
+
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button color="primary" onClick={this.updateProvider.bind(this)}>
+                            Confirmar
+                        </Button>{' '}
+                        <Button color="secondary" onClick={this.toggleAccountCreditModal.bind(this)}>
+                            Cancelar
+                        </Button>
+                    </ModalFooter>
+
+                </Modal>
+
                 {/* USER CRUD TABLE */}
                 <Row>
                     <Col>
@@ -683,7 +742,12 @@ class Providers extends React.Component {
                                         </Button>
 
                                         <Button color='primary' size='sm' className='mr-2'
-                                                onClick={this.editAccountCredit.bind(this, user.name, user.accountCredit)}>
+                                                onClick={this.editAccountCredit.bind(this, user.id, user.name,
+                                                    user.state, user.address, user.email, user.phone,
+                                                    user.logo, user.latitude, user.longitude,
+                                                    user.description, user.website, user.officeHoursFrom,
+                                                    user.officeHoursTo, user.officeDaysFrom, user.officeDaysTo,
+                                                    user.accountCredit, user.delivery)}>
                                             Cargar/Retirar Credito
                                         </Button>
 
