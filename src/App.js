@@ -11,6 +11,8 @@ import ClientAccount from "./components/Users/ClientAccount";
 import './App.css';
 import Users from "./components/Users/Users";
 import Providers from "./components/Users/Providers";
+import Menus from "./components/Menus/Menus";
+import ProviderMenus from "./components/Menus/ProviderMenus";
 
 function App() {
     const { loading } = useAuth0();
@@ -44,6 +46,8 @@ function App() {
                     {/* TODO: USERS ES TEMPORAL */}
                     <PrivateRoute path="/clientAccount" component={ClientAccount} />
                     <PrivateRoute path="/providers" component={Providers} />
+                    <PrivateRoute path="/menus" component={Menus} />
+                    <PrivateRoute path="/providerMenus/:provId" exact strict component={ProviderMenus} />
                 </Switch>
             </BrowserRouter>
         </div>

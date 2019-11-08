@@ -49,6 +49,9 @@ const NavBar = () => {
                         <NavItem>
                             <NavLink href="/providers">Proveedores</NavLink>
                         </NavItem>
+                        <NavItem>
+                             <NavLink href="/menus">Buscar Menú</NavLink>
+                          </NavItem>
                         <UncontrolledDropdown nav inNavbar>
                             <DropdownToggle nav caret>
                                 Cuenta

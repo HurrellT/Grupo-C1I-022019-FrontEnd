@@ -5,7 +5,7 @@ import Label from "reactstrap/es/Label";
 import Col from "reactstrap/es/Col";
 import Input from "reactstrap/es/Input";
 import Container from "reactstrap/es/Container";
-import Row from "reactstrap/es/Row";
+import Row from "reactstrap/es/Row"
 
 function ModalAlert({ errorsToShow }) {
     const hasErrorsToShow = errorsToShow.length > 0
@@ -200,6 +200,11 @@ class Providers extends React.Component {
         newUserData[field] = ev.target.value;
         this.setState({newUserData})
     }
+
+    seeProviderMenus(id) {
+        this.props.history.push('/providerMenus/' + id)
+    }
+
 
     render() {
         const {users, errorMsg} = this.state
@@ -590,6 +595,10 @@ class Providers extends React.Component {
                                     <td>{user.accountCredit}</td>
 
                                     <td>
+                                        <Button color='warning' size='sm'
+                                                 onClick={this.seeProviderMenus.bind(this, user.id)}>
+                                             Ver menús
+                                         </Button>
                                         <Button color='success' size='sm' className='mr-2'
                                                 onClick={this.editUser.bind(this, user.id, user.name,
                                                     user.lastname, user.state, user.address,
