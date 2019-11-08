@@ -17,6 +17,8 @@ import Col from "reactstrap/es/Col";
 import Input from "reactstrap/es/Input";
 import Container from "reactstrap/es/Container";
 import Row from "reactstrap/es/Row";
+import counterpart from 'counterpart';
+import Translate from 'react-translate-component';
 
 function ModalAlert({ errorsToShow }) {
     const hasErrorsToShow = errorsToShow.length > 0;
@@ -29,6 +31,10 @@ function ModalAlert({ errorsToShow }) {
         )
     }
     return <div />
+}
+
+const username = (props) => {
+    return props.content
 }
 
 class Providers extends React.Component {
@@ -252,17 +258,23 @@ class Providers extends React.Component {
     }
 
     render() {
-        const {users, errorMsg} = this.state
+        const {users, errorMsg} = this.state;
+
+        const placeholderTranslations = counterpart;
+
+        const username = this.state.editUserData.name;
 
         return (
             <Container>
                 <Row>
                     <Col xs={8}>
-                        <h1 className="my-3">Proveedores</h1>
+                        <h1 className="my-3">
+                            <Translate content='providerTitle'/>
+                        </h1>
                     </Col>
                     <Col xs={2} className="my-3">
                         <Button className="my-3" color="primary" onClick={this.toggleNewUserModal.bind(this)}>
-                            Nuevo Proveedor
+                            <Translate content='buttons.newProviderButton'/>
                         </Button>
                     </Col>
                 </Row>
@@ -271,7 +283,7 @@ class Providers extends React.Component {
 
                 <Modal isOpen={this.state.newUserModal} toggle={this.toggleNewUserModal.bind(this)}>
                     <ModalHeader toggle={this.toggleNewUserModal.bind(this)}>
-                        Añadir un nuevo Proveedor
+                        <Translate content='newProviderModalTitle'/>
                     </ModalHeader>
                     <ModalBody>
                         <ModalAlert errorsToShow={this.state.errorMessages} />
@@ -280,9 +292,13 @@ class Providers extends React.Component {
                         <Form>
                             {/* NAME */}
                             <FormGroup row>
-                                <Label for="name" sm={2}>Nombre</Label>
+                                <Label for="name" sm={2}>
+                                    <Translate content='labels.nameLabel'/>
+                                </Label>
                                 <Col sm={10}>
-                                    <Input name="name" id="name" placeholder="Escriba su primer nombre"
+                                    <Input name="name"
+                                           id="name"
+                                           placeholder={placeholderTranslations.translate('placeholders.providerNamePlaceholder')}
                                            value={this.state.newUserData.name}
                                            onChange={this.updateNewUserField('name')}/>
                                 </Col>
@@ -290,9 +306,13 @@ class Providers extends React.Component {
 
                             {/* STATE */}
                             <FormGroup row>
-                                <Label for="state" sm={2}>Ciudad</Label>
+                                <Label for="state" sm={2}>
+                                    <Translate content='labels.stateLabel'/>
+                                </Label>
                                 <Col sm={10}>
-                                    <Input name="state" id="state" placeholder="Escriba su ciudad de residencia"
+                                    <Input name="state"
+                                           id="state"
+                                           placeholder={placeholderTranslations.translate('placeholders.statePlaceholder')}
                                            value={this.state.newUserData.state}
                                            onChange={this.updateNewUserField('state')}/>
                                 </Col>
@@ -300,9 +320,12 @@ class Providers extends React.Component {
 
                             {/* ADDRESS */}
                             <FormGroup row>
-                                <Label for="address" sm={2}>Dirección</Label>
+                                <Label for="address" sm={2}>
+                                    <Translate content='labels.addressLabel' />
+                                </Label>
                                 <Col sm={10}>
-                                    <Input name="address" id="address" placeholder="Escriba su dirección"
+                                    <Input name="address" id="address"
+                                           placeholder={placeholderTranslations.translate('placeholders.addressPlaceholder')}
                                            value={this.state.newUserData.address}
                                            onChange={this.updateNewUserField('address')}/>
                                 </Col>
@@ -312,7 +335,8 @@ class Providers extends React.Component {
                             <FormGroup row>
                                 <Label for="email" sm={2}>Email</Label>
                                 <Col sm={10}>
-                                    <Input type="email" name="email" id="email" placeholder="Escriba su email"
+                                    <Input type="email" name="email" id="email"
+                                           placeholder={placeholderTranslations.translate('placeholders.emailPlaceholder')}
                                            value={this.state.newUserData.email}
                                            onChange={this.updateNewUserField('email')}/>
                                 </Col>
@@ -320,9 +344,12 @@ class Providers extends React.Component {
 
                             {/* PHONE */}
                             <FormGroup row>
-                                <Label for="phone" sm={2}>Telefono</Label>
+                                <Label for="phone" sm={2}>
+                                    <Translate content='labels.phoneLabel'/>
+                                </Label>
                                 <Col sm={10}>
-                                    <Input name="phone" id="phone" placeholder="Escriba su telefono"
+                                    <Input name="phone" id="phone"
+                                           placeholder={placeholderTranslations.translate('placeholders.phonePlaceholder')}
                                            value={this.state.newUserData.phone}
                                            onChange={this.updateNewUserField('phone')}/>
                                 </Col>
@@ -332,7 +359,8 @@ class Providers extends React.Component {
                             <FormGroup row>
                                 <Label for="logo" sm={2}>Logo</Label>
                                 <Col sm={10}>
-                                    <Input name="logo" id="logo" placeholder="URL de su Logo"
+                                    <Input name="logo" id="logo"
+                                           placeholder={placeholderTranslations.translate('placeholders.logoPlaceholder')}
                                            value={this.state.newUserData.logo}
                                            onChange={this.updateNewUserField('logo')}/>
                                 </Col>
@@ -340,9 +368,12 @@ class Providers extends React.Component {
 
                             {/* LATITUDE */}
                             <FormGroup row>
-                                <Label for="latitude" sm={2}>Latitud</Label>
+                                <Label for="latitude" sm={2}>
+                                    <Translate content='labels.latitudeLabel'/>
+                                </Label>
                                 <Col sm={10}>
-                                    <Input name="latitude" id="latitude" placeholder="Latitud"
+                                    <Input name="latitude" id="latitude"
+                                           placeholder={placeholderTranslations.translate('placeholders.latitudePlaceholder')}
                                            value={this.state.newUserData.latitude}
                                            onChange={this.updateNewUserField('latitude')}/>
                                 </Col>
@@ -350,9 +381,12 @@ class Providers extends React.Component {
 
                             {/* LONGITUDE -- TODO: LAT Y LONG = REEMPLAZAR POR PUNTO EN EL MAPA */}
                             <FormGroup row>
-                                <Label for="longitude" sm={2}>Longitud</Label>
+                                <Label for="longitude" sm={2}>
+                                    <Translate content='labels.longitudeLabel'/>
+                                </Label>
                                 <Col sm={10}>
-                                    <Input name="longitude" id="longitude" placeholder="Longitude"
+                                    <Input name="longitude" id="longitude"
+                                           placeholder={placeholderTranslations.translate('placeholders.longitudePlaceholder')}
                                            value={this.state.newUserData.longitude}
                                            onChange={this.updateNewUserField('longitude')}/>
                                 </Col>
@@ -360,9 +394,12 @@ class Providers extends React.Component {
 
                             {/* DESCRIPTION */}
                             <FormGroup row>
-                                <Label for="description" sm={2}>Descripcion</Label>
+                                <Label for="description" sm={2}>
+                                    <Translate content='labels.descriptionLabel'/>
+                                </Label>
                                 <Col sm={10}>
-                                    <Input type="textarea" name="description" id="description" placeholder="Escriba una descripcion"
+                                    <Input type="textarea" name="description" id="description"
+                                           placeholder={placeholderTranslations.translate('placeholders.descriptionPlaceholder')}
                                            value={this.state.newUserData.description}
                                            onChange={this.updateNewUserField('description')}/>
                                 </Col>
@@ -370,9 +407,12 @@ class Providers extends React.Component {
 
                             {/* WEBSITE */}
                             <FormGroup row>
-                                <Label for="website" sm={2}>Website</Label>
+                                <Label for="website" sm={2}>
+                                    <Translate content='labels.websiteLabel'/>
+                                </Label>
                                 <Col sm={10}>
-                                    <Input name="website" id="website" placeholder="URL de su pagina web"
+                                    <Input name="website" id="website"
+                                           placeholder={placeholderTranslations.translate('placeholders.websitePlaceholder')}
                                            value={this.state.newUserData.website}
                                            onChange={this.updateNewUserField('website')}/>
                                 </Col>
@@ -380,7 +420,9 @@ class Providers extends React.Component {
 
                             {/* HOURS FROM */}
                             <FormGroup row>
-                                <Label for="officeHoursFrom" sm={2}>Inicio horario de atencion</Label>
+                                <Label for="officeHoursFrom" sm={2}>
+                                    <Translate content='labels.hoursFromLabel'/>
+                                </Label>
                                 <Col sm={10}>
                                     <Input type="time" name="officeHoursFrom" id="officeHoursFrom"
                                            value={this.state.newUserData.officeHoursFrom}
@@ -390,7 +432,9 @@ class Providers extends React.Component {
 
                             {/* HOURS TO */}
                             <FormGroup row>
-                                <Label for="officeHoursTo" sm={2}>Fin horario de atencion</Label>
+                                <Label for="officeHoursTo" sm={2}>
+                                    <Translate content='labels.hoursToLabel'/>
+                                </Label>
                                 <Col sm={10}>
                                     <Input type="time" name="officeHoursTo" id="officeHoursTo"
                                            value={this.state.newUserData.officeHoursTo}
@@ -400,12 +444,16 @@ class Providers extends React.Component {
 
                             {/* DAYS FROM */}
                             <FormGroup row>
-                                <Label for="officeDaysFrom" sm={2}>Primer dia de atencion</Label>
+                                <Label for="officeDaysFrom" sm={2}>
+                                    <Translate content='labels.officeDaysFromLabel'/>
+                                </Label>
                                 <Col sm={10}>
                                     <CustomInput type="select" name="officeDaysFrom" id="officeDaysFrom"
                                            value={this.state.newUserData.officeDaysFrom}
                                            onChange={this.updateNewUserField('officeDaysFrom')}>
-                                        <option value="">Elija un dia</option>
+                                        <option value="">
+                                            {counterpart.translate('labels.chooseADayLabel')}
+                                        </option>
                                         <option>MONDAY</option>
                                         <option>TUESDAY</option>
                                         <option>WEDNESDAY</option>
@@ -417,12 +465,16 @@ class Providers extends React.Component {
 
                             {/* DAYS TO */}
                             <FormGroup row>
-                                <Label for="officeDaysTo" sm={2}>Ultimo dia de atencion</Label>
+                                <Label for="officeDaysTo" sm={2}>
+                                    <Translate content='labels.officeDaysToLabel'/>
+                                </Label>
                                 <Col sm={10}>
                                     <CustomInput type="select" name="officeDaysTo" id="officeDaysTo"
                                            value={this.state.newUserData.officeDaysTo}
                                            onChange={this.updateNewUserField('officeDaysTo')}>
-                                        <option value="">Elija un dia</option>
+                                        <option value="">
+                                            {counterpart.translate('labels.chooseADayLabel')}
+                                        </option>
                                         <option>MONDAY</option>
                                         <option>TUESDAY</option>
                                         <option>WEDNESDAY</option>
@@ -447,10 +499,10 @@ class Providers extends React.Component {
                     </ModalBody>
                     <ModalFooter>
                         <Button color="primary" onClick={this.addProvider.bind(this)}>
-                            Agregar Proveedor
+                            <Translate content='buttons.confirmButton'/>
                         </Button>{' '}
                         <Button color="secondary" onClick={this.toggleNewUserModal.bind(this)}>
-                            Cancelar
+                            <Translate content='buttons.cancelButton'/>
                         </Button>
                     </ModalFooter>
                 </Modal>
@@ -460,19 +512,19 @@ class Providers extends React.Component {
 
                 <Modal isOpen={this.state.editUserModal} toggle={this.toggleEditUserModal.bind(this)}>
                     <ModalHeader toggle={this.toggleEditUserModal.bind(this)}>
-                        Editar Proveedor
+                        <Translate content='buttons.editProviderModalTitle'/>
                     </ModalHeader>
                     <ModalBody>
-
-                        {/* ADD MODAL FORM */}
-
                         <Form>
 
                             {/* NAME */}
                             <FormGroup row>
-                                <Label for="name" sm={2}>Nombre</Label>
+                                <Label for="name" sm={2}>
+                                    <Translate content='labels.nameLabel'/>
+                                </Label>
                                 <Col sm={10}>
-                                    <Input name="name" id="name" placeholder="Escriba su primer nombre"
+                                    <Input name="name" id="name"
+                                           placeholder={placeholderTranslations.translate('placeholders.providerNamePlaceholder')}
                                            value={this.state.editUserData.name}
                                            onChange={this.updateEditUserField('name')}/>
                                 </Col>
@@ -480,9 +532,12 @@ class Providers extends React.Component {
 
                             {/* STATE */}
                             <FormGroup row>
-                                <Label for="state" sm={2}>Ciudad</Label>
+                                <Label for="state" sm={2}>
+                                    <Translate content='labels.stateLabel'/>
+                                </Label>
                                 <Col sm={10}>
-                                    <Input name="state" id="state" placeholder="Escriba su ciudad de residencia"
+                                    <Input name="state" id="state"
+                                           placeholder={placeholderTranslations.translate('placeholders.statePlaceholder')}
                                            value={this.state.editUserData.state}
                                            onChange={this.updateEditUserField('state')}/>
                                 </Col>
@@ -490,9 +545,12 @@ class Providers extends React.Component {
 
                             {/* ADDRESS */}
                             <FormGroup row>
-                                <Label for="address" sm={2}>Dirección</Label>
+                                <Label for="address" sm={2}>
+                                    <Translate content='labels.addressLabel' />
+                                </Label>
                                 <Col sm={10}>
-                                    <Input name="address" id="address" placeholder="Escriba su dirección"
+                                    <Input name="address" id="address"
+                                           placeholder={placeholderTranslations.translate('placeholders.addressPlaceholder')}
                                            value={this.state.editUserData.address}
                                            onChange={this.updateEditUserField('address')}/>
                                 </Col>
@@ -502,7 +560,8 @@ class Providers extends React.Component {
                             <FormGroup row>
                                 <Label for="email" sm={2}>Email</Label>
                                 <Col sm={10}>
-                                    <Input type="email" name="email" id="email" placeholder="Escriba su email"
+                                    <Input type="email" name="email" id="email"
+                                           placeholder={placeholderTranslations.translate('placeholders.emailPlaceholder')}
                                            value={this.state.editUserData.email}
                                            onChange={this.updateEditUserField('email')}/>
                                 </Col>
@@ -510,9 +569,12 @@ class Providers extends React.Component {
 
                             {/* PHONE */}
                             <FormGroup row>
-                                <Label for="phone" sm={2}>Telefono</Label>
+                                <Label for="phone" sm={2}>
+                                    <Translate content='labels.phoneLabel'/>
+                                </Label>
                                 <Col sm={10}>
-                                    <Input name="phone" id="phone" placeholder="Escriba su telefono"
+                                    <Input name="phone" id="phone"
+                                           placeholder={placeholderTranslations.translate('placeholders.phonePlaceholder')}
                                            value={this.state.editUserData.phone}
                                            onChange={this.updateEditUserField('phone')}/>
                                 </Col>
@@ -522,7 +584,8 @@ class Providers extends React.Component {
                             <FormGroup row>
                                 <Label for="logo" sm={2}>Logo</Label>
                                 <Col sm={10}>
-                                    <Input name="logo" id="logo" placeholder="URL de su Logo"
+                                    <Input name="logo" id="logo"
+                                           placeholder={placeholderTranslations.translate('placeholders.logoPlaceholder')}
                                            value={this.state.editUserData.logo}
                                            onChange={this.updateEditUserField('logo')}/>
                                 </Col>
@@ -530,9 +593,12 @@ class Providers extends React.Component {
 
                             {/* LATITUDE */}
                             <FormGroup row>
-                                <Label for="latitude" sm={2}>Latitud</Label>
+                                <Label for="latitude" sm={2}>
+                                    <Translate content='labels.latitudeLabel'/>
+                                </Label>
                                 <Col sm={10}>
-                                    <Input name="latitude" id="latitude" placeholder="Latitud"
+                                    <Input name="latitude" id="latitude"
+                                           placeholder={placeholderTranslations.translate('placeholders.latitudePlaceholder')}
                                            value={this.state.editUserData.latitude}
                                            onChange={this.updateEditUserField('latitude')}/>
                                 </Col>
@@ -540,9 +606,12 @@ class Providers extends React.Component {
 
                             {/* LONGITUDE -- TODO: LAT Y LONG = REEMPLAZAR POR PUNTO EN EL MAPA */}
                             <FormGroup row>
-                                <Label for="longitude" sm={2}>Longitud</Label>
+                                <Label for="longitude" sm={2}>
+                                    <Translate content='labels.longitudeLabel'/>
+                                </Label>
                                 <Col sm={10}>
-                                    <Input name="longitude" id="longitude" placeholder="Longitude"
+                                    <Input name="longitude" id="longitude"
+                                           placeholder={placeholderTranslations.translate('placeholders.longitudePlaceholder')}
                                            value={this.state.editUserData.longitude}
                                            onChange={this.updateEditUserField('longitude')}/>
                                 </Col>
@@ -550,9 +619,12 @@ class Providers extends React.Component {
 
                             {/* DESCRIPTION */}
                             <FormGroup row>
-                                <Label for="description" sm={2}>Descripcion</Label>
+                                <Label for="description" sm={2}>
+                                    <Translate content='labels.descriptionLabel'/>
+                                </Label>
                                 <Col sm={10}>
-                                    <Input type="textarea" name="description" id="description" placeholder="Escriba una descripcion"
+                                    <Input type="textarea" name="description" id="description"
+                                           placeholder={placeholderTranslations.translate('placeholders.descriptionPlaceholder')}
                                            value={this.state.editUserData.description}
                                            onChange={this.updateEditUserField('description')}/>
                                 </Col>
@@ -560,9 +632,12 @@ class Providers extends React.Component {
 
                             {/* WEBSITE */}
                             <FormGroup row>
-                                <Label for="website" sm={2}>Website</Label>
+                                <Label for="website" sm={2}>
+                                    <Translate content='labels.websiteLabel'/>
+                                </Label>
                                 <Col sm={10}>
-                                    <Input name="website" id="website" placeholder="URL de su pagina web"
+                                    <Input name="website" id="website"
+                                           placeholder={placeholderTranslations.translate('placeholders.websitePlaceholder')}
                                            value={this.state.editUserData.website}
                                            onChange={this.updateEditUserField('website')}/>
                                 </Col>
@@ -570,9 +645,12 @@ class Providers extends React.Component {
 
                             {/* HOURS FROM */}
                             <FormGroup row>
-                                <Label for="officeHoursFrom" sm={2}>Inicio horario de atencion</Label>
+                                <Label for="officeHoursFrom" sm={2}>
+                                    <Translate content='labels.hoursFromLabel'/>
+                                </Label>
                                 <Col sm={10}>
-                                    <Input type="time" name="officeHoursFrom" id="officeHoursFrom"
+                                    <Input type="time" name="officeHoursFrom"
+                                           id="officeHoursFrom"
                                            value={this.state.editUserData.officeHoursFrom}
                                            onChange={this.updateEditUserField('officeHoursFrom')}/>
                                 </Col>
@@ -580,7 +658,9 @@ class Providers extends React.Component {
 
                             {/* HOURS TO */}
                             <FormGroup row>
-                                <Label for="officeHoursTo" sm={2}>Fin horario de atencion</Label>
+                                <Label for="officeHoursTo" sm={2}>
+                                    <Translate content='labels.hoursToLabel'/>
+                                </Label>
                                 <Col sm={10}>
                                     <Input type="time" name="officeHoursTo" id="officeHoursTo"
                                            value={this.state.editUserData.officeHoursTo}
@@ -590,12 +670,16 @@ class Providers extends React.Component {
 
                             {/* DAYS FROM */}
                             <FormGroup row>
-                                <Label for="officeDaysFrom" sm={2}>Inicio dia de atencion</Label>
+                                <Label for="officeDaysFrom" sm={2}>
+                                    <Translate content='labels.officeDaysFromLabel'/>
+                                </Label>
                                 <Col sm={10}>
                                     <CustomInput type="select" name="officeDaysFrom" id="officeDaysFrom"
                                            value={this.state.editUserData.officeDaysFrom}
                                            onChange={this.updateEditUserField('officeDaysFrom')}>
-                                        <option value="">Elija un dia</option>
+                                        <option value="">
+                                            {counterpart.translate('labels.chooseADayLabel')}
+                                        </option>
                                         <option>MONDAY</option>
                                         <option>TUESDAY</option>
                                         <option>WEDNESDAY</option>
@@ -607,12 +691,16 @@ class Providers extends React.Component {
 
                             {/* DAYS TO */}
                             <FormGroup row>
-                                <Label for="officeDaysTo" sm={2}>Fin dia de atencion</Label>
+                                <Label for="officeDaysTo" sm={2}>
+                                    <Translate content='labels.officeDaysToLabel'/>
+                                </Label>
                                 <Col sm={10}>
                                     <CustomInput type="select" name="officeDaysTo" id="officeDaysTo"
                                            value={this.state.editUserData.officeDaysTo}
                                            onChange={this.updateEditUserField('officeDaysTo')}>
-                                        <option value="">Elija un dia</option>
+                                        <option value="">
+                                            {counterpart.translate('labels.chooseADayLabel')}
+                                        </option>
                                         <option>MONDAY</option>
                                         <option>TUESDAY</option>
                                         <option>WEDNESDAY</option>
@@ -639,10 +727,10 @@ class Providers extends React.Component {
 
                     <ModalFooter>
                         <Button color="primary" onClick={this.updateProvider.bind(this)}>
-                            Editar Proveedor
+                            <Translate content='buttons.confirmButton'/>
                         </Button>{' '}
                         <Button color="secondary" onClick={this.toggleEditUserModal.bind(this)}>
-                            Cancelar
+                            <Translate content='buttons.cancelButton'/>
                         </Button>
                     </ModalFooter>
 
@@ -653,7 +741,7 @@ class Providers extends React.Component {
 
                 <Modal isOpen={this.state.accountCreditModal} toggle={this.toggleAccountCreditModal.bind(this)}>
                     <ModalHeader toggle={this.toggleAccountCreditModal.bind(this)}>
-                        Cargar / Retirar credito para {this.state.editUserData.name}
+                        <Translate content='accountCreditModalTitle' with={{username}}/>
                     </ModalHeader>
                     <ModalBody>
 
@@ -662,9 +750,12 @@ class Providers extends React.Component {
                             {/* ACCOUNT CREDIT */}
 
                             <FormGroup row>
-                                <Label for="accountCredit" sm={2}>Credito</Label>
+                                <Label for="accountCredit" sm={2}>
+                                    <Translate content='labels.accountCreditLabel'/>
+                                </Label>
                                 <Col sm={10}>
-                                    <Input name="accountCredit" id="accountCredit" placeholder="Credito"
+                                    <Input name="accountCredit" id="accountCredit"
+                                           placeholder={placeholderTranslations.translate('placeholders.accountCreditPlaceholder')}
                                            value={this.state.editUserData.accountCredit}
                                            onChange={this.updateEditUserField('accountCredit')}/>
                                 </Col>
@@ -676,10 +767,10 @@ class Providers extends React.Component {
 
                     <ModalFooter>
                         <Button color="primary" onClick={this.updateProvider.bind(this)}>
-                            Confirmar
+                            <Translate content='buttons.confirmButton'/>
                         </Button>{' '}
                         <Button color="secondary" onClick={this.toggleAccountCreditModal.bind(this)}>
-                            Cancelar
+                            <Translate content='buttons.cancelButton'/>
                         </Button>
                     </ModalFooter>
 
@@ -692,21 +783,21 @@ class Providers extends React.Component {
                             <thead>
                             <tr>
                                 <th hidden>#</th>
-                                <th>Nombre</th>
-                                <th>Ciudad</th>
-                                <th>Dirección</th>
+                                <th><Translate content='labels.nameLabel'/></th>
+                                <th><Translate content='labels.stateLabel'/></th>
+                                <th><Translate content='labels.addressLabel'/></th>
                                 <th>E-Mail</th>
-                                <th>Telefono</th>
+                                <th><Translate content='labels.phoneLabel'/></th>
                                 {/*<th>Logo</th> TODO: ver como la imagen del logo que elijas*/}
-                                <th>Descripcion</th>
-                                <th>Website</th>
-                                <th>Inicio hs atencion</th>
-                                <th>Fin hs atencion</th>
-                                <th>Primer dia de atencion</th>
-                                <th>Ultimo dia de atencion</th>
+                                <th><Translate content='labels.descriptionLabel'/></th>
+                                <th><Translate content='labels.websiteLabel'/></th>
+                                <th><Translate content='labels.hoursFromLabel'/></th>
+                                <th><Translate content='labels.hoursToLabel'/></th>
+                                <th><Translate content='labels.officeDaysFromLabel'/></th>
+                                <th><Translate content='labels.officeDaysToLabel'/></th>
                                 {/*<th>Hace Delivery</th>*/}
-                                <th>Credito</th>
-                                <th>Acciones</th>
+                                <th><Translate content='labels.accountCreditLabel'/></th>
+                                <th><Translate content='labels.actionsLabel'/></th>
                             </tr>
                             </thead>
 
@@ -738,7 +829,7 @@ class Providers extends React.Component {
                                                     user.description, user.website, user.officeHoursFrom,
                                                     user.officeHoursTo, user.officeDaysFrom, user.officeDaysTo,
                                                     user.accountCredit, user.delivery)}>
-                                            Editar
+                                            <Translate content='buttons.editButton'/>
                                         </Button>
 
                                         <Button color='primary' size='sm' className='mr-2'
@@ -748,12 +839,12 @@ class Providers extends React.Component {
                                                     user.description, user.website, user.officeHoursFrom,
                                                     user.officeHoursTo, user.officeDaysFrom, user.officeDaysTo,
                                                     user.accountCredit, user.delivery)}>
-                                            Cargar/Retirar Credito
+                                            <Translate content='buttons.accountCreditButton'/>
                                         </Button>
 
                                         <Button color='danger' size='sm'
                                                 onClick={this.deleteProvider.bind(this, user.id)}>
-                                            Borrar
+                                            <Translate content='buttons.deleteButton'/>
                                         </Button>
                                     </td>
                                     {errorMsg ? <div>{errorMsg}</div> : null}
