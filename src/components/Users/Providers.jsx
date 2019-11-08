@@ -512,7 +512,7 @@ class Providers extends React.Component {
 
                 <Modal isOpen={this.state.editUserModal} toggle={this.toggleEditUserModal.bind(this)}>
                     <ModalHeader toggle={this.toggleEditUserModal.bind(this)}>
-                        <Translate content='buttons.editProviderModalTitle'/>
+                        <Translate content='editProviderModalTitle'/>
                     </ModalHeader>
                     <ModalBody>
                         <Form>
