@@ -227,7 +227,11 @@ class Menus extends React.Component {
     buyMenu(menu) {
         let {menuName} = menu.name
         this.getSeller(menu.providerId);
-        axios.post('http://localhost:8080//makePurchase', menuName, this.state.seller)
+        let {purchaseRequest} = {
+            menuName:menuName,
+            provider:this.state.seller
+        }
+        axios.post('http://localhost:8080/makePurchase', purchaseRequest)
             .then((response) => {
             })
             .catch((error) => {
