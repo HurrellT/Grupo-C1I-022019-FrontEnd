@@ -26,6 +26,7 @@ class Menus extends React.Component {
         super(props)
 
         this.providerName = '';
+        this.buyResult = '';
         this.state = {
             menus: [],
             newMenuData: {
@@ -94,28 +95,10 @@ class Menus extends React.Component {
                 providerName: '',
                 score: []
             },
-            seller: {
-                id: '',
-                name: '',
-                state: '',
-                address: '',
-                email: '',
-                phone: '',
-                accountCredit: 0.0,
-                logo: '',
-                latitude: '',
-                longitude: '',
-                description: '',
-                website: '',
-                officeHoursFrom: '',
-                officeHoursTo: '',
-                officeDaysFrom: '',
-                officeDaysTo: '',
-                menus: []
-            },
             searchMenuModal: false,
             newMenuModal: false,
             editMenuModal: false,
+            buyResultModal: false,
             errorMessages: []
         }
     }
@@ -136,7 +119,13 @@ class Menus extends React.Component {
             this.setState({
                 SearchMenuModal: !this.state.SearchMenuModal
             })
-        }
+    }
+
+    toggleBuyResultModal() {
+        this.setState({
+            buyResultModal: !this.state.buyResultModal
+        })
+    }
 
     addMenu() {
             axios.post('http://localhost:8080/menu', this.state.newMenuData)
@@ -211,28 +200,11 @@ class Menus extends React.Component {
             })
     }
 
-    getSeller(id){
-        axios.get('http://localhost:8080/providerGetId/' + id)
-        .then(response => {
-            this.setState({
-                 seller: response.data
-             })
-        })
-        .catch(error => {
-            // console.log(error)
-            this.setState({errorMsg: 'Error retreiving data'})
-        })
-    }
-
-    buyMenu(menu) {
-        let {menuName} = menu.name
-        this.getSeller(menu.providerId);
-        let {purchaseRequest} = {
-            menuName:menuName,
-            provider:this.state.seller
-        }
-        axios.post('http://localhost:8080/makePurchase', purchaseRequest)
+    buyMenu(menuName) {
+        axios.get('http://localhost:8080/makePurchase/' + menuName)
             .then((response) => {
+                this.buyResult = response.data;
+                this.toggleBuyResultModal.bind(this)
             })
             .catch((error) => {
                 this.setState({
@@ -424,6 +396,15 @@ class Menus extends React.Component {
                     </ModalFooter>
                 </Modal>
 
+                {/* EDIT ACCOUNT CREDIT */}
+
+                <Modal isOpen={this.state.buyResultModal} toggle={this.toggleBuyResultModal.bind(this)}>
+                    <ModalHeader toggle={this.toggleBuyResultModal.bind(this)}>
+                        Resultado de la compra
+                    </ModalHeader>
+
+                </Modal>
+
                 {/* MENU CRUD TABLE */}
                 <Row>
                     <Col>
@@ -452,7 +433,7 @@ class Menus extends React.Component {
                                     <td>{menu.providerName}</td>
                                     <td>
                                         <Button color='warning' size='sm'
-                                                onClick={this.buyMenu.bind(this, menu)}>
+                                                onClick={this.buyMenu.bind(this, menu.name)}>
                                             Comprar
                                         </Button>
                                     </td>
