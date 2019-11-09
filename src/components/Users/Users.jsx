@@ -1,11 +1,24 @@
 import React from 'react'
 import axios from 'axios'
-import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup} from 'reactstrap';
+import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Alert} from 'reactstrap';
 import Label from "reactstrap/es/Label";
 import Col from "reactstrap/es/Col";
 import Input from "reactstrap/es/Input";
 import Container from "reactstrap/es/Container";
 import Row from "reactstrap/es/Row";
+
+function ModalAlert({ errorsToShow }) {
+    const hasErrorsToShow = errorsToShow.length > 0
+
+    if (hasErrorsToShow) {
+        return (
+            <Alert color="danger">
+                {errorsToShow.map(error => <div>{error}</div>)}
+            </Alert>
+        )
+    }
+    return <div />
+}
 
 class Users extends React.Component {
 
@@ -34,7 +47,8 @@ class Users extends React.Component {
                 accountCredit: 0.0,
             },
             newUserModal: false,
-            editUserModal: false
+            editUserModal: false,
+            errorMessages: []
         }
     }
 
@@ -56,9 +70,10 @@ class Users extends React.Component {
         })
     }
 
-    addUser() {
-        axios.post('http://localhost:8080/user', this.state.newUserData)
+    addClient() {
+        axios.post('http://localhost:8080/client', this.state.newUserData)
             .then((response) => {
+                //TODO: Get the alert render to work
                 let {users} = this.state;
                 users.push(response.data);
                 this.setState(
@@ -77,6 +92,11 @@ class Users extends React.Component {
                     });
                 this._refreshUsers();
             })
+            .catch((error) => {
+                this.setState({
+                    errorMessages: error.response.data.errors
+                })
+            })
     }
 
     editUser(id, name, lastname, state, address, email, phone, accountCredit) {
@@ -86,10 +106,10 @@ class Users extends React.Component {
         })
     }
 
-    updateUser() {
+    updateClient() {
         let {name, lastname, state, address, email, phone, accountCredit} = this.state.editUserData;
 
-        axios.put('http://localhost:8080/user/' + this.state.editUserData.id, {
+        axios.put('http://localhost:8080/client/' + this.state.editUserData.id, {
             name, lastname, state, address, email, phone, accountCredit
         })
             .then((response) => {
@@ -110,7 +130,7 @@ class Users extends React.Component {
             })
     }
 
-    deleteBook(id) {
+    deleteUser(id) {
         axios.delete('http://localhost:8080/user/' + id)
             .then((response) => {
                 this._refreshUsers();
@@ -128,12 +148,24 @@ class Users extends React.Component {
                 })
             })
             .catch(error => {
-                console.log(error)
+                // console.log(error)
                 this.setState({errorMsg: 'Error retreiving data'})
             })
     }
 
+    //TODO: Depending on the user role (client, provider) you see the table with all
+    //      users, or your profile (with the according fields for each role).
+    //      The admin role sees a Users option.
+    //      SEE HOW TO DETERMINE WHICH PAGE YOU SEE DEPENDING ON YOUR ROLE PERMISSION
+    //      Maybe a flag userType in the json?
+
     //RENDER
+
+    updateField = (field) => (ev) => {
+        let {newUserData} = this.state;
+        newUserData[field] = ev.target.value;
+        this.setState({newUserData})
+    }
 
     render() {
         const {users, errorMsg} = this.state
@@ -141,25 +173,31 @@ class Users extends React.Component {
         return (
             <Container>
                 <Row>
-                    <Col xs={9}>
+                    <Col xs={8}>
                         <h1 className="my-3">Users</h1>
                     </Col>
-                    <Col xs={3} className="my-3">
+                    <Col xs={2} className="my-3">
                         <Button className="my-3" color="primary" onClick={this.toggleNewUserModal.bind(this)}>
-                            Nuevo Usuario
+                            Nuevo Cliente
+                        </Button>
+                    </Col>
+                    <Col xs={2} className="my-3">
+                        <Button className="my-3" color="primary" onClick={this.toggleNewUserModal.bind(this)}>
+                            Nuevo Proveedor
                         </Button>
                     </Col>
                 </Row>
 
-                {/* EDIT MODAL */}
+                {/* ADD USER MODAL */}
 
                 <Modal isOpen={this.state.newUserModal} toggle={this.toggleNewUserModal.bind(this)}>
                     <ModalHeader toggle={this.toggleNewUserModal.bind(this)}>
                         Añadir un nuevo Usuario
                     </ModalHeader>
                     <ModalBody>
+                        <ModalAlert errorsToShow={this.state.errorMessages} />
 
-                        {/* ADD MODAL FORM */}
+                        {/* ADD CLIENT MODAL FORM */}
                         <Form>
                             {/* NAME */}
                             <FormGroup row>
@@ -167,12 +205,8 @@ class Users extends React.Component {
                                 <Col sm={10}>
                                     <Input name="name" id="name" placeholder="Escriba su primer nombre"
                                            value={this.state.newUserData.name}
-                                        //TODO: how to extract this correctly?
-                                           onChange={(e) => {
-                                               let {newUserData} = this.state;
-                                               newUserData.name = e.target.value;
-                                               this.setState({newUserData})
-                                           }}/>
+                                            //TODO: CHANGE THE REST
+                                           onChange={this.updateField('name')}/>
                                 </Col>
                             </FormGroup>
 
@@ -250,7 +284,7 @@ class Users extends React.Component {
 
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="primary" onClick={this.addUser.bind(this)}>
+                        <Button color="primary" onClick={this.addClient.bind(this)}>
                             Agregar Usuario
                         </Button>{' '}
                         <Button color="secondary" onClick={this.toggleNewUserModal.bind(this)}>
@@ -372,7 +406,7 @@ class Users extends React.Component {
 
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="primary" onClick={this.updateUser.bind(this)}>
+                        <Button color="primary" onClick={this.updateClient.bind(this)}>
                             Editar Usuario
                         </Button>{' '}
                         <Button color="secondary" onClick={this.toggleEditUserModal.bind(this)}>
@@ -421,7 +455,7 @@ class Users extends React.Component {
                                             Editar
                                         </Button>
                                         <Button color='danger' size='sm'
-                                                onClick={this.deleteBook.bind(this, user.id)}>
+                                                onClick={this.deleteUser.bind(this, user.id)}>
                                             Borrar
                                         </Button>
                                     </td>
