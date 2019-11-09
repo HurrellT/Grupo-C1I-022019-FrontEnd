@@ -1,4 +1,26 @@
 ---------------------------------------------------------------------
+TAG Grupo-C1I-022019-FrontEnd-Entrega-2
+---------------------------------------------------------------------
+NEW FEATURES
+* New Providers view
+* New account credit view
+* Auth0 authentication frontend implementation
+* Translations for English and Spanish languages
+* New Provider Menus view
+* Buy menu feature
+* Search menus feature
+
+KNOWN ISSUES
+* Office Days Selection Are not being translated to avoid api problems
+* Missing translations in "My Account" view
+
+NOTES
+* There's still no user type to differentiate between providers and normal clients
+
+
+------------------------Previous Releases----------------------------
+
+---------------------------------------------------------------------
 TAG Grupo-C1I-022019-FrontEnd-Entrega-1
 ---------------------------------------------------------------------
 NEW FEATURES
