@@ -94,6 +94,25 @@ class Menus extends React.Component {
                 providerName: '',
                 score: []
             },
+            seller: {
+                id: '',
+                name: '',
+                state: '',
+                address: '',
+                email: '',
+                phone: '',
+                accountCredit: 0.0,
+                logo: '',
+                latitude: '',
+                longitude: '',
+                description: '',
+                website: '',
+                officeHoursFrom: '',
+                officeHoursTo: '',
+                officeDaysFrom: '',
+                officeDaysTo: '',
+                menus: []
+            },
             searchMenuModal: false,
             newMenuModal: false,
             editMenuModal: false,
@@ -192,11 +211,33 @@ class Menus extends React.Component {
             })
     }
 
-    filterMenus() { }
-
-    buyMenu(menuId) {
-
+    getSeller(id){
+        axios.get('http://localhost:8080/providerGetId/' + id)
+        .then(response => {
+            this.setState({
+                 seller: response.data
+             })
+        })
+        .catch(error => {
+            // console.log(error)
+            this.setState({errorMsg: 'Error retreiving data'})
+        })
     }
+
+    buyMenu(menu) {
+        let {menuName} = menu.name
+        this.getSeller(menu.providerId);
+        axios.post('http://localhost:8080//makePurchase', menuName, this.state.seller)
+            .then((response) => {
+            })
+            .catch((error) => {
+                this.setState({
+                    errorMessages: error.response.data.errors
+                })
+            })
+    }
+
+    filterMenus() { }
 
     //RENDER
 
@@ -407,7 +448,7 @@ class Menus extends React.Component {
                                     <td>{menu.providerName}</td>
                                     <td>
                                         <Button color='warning' size='sm'
-                                                onClick={this.buyMenu(menu.id)}>
+                                                onClick={this.buyMenu.bind(this, menu)}>
                                             Comprar
                                         </Button>
                                     </td>

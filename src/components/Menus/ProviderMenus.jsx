@@ -167,7 +167,7 @@ class ProviderMenus extends Menus {
                                     <td>{menu.price}</td>
                                     <td>
                                         <Button color='warning' size='sm'
-                                                onClick={this.buyMenu(menu.id)}>
+                                                onClick={this.buyMenu.bind(this, menu)}>
                                             Comprar
                                         </Button>
                                     </td>
