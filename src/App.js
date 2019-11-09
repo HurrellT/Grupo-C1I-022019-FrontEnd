@@ -13,6 +13,14 @@ import Users from "./components/Users/Users";
 import Providers from "./components/Users/Providers";
 import Menus from "./components/Menus/Menus";
 import ProviderMenus from "./components/Menus/ProviderMenus";
+import counterpart from 'counterpart'
+import es from "./lang/es";
+import en from "./lang/en";
+import Translate from 'react-translate-component';
+
+counterpart.registerTranslations('es', es)
+counterpart.registerTranslations('en', en)
+counterpart.setLocale(localStorage.getItem('lang'))
 
 function App() {
     const { loading } = useAuth0();
@@ -27,7 +35,11 @@ function App() {
                 <header>
                     <NavBar />
                 </header>
-                <h2 style={padding}>Loading...</h2>
+                <Translate
+                    content='loading'
+                    style={padding}
+                    component='h2'
+                />
             </div>
         );
     }
