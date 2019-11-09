@@ -72,6 +72,29 @@ class Menus extends React.Component {
                 providerName: '',
                 score: []
             },
+            searchMenuData: {
+                name: '',
+                description: '',
+                category: '',
+                deliveryPrice: '',
+                effectiveDateFrom: '',
+                effectiveDateTo: 0.0,
+                dayNight: '',
+                effectiveDeliveryHoursFrom: '',
+                effectiveDeliveryHoursTo: '',
+                deliveryType: '',
+                averageDeliveryTime: '',
+                price: '',
+                maximumAllowedSells: '',
+                minimumAmount: '',
+                minimumAmountPrice: '',
+                minimumAmount2: '',
+                minimumAmount2Price: '',
+                providerId: '',
+                providerName: '',
+                score: []
+            },
+            searchMenuModal: false,
             newMenuModal: false,
             editMenuModal: false,
             errorMessages: []
@@ -90,6 +113,12 @@ class Menus extends React.Component {
         })
     }
 
+    toggleSearchMenuModal() {
+            this.setState({
+                SearchMenuModal: !this.state.SearchMenuModal
+            })
+        }
+
     addMenu() {
             axios.post('http://localhost:8080/menu', this.state.newMenuData)
                 .then((response) => {
@@ -99,6 +128,7 @@ class Menus extends React.Component {
                         {
                             menus,
                             newMenuModal: false,
+                            SearchMenuModal: false,
                             newMenuData: {
                                 name: '',
                                 description: '',
@@ -162,7 +192,11 @@ class Menus extends React.Component {
             })
     }
 
-    buyMenu(menuId) { }
+    filterMenus() { }
+
+    buyMenu(menuId) {
+
+    }
 
     //RENDER
 
@@ -182,11 +216,93 @@ class Menus extends React.Component {
                         <h1 className="my-3">Menús</h1>
                     </Col>
                     <Col xs={2} className="my-3">
+                        <Button className="my-3" color="primary" onClick={this.toggleSearchMenuModal.bind(this)}>
+                            Buscar Menú
+                        </Button>
+                    </Col>
+                    <Col xs={2} className="my-3">
                         <Button className="my-3" color="primary" onClick={this.toggleNewMenuModal.bind(this)}>
                             Nuevo Menú
                         </Button>
                     </Col>
                 </Row>
+
+                {/* SEARCH MENU MODAL */}
+
+                <Modal isOpen={this.state.SearchMenuModal} toggle={this.toggleSearchMenuModal.bind(this)}>
+                    <ModalHeader toggle={this.toggleSearchMenuModal.bind(this)}>
+                        Aplicar filtros
+                    </ModalHeader>
+                    <ModalBody>
+                        <ModalAlert errorsToShow={this.state.errorMessages} />
+
+                        {/* SEARCH MENU MODAL FORM */}
+                        <Form>
+                            {/* NAME */}
+                            <FormGroup row>
+                                <Label for="name" sm={2}>Nombre</Label>
+                                <Col sm={10}>
+                                    <Input name="name" id="name" placeholder="Escriba el nombre del menú"
+                                           value={this.state.searchMenuData.name}
+                                           onChange={(e) => {
+                                               let {searchMenuData} = this.state;
+                                               searchMenuData.name = e.target.value;
+                                               this.setState({searchMenuData})
+                                           }}/>
+                                </Col>
+                            </FormGroup>
+
+                            {/* DESCRIPTION */}
+                            <FormGroup row>
+                                <Label for="description" sm={2}>Descripción</Label>
+                                <Col sm={10}>
+                                    <Input name="description" id="description" placeholder="Escriba la descripción del menú"
+                                           value={this.state.searchMenuData.description}
+                                           onChange={(e) => {
+                                               let {searchMenuData} = this.state;
+                                               searchMenuData.description = e.target.value;
+                                               this.setState({searchMenuData})
+                                           }}/>
+                                </Col>
+                            </FormGroup>
+
+                            {/* CATEGORY */}
+                            <FormGroup row>
+                                <Label for="category" sm={2}>Categoría</Label>
+                                <Col sm={10}>
+                                    <Input name="category" id="category" placeholder="Escriba la categoría del menú"
+                                           value={this.state.searchMenuData.category}
+                                           onChange={(e) => {
+                                               let {searchMenuData} = this.state;
+                                               searchMenuData.category = e.target.value;
+                                               this.setState({searchMenuData})
+                                           }}/>
+                                </Col>
+                            </FormGroup>
+
+                            {/* DELIVERY PRICE */}
+                            <FormGroup row>
+                                <Label for="deliveryPrice" sm={2}>Precio de delivery</Label>
+                                <Col sm={10}>
+                                    <Input name="deliveryPrice" id="deliveryPrice" placeholder="Escriba el precio de delivery"
+                                           value={this.state.searchMenuData.deliveryPrice}
+                                           onChange={(e) => {
+                                               let {searchMenuData} = this.state;
+                                               searchMenuData.deliveryPrice = e.target.value;
+                                               this.setState({searchMenuData})
+                                           }}/>
+                                </Col>
+                            </FormGroup>
+                        </Form>
+
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="primary" onClick={this.filterMenus.bind(this)}>
+                            Aplicar filtro
+                        </Button>{' '}
+                    </ModalFooter>
+                </Modal>
+
 
                 {/* ADD MENU MODAL */}
 
@@ -197,7 +313,7 @@ class Menus extends React.Component {
                     <ModalBody>
                         <ModalAlert errorsToShow={this.state.errorMessages} />
 
-                        {/* ADD CLIENT MODAL FORM */}
+                        {/* ADD MENU MODAL FORM */}
                         <Form>
                             {/* NAME */}
                             <FormGroup row>
@@ -217,7 +333,7 @@ class Menus extends React.Component {
                                            value={this.state.newMenuData.description}
                                            onChange={(e) => {
                                                let {newMenuData} = this.state;
-                                               newMenuData.state = e.target.value;
+                                               newMenuData.description = e.target.value;
                                                this.setState({newMenuData})
                                            }}/>
                                 </Col>
@@ -231,7 +347,7 @@ class Menus extends React.Component {
                                            value={this.state.newMenuData.category}
                                            onChange={(e) => {
                                                let {newMenuData} = this.state;
-                                               newMenuData.address = e.target.value;
+                                               newMenuData.category = e.target.value;
                                                this.setState({newMenuData})
                                            }}/>
                                 </Col>
@@ -245,7 +361,7 @@ class Menus extends React.Component {
                                            value={this.state.newMenuData.deliveryPrice}
                                            onChange={(e) => {
                                                let {newMenuData} = this.state;
-                                               newMenuData.email = e.target.value;
+                                               newMenuData.deliveryPrice = e.target.value;
                                                this.setState({newMenuData})
                                            }}/>
                                 </Col>
