@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Alert} from 'reactstrap';
+import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Alert, CustomInput} from 'reactstrap';
 import Label from "reactstrap/es/Label";
 import Col from "reactstrap/es/Col";
 import Input from "reactstrap/es/Input";
@@ -79,7 +79,7 @@ class ProviderMenus extends Menus {
                         <Form>
                             {/* NAME */}
                             <FormGroup row>
-                                <Label for="name" sm={2}>Nombre</Label>
+                                <Label for="name" sm={10}>Nombre</Label>
                                 <Col sm={10}>
                                     <Input name="name" id="name" placeholder="Escriba el nombre del menú"
                                            value={this.state.newMenuData.name}
@@ -89,13 +89,13 @@ class ProviderMenus extends Menus {
 
                             {/* DESCRIPTION */}
                             <FormGroup row>
-                                <Label for="description" sm={2}>Descripción</Label>
+                                <Label for="description" sm={10}>Descripción</Label>
                                 <Col sm={10}>
                                     <Input name="description" id="description" placeholder="Escriba la descripción del menú"
                                            value={this.state.newMenuData.description}
                                            onChange={(e) => {
                                                let {newMenuData} = this.state;
-                                               newMenuData.state = e.target.value;
+                                               newMenuData.description = e.target.value;
                                                this.setState({newMenuData})
                                            }}/>
                                 </Col>
@@ -103,13 +103,13 @@ class ProviderMenus extends Menus {
 
                             {/* CATEGORY */}
                             <FormGroup row>
-                                <Label for="category" sm={2}>Categoría</Label>
+                                <Label for="category" sm={10}>Categoría</Label>
                                 <Col sm={10}>
                                     <Input name="category" id="category" placeholder="Escriba la categoría del menú"
                                            value={this.state.newMenuData.category}
                                            onChange={(e) => {
                                                let {newMenuData} = this.state;
-                                               newMenuData.address = e.target.value;
+                                               newMenuData.category = e.target.value;
                                                this.setState({newMenuData})
                                            }}/>
                                 </Col>
@@ -117,13 +117,13 @@ class ProviderMenus extends Menus {
 
                             {/* DELIVERY PRICE */}
                             <FormGroup row>
-                                <Label for="deliveryPrice" sm={2}>Precio de delivery</Label>
+                                <Label for="deliveryPrice" sm={10}>Precio de delivery</Label>
                                 <Col sm={10}>
                                     <Input type="deliveryPrice" name="deliveryPrice" id="deliveryPrice" placeholder="Escriba el precio de delivery"
                                            value={this.state.newMenuData.deliveryPrice}
                                            onChange={(e) => {
                                                let {newMenuData} = this.state;
-                                               newMenuData.email = e.target.value;
+                                               newMenuData.deliveryPrice = e.target.value;
                                                this.setState({newMenuData})
                                            }}/>
                                 </Col>
@@ -139,6 +139,32 @@ class ProviderMenus extends Menus {
                             Cancelar
                         </Button>
                     </ModalFooter>
+                </Modal>
+
+                {/* BUY RESULT */}
+
+                <Modal isOpen={this.state.buyResultModal} toggle={this.toggleBuyResultModal.bind(this)}>
+                    <ModalHeader toggle={this.toggleBuyResultModal.bind(this)}>
+                        Resultado de la compra
+                    </ModalHeader>
+                    <ModalBody>
+                         <ModalAlert errorsToShow={this.state.errorMessages} />
+
+                         {/* ADD MENU MODAL FORM */}
+                         <Form>
+                             {/* NAME */}
+                             <FormGroup row>
+                                 <Label sm={20}>{this.state.buyResult}</Label>
+                             </FormGroup>
+                         </Form>
+
+                     </ModalBody>
+                     <ModalFooter>
+                         <Button color="primary" onClick={this.toggleBuyResultModal.bind(this)}>
+                             Aceptar
+                         </Button>
+                     </ModalFooter>
+
                 </Modal>
 
                 {/* MENU CRUD TABLE */}

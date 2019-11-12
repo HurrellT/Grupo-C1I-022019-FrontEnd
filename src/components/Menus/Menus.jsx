@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Alert} from 'reactstrap';
+import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Alert, CustomInput} from 'reactstrap';
 import Label from "reactstrap/es/Label";
 import Col from "reactstrap/es/Col";
 import Input from "reactstrap/es/Input";
@@ -26,7 +26,6 @@ class Menus extends React.Component {
         super(props)
 
         this.providerName = '';
-        this.buyResult = '';
         this.state = {
             menus: [],
             newMenuData: {
@@ -49,6 +48,7 @@ class Menus extends React.Component {
                 minimumAmount2Price: '',
                 providerId: '',
                 providerName: '',
+                buyResult: '',
                 score: []
             },
             editMenuData: {
@@ -117,7 +117,7 @@ class Menus extends React.Component {
 
     toggleSearchMenuModal() {
             this.setState({
-                SearchMenuModal: !this.state.SearchMenuModal
+                searchMenuModal: !this.state.searchMenuModal
             })
     }
 
@@ -136,7 +136,7 @@ class Menus extends React.Component {
                         {
                             menus,
                             newMenuModal: false,
-                            SearchMenuModal: false,
+                            searchMenuModal: false,
                             newMenuData: {
                                 name: '',
                                 description: '',
@@ -203,12 +203,15 @@ class Menus extends React.Component {
     buyMenu(menuName) {
         axios.get('http://localhost:8080/makePurchase/' + menuName)
             .then((response) => {
-                this.buyResult = response.data;
-                this.toggleBuyResultModal.bind(this)
+                this.setState({
+                    buyResult: 'Su compra ha sido realizada con éxito',
+                    buyResultModal: !this.state.buyResultModal
+                })
             })
             .catch((error) => {
                 this.setState({
-                    errorMessages: error.response.data.errors
+                    buyResult: 'No se pudo realizar la compra',
+                    buyResultModal: !this.state.buyResultModal
                 })
             })
     }
@@ -246,7 +249,7 @@ class Menus extends React.Component {
 
                 {/* SEARCH MENU MODAL */}
 
-                <Modal isOpen={this.state.SearchMenuModal} toggle={this.toggleSearchMenuModal.bind(this)}>
+                <Modal isOpen={this.state.searchMenuModal} toggle={this.toggleSearchMenuModal.bind(this)}>
                     <ModalHeader toggle={this.toggleSearchMenuModal.bind(this)}>
                         Aplicar filtros
                     </ModalHeader>
@@ -334,7 +337,7 @@ class Menus extends React.Component {
                         <Form>
                             {/* NAME */}
                             <FormGroup row>
-                                <Label for="name" sm={2}>Nombre</Label>
+                                <Label for="name" sm={10}>Nombre</Label>
                                 <Col sm={10}>
                                     <Input name="name" id="name" placeholder="Escriba el nombre del menú"
                                            value={this.state.newMenuData.name}
@@ -344,7 +347,7 @@ class Menus extends React.Component {
 
                             {/* DESCRIPTION */}
                             <FormGroup row>
-                                <Label for="description" sm={2}>Descripción</Label>
+                                <Label for="description" sm={10}>Descripción</Label>
                                 <Col sm={10}>
                                     <Input name="description" id="description" placeholder="Escriba la descripción del menú"
                                            value={this.state.newMenuData.description}
@@ -358,7 +361,7 @@ class Menus extends React.Component {
 
                             {/* CATEGORY */}
                             <FormGroup row>
-                                <Label for="category" sm={2}>Categoría</Label>
+                                <Label for="category" sm={10}>Categoría</Label>
                                 <Col sm={10}>
                                     <Input name="category" id="category" placeholder="Escriba la categoría del menú"
                                            value={this.state.newMenuData.category}
@@ -372,7 +375,7 @@ class Menus extends React.Component {
 
                             {/* DELIVERY PRICE */}
                             <FormGroup row>
-                                <Label for="deliveryPrice" sm={2}>Precio de delivery</Label>
+                                <Label for="deliveryPrice" sm={10}>Precio de delivery</Label>
                                 <Col sm={10}>
                                     <Input type="deliveryPrice" name="deliveryPrice" id="deliveryPrice" placeholder="Escriba el precio de delivery"
                                            value={this.state.newMenuData.deliveryPrice}
@@ -396,12 +399,29 @@ class Menus extends React.Component {
                     </ModalFooter>
                 </Modal>
 
-                {/* EDIT ACCOUNT CREDIT */}
+                {/* BUY RESULT */}
 
                 <Modal isOpen={this.state.buyResultModal} toggle={this.toggleBuyResultModal.bind(this)}>
                     <ModalHeader toggle={this.toggleBuyResultModal.bind(this)}>
                         Resultado de la compra
                     </ModalHeader>
+                    <ModalBody>
+                         <ModalAlert errorsToShow={this.state.errorMessages} />
+
+                         {/* ADD MENU MODAL FORM */}
+                         <Form>
+                             {/* NAME */}
+                             <FormGroup row>
+                                 <Label sm={20}>{this.state.buyResult}</Label>
+                             </FormGroup>
+                         </Form>
+
+                     </ModalBody>
+                     <ModalFooter>
+                         <Button color="primary" onClick={this.toggleBuyResultModal.bind(this)}>
+                             Aceptar
+                         </Button>
+                     </ModalFooter>
 
                 </Modal>
 
