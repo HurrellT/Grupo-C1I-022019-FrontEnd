@@ -6,6 +6,8 @@ import Col from "reactstrap/es/Col";
 import Input from "reactstrap/es/Input";
 import Container from "reactstrap/es/Container";
 import Row from "reactstrap/es/Row";
+import counterpart from 'counterpart';
+import NumericInput from 'react-numeric-input';
 
 function ModalAlert({ errorsToShow }) {
     const hasErrorsToShow = errorsToShow.length > 0
@@ -28,13 +30,19 @@ class Menus extends React.Component {
         this.providerName = '';
         this.state = {
             menus: [],
+            purchases: [],
+            purchaseRequest: {
+                menuName: '',
+                providerId: '',
+                quantity: '1'
+            },
             newMenuData: {
                 name: '',
                 description: '',
                 category: '',
                 deliveryPrice: '',
                 effectiveDateFrom: '',
-                effectiveDateTo: 0.0,
+                effectiveDateTo: '',
                 dayNight: '',
                 effectiveDeliveryHoursFrom: '',
                 effectiveDeliveryHoursTo: '',
@@ -48,7 +56,6 @@ class Menus extends React.Component {
                 minimumAmount2Price: '',
                 providerId: '',
                 providerName: '',
-                buyResult: '',
                 score: []
             },
             editMenuData: {
@@ -57,7 +64,7 @@ class Menus extends React.Component {
                 category: '',
                 deliveryPrice: '',
                 effectiveDateFrom: '',
-                effectiveDateTo: 0.0,
+                effectiveDateTo: '',
                 dayNight: '',
                 effectiveDeliveryHoursFrom: '',
                 effectiveDeliveryHoursTo: '',
@@ -79,7 +86,7 @@ class Menus extends React.Component {
                 category: '',
                 deliveryPrice: '',
                 effectiveDateFrom: '',
-                effectiveDateTo: 0.0,
+                effectiveDateTo: '',
                 dayNight: '',
                 effectiveDeliveryHoursFrom: '',
                 effectiveDeliveryHoursTo: '',
@@ -95,10 +102,12 @@ class Menus extends React.Component {
                 providerName: '',
                 score: []
             },
+            buyResult: '',
             searchMenuModal: false,
             newMenuModal: false,
             editMenuModal: false,
             buyResultModal: false,
+            askQuantityModal: false,
             errorMessages: []
         }
     }
@@ -127,6 +136,12 @@ class Menus extends React.Component {
         })
     }
 
+    toggleAskQuantityModal() {
+        this.setState({
+            askQuantityModal: !this.state.askQuantityModal
+        })
+    }
+
     addMenu() {
             axios.post('http://localhost:8080/menu', this.state.newMenuData)
                 .then((response) => {
@@ -137,13 +152,14 @@ class Menus extends React.Component {
                             menus,
                             newMenuModal: false,
                             searchMenuModal: false,
+                            number: '',
                             newMenuData: {
                                 name: '',
                                 description: '',
                                 category: '',
                                 deliveryPrice: '',
                                 effectiveDateFrom: '',
-                                effectiveDateTo: 0.0,
+                                effectiveDateTo: '',
                                 dayNight: '',
                                 effectiveDeliveryHoursFrom: '',
                                 effectiveDeliveryHoursTo: '',
@@ -200,8 +216,9 @@ class Menus extends React.Component {
             })
     }
 
-    buyMenu(menuName) {
-        axios.get('http://localhost:8080/makePurchase/' + menuName)
+
+    makePurchase() {
+        axios.post('http://localhost:8080/makePurchase', this.state.purchases)
             .then((response) => {
                 this.setState({
                     buyResult: 'Su compra ha sido realizada con éxito',
@@ -217,6 +234,16 @@ class Menus extends React.Component {
     }
 
     filterMenus() { }
+
+    askForQuantity(menuName, providerId){
+        let {purchaseRequest} = this.state;
+        purchaseRequest.menuName = menuName;
+        purchaseRequest.providerId = providerId;
+        this.setState({
+            purchases: this.state.purchases.concat(purchaseRequest),
+            askQuantityModal: !this.state.askQuantityModal
+        })
+    }
 
     //RENDER
 
@@ -241,14 +268,13 @@ class Menus extends React.Component {
                         </Button>
                     </Col>
                     <Col xs={2} className="my-3">
-                        <Button className="my-3" color="primary" onClick={this.toggleNewMenuModal.bind(this)}>
+                        <Button className="my-3" color="primary" onClick={this.makePurchase.bind(this)}>
                             Nuevo Menú
                         </Button>
                     </Col>
                 </Row>
 
                 {/* SEARCH MENU MODAL */}
-
                 <Modal isOpen={this.state.searchMenuModal} toggle={this.toggleSearchMenuModal.bind(this)}>
                     <ModalHeader toggle={this.toggleSearchMenuModal.bind(this)}>
                         Aplicar filtros
@@ -325,7 +351,6 @@ class Menus extends React.Component {
 
 
                 {/* ADD MENU MODAL */}
-
                 <Modal isOpen={this.state.newMenuModal} toggle={this.toggleNewMenuModal.bind(this)}>
                     <ModalHeader toggle={this.toggleNewMenuModal.bind(this)}>
                         Añadir un nuevo Menú
@@ -363,13 +388,39 @@ class Menus extends React.Component {
                             <FormGroup row>
                                 <Label for="category" sm={10}>Categoría</Label>
                                 <Col sm={10}>
-                                    <Input name="category" id="category" placeholder="Escriba la categoría del menú"
+                                    <CustomInput type="select" name="category" id="category"
                                            value={this.state.newMenuData.category}
                                            onChange={(e) => {
                                                let {newMenuData} = this.state;
                                                newMenuData.category = e.target.value;
                                                this.setState({newMenuData})
-                                           }}/>
+                                           }}>
+                                            <option value="">
+                                                {counterpart.translate('labels.chooseADayLabel')}
+                                            </option>
+                                            <option>PIZZA</option>
+                                            <option>BEER</option>
+                                     </CustomInput>
+                                </Col>
+                            </FormGroup>
+
+                            {/* DAY NIGHT */}
+                            <FormGroup row>
+                                <Label for="dayNight" sm={10}>Dia o noche</Label>
+                                <Col sm={10}>
+                                    <CustomInput type="select" name="dayNight" id="dayNight"
+                                           value={this.state.newMenuData.dayNight}
+                                           onChange={(e) => {
+                                               let {newMenuData} = this.state;
+                                               newMenuData.dayNight = e.target.value;
+                                               this.setState({newMenuData})
+                                           }}>
+                                            <option value="">
+                                                {counterpart.translate('labels.chooseADayLabel')}
+                                            </option>
+                                            <option>DAY</option>
+                                            <option>NIGHT</option>
+                                     </CustomInput>
                                 </Col>
                             </FormGroup>
 
@@ -399,8 +450,7 @@ class Menus extends React.Component {
                     </ModalFooter>
                 </Modal>
 
-                {/* BUY RESULT */}
-
+                {/* BUY RESULT MODAL */}
                 <Modal isOpen={this.state.buyResultModal} toggle={this.toggleBuyResultModal.bind(this)}>
                     <ModalHeader toggle={this.toggleBuyResultModal.bind(this)}>
                         Resultado de la compra
@@ -419,6 +469,39 @@ class Menus extends React.Component {
                      </ModalBody>
                      <ModalFooter>
                          <Button color="primary" onClick={this.toggleBuyResultModal.bind(this)}>
+                             Aceptar
+                         </Button>
+                     </ModalFooter>
+
+                </Modal>
+
+
+                {/* ASK QUANTITY MODAL */}
+                <Modal isOpen={this.state.askQuantityModal} toggle={this.toggleAskQuantityModal.bind(this)}>
+                    <ModalHeader toggle={this.toggleAskQuantityModal.bind(this)}>
+                        Seleccionar la cantidad
+                    </ModalHeader>
+                    <ModalBody>
+                         <ModalAlert errorsToShow={this.state.errorMessages} />
+
+                         {/* ADD MENU MODAL FORM */}
+                         <Form>
+                             {/* QUANTITY */}
+                             <FormGroup row>
+                                 <Col sm={10}>
+                                     <NumericInput min={1} value={this.state.purchaseRequest.quantity}
+                                        onChange={(value) =>{
+                                            let {purchaseRequest} = this.state;
+                                            purchaseRequest.quantity = value;
+                                            this.setState({purchaseRequest})
+                                     }}/>
+                                 </Col>
+                             </FormGroup>
+                         </Form>
+
+                     </ModalBody>
+                     <ModalFooter>
+                         <Button color="primary" onClick={this.toggleAskQuantityModal.bind(this)}>
                              Aceptar
                          </Button>
                      </ModalFooter>
@@ -453,8 +536,8 @@ class Menus extends React.Component {
                                     <td>{menu.providerName}</td>
                                     <td>
                                         <Button color='warning' size='sm'
-                                                onClick={this.buyMenu.bind(this, menu.name)}>
-                                            Comprar
+                                                onClick={this.askForQuantity.bind(this, menu.name, menu.providerId)}>
+                                            Agregar a mi compra
                                         </Button>
                                     </td>
                                 </tr>
