@@ -32,8 +32,8 @@ class Menus extends React.Component {
             menus: [],
             purchases: [],
             purchaseRequest: {
-                menuName: '',
                 providerId: '',
+                menuName: '',
                 quantity: '1'
             },
             newMenuData: {
@@ -221,28 +221,45 @@ class Menus extends React.Component {
         axios.post('http://localhost:8080/makePurchase', this.state.purchases)
             .then((response) => {
                 this.setState({
-                    buyResult: 'Su compra ha sido realizada con éxito',
-                    buyResultModal: !this.state.buyResultModal
+                    buyResult: 'Su compra ha sido realizada con éxito'
                 })
             })
             .catch((error) => {
                 this.setState({
-                    buyResult: 'No se pudo realizar la compra',
-                    buyResultModal: !this.state.buyResultModal
+                    buyResult: 'No se pudo realizar la compra'
                 })
             })
+        this.setState({
+            purchases: [],
+            purchaseRequest: {
+                            providerId: '',
+                            menuName: '',
+                            quantity: '1'
+                            },
+            buyResultModal: !this.state.buyResultModal
+        })
     }
 
     filterMenus() { }
 
     askForQuantity(menuName, providerId){
         let {purchaseRequest} = this.state;
-        purchaseRequest.menuName = menuName;
         purchaseRequest.providerId = providerId;
+        purchaseRequest.menuName = menuName;
+        purchaseRequest.quantity = '1';
+        this.setState({ purchaseRequest });
+        this.toggleAskQuantityModal()
+    }
+
+    acceptAskQuantityModal(){
+        let {purchases} = this.state;
+        this.state.purchases.push({ providerId: this.state.purchaseRequest.providerId,
+                                    menuName: this.state.purchaseRequest.menuName,
+                                    quantity: this.state.purchaseRequest.quantity });
         this.setState({
-            purchases: this.state.purchases.concat(purchaseRequest),
-            askQuantityModal: !this.state.askQuantityModal
+            purchases
         })
+        this.toggleAskQuantityModal()
     }
 
     //RENDER
@@ -501,7 +518,7 @@ class Menus extends React.Component {
 
                      </ModalBody>
                      <ModalFooter>
-                         <Button color="primary" onClick={this.toggleAskQuantityModal.bind(this)}>
+                         <Button color="primary" onClick={this.acceptAskQuantityModal.bind(this)}>
                              Aceptar
                          </Button>
                      </ModalFooter>
