@@ -85,6 +85,7 @@ class Providers extends React.Component {
             newUserModal: false,
             editUserModal: false,
             accountCreditModal: false,
+            amount: '',
             errorMessages: []
         }
     }
@@ -214,6 +215,80 @@ class Providers extends React.Component {
             })
     }
 
+    withdrawCredit() {
+        axios.post('http://localhost:8080/withdrawCredit/' + this.state.editUserData.id + "/" + this.state.amount)
+            .then((response) => {
+                this._refreshUsers();
+                this.setState({
+                    editUserModal: false,
+                    accountCreditModal: false,
+                    editUserData: {
+                        name: '',
+                        state: '',
+                        address: '',
+                        email: '',
+                        phone: '',
+                        accountCredit: 0.0,
+                        logo: '',
+                        latitude: '',
+                        longitude: '',
+                        description: '',
+                        website: '',
+                        officeHoursFrom: '',
+                        officeHoursTo: '',
+                        officeDaysFrom: '',
+                        officeDaysTo: '',
+                        menus: [],
+                        delivery: false
+                    },
+                    amount: ''
+                })
+            })
+            .catch((error) => {
+                this.setState({
+                    errorMessages: [error.response.data.message]
+                })
+            })
+
+    }
+
+    depositCredit() {
+        axios.post('http://localhost:8080/depositCredit/' + this.state.editUserData.id + "/" + this.state.amount)
+            .then((response) => {
+                this._refreshUsers();
+                this.setState({
+                    editUserModal: false,
+                    accountCreditModal: false,
+                    editUserData: {
+                        name: '',
+                        state: '',
+                        address: '',
+                        email: '',
+                        phone: '',
+                        accountCredit: 0.0,
+                        logo: '',
+                        latitude: '',
+                        longitude: '',
+                        description: '',
+                        website: '',
+                        officeHoursFrom: '',
+                        officeHoursTo: '',
+                        officeDaysFrom: '',
+                        officeDaysTo: '',
+                        menus: [],
+                        delivery: false
+                    },
+                    amount: ''
+                })
+            })
+            .catch((error) => {
+                this.setState({
+                    errorMessages: [error.response.data.message]
+                })
+            })
+
+    }
+
     deleteProvider(id) {
         axios.delete('http://localhost:8080/user/' + id)
             .then((response) => {
@@ -267,6 +342,8 @@ class Providers extends React.Component {
         const placeholderTranslations = counterpart;
 
         const username = this.state.editUserData.name;
+
+        const credit = this.state.editUserData.accountCredit;
 
         return (
             <Container>
@@ -748,10 +825,16 @@ class Providers extends React.Component {
                         <Translate content='accountCreditModalTitle' with={{username}}/>
                     </ModalHeader>
                     <ModalBody>
-
+                        <ModalAlert errorsToShow={this.state.errorMessages} />
                         <Form>
 
                             {/* ACCOUNT CREDIT */}
+
+                            <FormGroup row>
+                                <Col sm={10}>
+                                    <h6><Translate content='labels.availableAccountCredit' with={{credit}}/></h6>
+                                </Col>
+                            </FormGroup>
 
                             <FormGroup row>
                                 <Label for="accountCredit" sm={2}>
@@ -760,8 +843,12 @@ class Providers extends React.Component {
                                 <Col sm={10}>
                                     <Input name="accountCredit" id="accountCredit"
                                            placeholder={placeholderTranslations.translate('placeholders.accountCreditPlaceholder')}
-                                           value={this.state.editUserData.accountCredit}
-                                           onChange={this.updateEditUserField('accountCredit')}/>
+                                           value={this.state.amount}
+                                           onChange={(e) => {
+                                               let {amount} = this.state.amount;
+                                               amount = e.target.value;
+                                               this.setState({amount:amount})
+                                           }}/>
                                 </Col>
                             </FormGroup>
 
@@ -770,8 +857,11 @@ class Providers extends React.Component {
                     </ModalBody>
 
                     <ModalFooter>
-                        <Button color="primary" onClick={this.updateProvider.bind(this)}>
-                            <Translate content='buttons.confirmButton'/>
+                        <Button color="primary" onClick={this.depositCredit.bind(this)}>
+                            <Translate content='buttons.depositCredit'/>
+                        </Button>{' '}
+                        <Button color="primary" onClick={this.withdrawCredit.bind(this)}>
+                            <Translate content='buttons.withdrawCredit'/>
                         </Button>{' '}
                         <Button color="secondary" onClick={this.toggleAccountCreditModal.bind(this)}>
                             <Translate content='buttons.cancelButton'/>

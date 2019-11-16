@@ -24,7 +24,9 @@ export default {
         editButton: 'Edit',
         deleteButton: 'Delete',
         loginButton: 'Log in',
-        logoutButton: 'Log out'
+        logoutButton: 'Log out',
+        withdrawCredit: 'Withdraw credit',
+        depositCredit: 'Deposit credit'
     },
 
     labels: {
@@ -42,7 +44,8 @@ export default {
         officeDaysToLabel: 'Service finishing on',
         accountCreditLabel: 'Credit',
         actionsLabel: 'Actions',
-        chooseADayLabel: 'Choose a day'
+        chooseADayLabel: 'Choose a day',
+        availableAccountCredit: 'Your available credit is %(credit)s USD'
     },
 
     placeholders: {

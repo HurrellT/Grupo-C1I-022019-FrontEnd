@@ -24,7 +24,9 @@ export default {
         editButton: 'Editar',
         deleteButton: 'Borrar',
         loginButton: 'Iniciar sesion',
-        logoutButton: 'Cerrar sesion'
+        logoutButton: 'Cerrar sesion',
+        withdrawCredit: 'Retirar credito',
+        depositCredit: 'Depositar credito'
     },
 
     labels: {
@@ -42,7 +44,8 @@ export default {
         officeDaysToLabel: 'Servicio finalizando los',
         accountCreditLabel: 'Credito',
         actionsLabel: 'Acciones',
-        chooseADayLabel: 'Elija un dia'
+        chooseADayLabel: 'Elija un dia',
+        availableAccountCredit: 'Tu credito disponible es %(credit)s ARS'
     },
 
     placeholders: {
