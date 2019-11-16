@@ -10,15 +10,16 @@ import {
     Form,
     FormGroup,
     Alert,
-    CustomInput
+    CustomInput,
+    Label,
+    Col,
+    Input,
+    Container,
+    Row
 } from 'reactstrap';
-import Label from "reactstrap/es/Label";
-import Col from "reactstrap/es/Col";
-import Input from "reactstrap/es/Input";
-import Container from "reactstrap/es/Container";
-import Row from "reactstrap/es/Row";
 import counterpart from 'counterpart';
 import Translate from 'react-translate-component';
+import PaginationComponent from "react-reactstrap-pagination";
 
 function ModalAlert({ errorsToShow }) {
     const hasErrorsToShow = errorsToShow.length > 0;
@@ -86,11 +87,19 @@ class Providers extends React.Component {
             editUserModal: false,
             accountCreditModal: false,
             amount: '',
+            selectedPage: 0,
             errorMessages: []
         }
+
+        this.handleSelected = this.handleSelected.bind(this);
     }
 
     //METHODS
+
+    handleSelected(selectedPage) {
+        // console.log("selected", selectedPage);
+        this.setState({ selectedPage: selectedPage });
+    }
 
     componentDidMount() {
         this._refreshUsers();
@@ -98,19 +107,22 @@ class Providers extends React.Component {
 
     toggleNewUserModal() {
         this.setState({
-            newUserModal: !this.state.newUserModal
+            newUserModal: !this.state.newUserModal,
+            errorMessages: []
         })
     }
 
     toggleEditUserModal() {
         this.setState({
-            editUserModal: !this.state.editUserModal
+            editUserModal: !this.state.editUserModal,
+            errorMessages: []
         })
     }
 
     toggleAccountCreditModal() {
         this.setState({
-            accountCreditModal: !this.state.accountCreditModal
+            accountCreditModal: !this.state.accountCreditModal,
+            errorMessages: []
         })
     }
 
@@ -300,7 +312,7 @@ class Providers extends React.Component {
     _refreshUsers() {
         //TODO: CHANGE THIS WITH THE HEROKU URL
         // axios.get('http://viandas-ya.herokuapp.com/users')
-        axios.get('http://localhost:8080/providers')
+        axios.get('http://localhost:8080/providers?page='+this.state.selectedPage+'&size=5')
             .then(response => {
                 this.setState({
                     users: response.data
@@ -952,6 +964,17 @@ class Providers extends React.Component {
                         </Table>
                     </Col>
                 </Row>
+
+                <PaginationComponent
+                    firstPageText="<<"
+                    previousPageText="<"
+                    nextPageText=">"
+                    lastPageText=">>"
+                    totalItems={this.state.users.length}
+                    pageSize={5}
+                    onSelect={this.handleSelected}
+                />
+
             </Container>
         )
     }
