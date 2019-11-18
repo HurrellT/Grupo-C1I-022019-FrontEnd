@@ -102,11 +102,11 @@ class Menus extends React.Component {
                 providerName: '',
                 score: []
             },
-            buyResult: '',
+            message: '',
             searchMenuModal: false,
             newMenuModal: false,
             editMenuModal: false,
-            buyResultModal: false,
+            messageModal: false,
             askQuantityModal: false,
             errorMessages: []
         }
@@ -130,9 +130,9 @@ class Menus extends React.Component {
             })
     }
 
-    toggleBuyResultModal() {
+    toggleMessageModal() {
         this.setState({
-            buyResultModal: !this.state.buyResultModal
+            messageModal: !this.state.messageModal
         })
     }
 
@@ -218,15 +218,16 @@ class Menus extends React.Component {
 
 
     makePurchase() {
-        axios.post('http://localhost:8080/makePurchase', this.state.purchases)
+        //TODO: change the 4 fot the logged client id
+        axios.post('http://localhost:8080/makePurchase/' + 4, this.state.purchases)
             .then((response) => {
                 this.setState({
-                    buyResult: 'Su compra ha sido realizada con éxito'
+                    message: 'Su compra ha sido realizada con éxito'
                 })
             })
             .catch((error) => {
                 this.setState({
-                    buyResult: 'No se pudo realizar la compra'
+                    message: 'No se pudo realizar la compra'
                 })
             })
         this.setState({
@@ -236,7 +237,7 @@ class Menus extends React.Component {
                             menuName: '',
                             quantity: '1'
                             },
-            buyResultModal: !this.state.buyResultModal
+            messageModal: !this.state.messageModal
         })
     }
 
@@ -262,6 +263,18 @@ class Menus extends React.Component {
         this.toggleAskQuantityModal()
     }
 
+    seeMyPurchase(){
+        if (this.state.purchases.length > 0){
+            this.makePurchase()
+        }
+        else{
+             this.setState({
+                 message: 'Aún no hay menús en su compra',
+                 messageModal: !this.state.messageModal
+             })
+        }
+    }
+
     //RENDER
 
     updateField = (field) => (ev) => {
@@ -276,7 +289,7 @@ class Menus extends React.Component {
         return (
             <Container>
                 <Row>
-                    <Col xs={8}>
+                    <Col xs={6}>
                         <h1 className="my-3">Menús</h1>
                     </Col>
                     <Col xs={2} className="my-3">
@@ -285,8 +298,13 @@ class Menus extends React.Component {
                         </Button>
                     </Col>
                     <Col xs={2} className="my-3">
-                        <Button className="my-3" color="primary" onClick={this.makePurchase.bind(this)}>
+                        <Button className="my-3" color="primary" onClick={this.toggleNewMenuModal.bind(this)}>
                             Nuevo Menú
+                        </Button>
+                    </Col>
+                    <Col xs={2} className="my-3">
+                        <Button className="my-3" color="primary" onClick={this.seeMyPurchase.bind(this)}>
+                            Ver mi compra
                         </Button>
                     </Col>
                 </Row>
@@ -468,9 +486,9 @@ class Menus extends React.Component {
                 </Modal>
 
                 {/* BUY RESULT MODAL */}
-                <Modal isOpen={this.state.buyResultModal} toggle={this.toggleBuyResultModal.bind(this)}>
-                    <ModalHeader toggle={this.toggleBuyResultModal.bind(this)}>
-                        Resultado de la compra
+                <Modal isOpen={this.state.messageModal} toggle={this.toggleMessageModal.bind(this)}>
+                    <ModalHeader toggle={this.toggleMessageModal.bind(this)}>
+                        Información
                     </ModalHeader>
                     <ModalBody>
                          <ModalAlert errorsToShow={this.state.errorMessages} />
@@ -479,13 +497,13 @@ class Menus extends React.Component {
                          <Form>
                              {/* NAME */}
                              <FormGroup row>
-                                 <Label sm={20}>{this.state.buyResult}</Label>
+                                 <Label sm={20}>{this.state.message}</Label>
                              </FormGroup>
                          </Form>
 
                      </ModalBody>
                      <ModalFooter>
-                         <Button color="primary" onClick={this.toggleBuyResultModal.bind(this)}>
+                         <Button color="primary" onClick={this.toggleMessageModal.bind(this)}>
                              Aceptar
                          </Button>
                      </ModalFooter>
