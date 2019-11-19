@@ -112,6 +112,7 @@ class Menus extends React.Component {
             messageModal: false,
             askQuantityModal: false,
             purchaseModal: false,
+            addedToPurchase: false,
             errorMessages: []
         }
     }
@@ -142,6 +143,7 @@ class Menus extends React.Component {
 
     toggleAskQuantityModal() {
         this.setState({
+            errorMessages: [],
             askQuantityModal: !this.state.askQuantityModal
         })
     }
@@ -256,22 +258,45 @@ class Menus extends React.Component {
 
     askForQuantity(menuName, providerId){
         let {purchaseRequest} = this.state;
-        purchaseRequest.providerId = providerId;
-        purchaseRequest.menuName = menuName;
-        purchaseRequest.quantity = '1';
-        this.setState({ purchaseRequest });
-        this.toggleAskQuantityModal()
+        let{addedToPurchase} = this.state;
+
+        this.state.purchases.map(p => {if(p.menuName === menuName){addedToPurchase = true}});
+        if(addedToPurchase){
+            this.setState({
+                message: 'Este menú ya está en la compra',
+                messageModal: !this.state.messageModal,
+            })
+        }
+        else{
+            purchaseRequest.providerId = providerId;
+            purchaseRequest.menuName = menuName;
+            purchaseRequest.quantity = '1';
+            this.setState({ purchaseRequest });
+            this.toggleAskQuantityModal()
+        }
     }
 
     acceptAskQuantityModal(){
         let {purchases} = this.state;
-        this.state.purchases.push({ providerId: this.state.purchaseRequest.providerId,
-                                    menuName: this.state.purchaseRequest.menuName,
-                                    quantity: this.state.purchaseRequest.quantity });
-        this.setState({
-            purchases
-        })
-        this.toggleAskQuantityModal()
+        let {errorMessages} = this.state;
+
+        if (this.state.purchaseRequest.quantity < 1){
+           errorMessages = [];
+           errorMessages.push("La cantidad debe ser mayor a 0");
+           this.setState({
+               errorMessages
+           });
+        }
+        else{
+            this.state.purchases.push({ providerId: this.state.purchaseRequest.providerId,
+                                        menuName: this.state.purchaseRequest.menuName,
+                                        quantity: this.state.purchaseRequest.quantity });
+            this.setState({
+                purchases,
+                errorMessages: [],
+                askQuantityModal: !this.state.askQuantityModal
+            })
+        }
     }
 
     seeMyPurchase(){
@@ -544,9 +569,9 @@ class Menus extends React.Component {
                     <ModalBody>
                          <ModalAlert errorsToShow={this.state.errorMessages} />
 
-                         {/* ADD MENU MODAL FORM */}
+                         {/* MESSAGE FORM */}
                          <Form>
-                             {/* NAME */}
+                             {/* MESSAGE */}
                              <FormGroup row>
                                  <Label sm={20}>{this.state.message}</Label>
                              </FormGroup>
@@ -570,7 +595,7 @@ class Menus extends React.Component {
                     <ModalBody>
                          <ModalAlert errorsToShow={this.state.errorMessages} />
 
-                         {/* ADD MENU MODAL FORM */}
+                         {/* ASK QUANTITY MODAL FORM */}
                          <Form>
                              {/* QUANTITY */}
                              <FormGroup row>
@@ -589,6 +614,9 @@ class Menus extends React.Component {
                      <ModalFooter>
                          <Button color="primary" onClick={this.acceptAskQuantityModal.bind(this)}>
                              Aceptar
+                         </Button>
+                         <Button color="secondary" onClick={this.toggleAskQuantityModal.bind(this)}>
+                             Cancelar
                          </Button>
                      </ModalFooter>
                 </Modal>

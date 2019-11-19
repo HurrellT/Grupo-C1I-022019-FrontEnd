@@ -151,7 +151,7 @@ class ProviderMenus extends Menus {
 
                 <Modal isOpen={this.state.messageModal} toggle={this.toggleMessageModal.bind(this)}>
                     <ModalHeader toggle={this.toggleMessageModal.bind(this)}>
-                        Resultado de la compra
+                        Información
                     </ModalHeader>
                     <ModalBody>
                          <ModalAlert errorsToShow={this.state.errorMessages} />
@@ -200,6 +200,9 @@ class ProviderMenus extends Menus {
                      <ModalFooter>
                          <Button color="primary" onClick={this.acceptAskQuantityModal.bind(this)}>
                              Aceptar
+                         </Button>
+                         <Button color="secondary" onClick={this.toggleAskQuantityModal.bind(this)}>
+                             Cancelar
                          </Button>
                      </ModalFooter>
                 </Modal>
