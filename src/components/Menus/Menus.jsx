@@ -30,7 +30,10 @@ class Menus extends React.Component {
         this.providerName = '';
         this.state = {
             menus: [],
+            menuNames: [],
             purchases: [],
+            purchaseMenus: [],
+            totalAmount: 0,
             purchaseRequest: {
                 providerId: '',
                 menuName: '',
@@ -108,6 +111,7 @@ class Menus extends React.Component {
             editMenuModal: false,
             messageModal: false,
             askQuantityModal: false,
+            purchaseModal: false,
             errorMessages: []
         }
     }
@@ -139,6 +143,12 @@ class Menus extends React.Component {
     toggleAskQuantityModal() {
         this.setState({
             askQuantityModal: !this.state.askQuantityModal
+        })
+    }
+
+    togglePurchaseModal() {
+        this.setState({
+            purchaseModal: !this.state.purchaseModal
         })
     }
 
@@ -237,7 +247,8 @@ class Menus extends React.Component {
                             menuName: '',
                             quantity: '1'
                             },
-            messageModal: !this.state.messageModal
+            messageModal: !this.state.messageModal,
+            purchaseModal: !this.state.purchaseModal
         })
     }
 
@@ -265,7 +276,27 @@ class Menus extends React.Component {
 
     seeMyPurchase(){
         if (this.state.purchases.length > 0){
-            this.makePurchase()
+
+            let {purchaseMenus} = this.state;
+            let {newMenuData} = this.state;
+            let {totalAmount} = this.state;
+            purchaseMenus = [];
+            totalAmount = 0;
+            this.state.purchases.map(p => {
+                                            newMenuData = this.state.menus.find(menu => menu.name === p.menuName);
+                                            purchaseMenus.push({
+                                                                name: p.menuName,
+                                                                providerName: newMenuData.providerName,
+                                                                quantity: p.quantity,
+                                                                price: newMenuData.price * p.quantity,
+                                                                });
+                                            totalAmount = totalAmount + (newMenuData.price * p.quantity);
+                                          });
+            this.setState({
+                purchaseMenus,
+                totalAmount,
+                purchaseModal: !this.state.purchaseModal
+            })
         }
         else{
              this.setState({
@@ -273,6 +304,26 @@ class Menus extends React.Component {
                  messageModal: !this.state.messageModal
              })
         }
+    }
+
+    removeFromPurchase(menuName){
+
+        let {purchaseMenus} = this.state;
+        let {purchases} = this.state;
+        let {totalAmount} = this.state;
+        totalAmount = 0;
+        purchases = purchases.filter(p => p.menuName !== menuName);
+        purchaseMenus = purchaseMenus.filter(p => p.name !== menuName);
+        purchaseMenus.map(p => totalAmount = totalAmount + p.price);
+        if (purchases.length === 0){
+            this.togglePurchaseModal();
+        }
+        this.setState({
+            totalAmount,
+            purchaseMenus,
+            purchases
+        })
+
     }
 
     //RENDER
@@ -284,7 +335,7 @@ class Menus extends React.Component {
     }
 
     render() {
-        const {menus, errorMsg} = this.state
+        const {menus, purchaseMenus, errorMsg} = this.state
 
         return (
             <Container>
@@ -485,7 +536,7 @@ class Menus extends React.Component {
                     </ModalFooter>
                 </Modal>
 
-                {/* BUY RESULT MODAL */}
+                {/* MESSAGE MODAL */}
                 <Modal isOpen={this.state.messageModal} toggle={this.toggleMessageModal.bind(this)}>
                     <ModalHeader toggle={this.toggleMessageModal.bind(this)}>
                         Información
@@ -540,7 +591,67 @@ class Menus extends React.Component {
                              Aceptar
                          </Button>
                      </ModalFooter>
+                </Modal>
 
+                {/* PURCHASE MODAL */}
+                <Modal isOpen={this.state.purchaseModal} toggle={this.togglePurchaseModal.bind(this)}
+                       style={{width: 3000}}>
+                    <ModalHeader toggle={this.togglePurchaseModal.bind(this)}>
+                        Mi compra
+                    </ModalHeader>
+                    <ModalBody>
+                         <ModalAlert errorsToShow={this.state.errorMessages} />
+
+                         <Row>
+                             <Col>
+                                 <Table hover responsive>
+                                     <thead>
+                                     <tr>
+                                         <th hidden>#</th>
+                                         <th>Nombre</th>
+                                         <th>Proveedor</th>
+                                         <th>Cantidad</th>
+                                         <th>Precio</th>
+                                         <th>Acciones</th>
+                                     </tr>
+                                     </thead>
+
+                                     {/* PURCHASE INFO FETCHED FROM SERVER */}
+                                     <tbody>
+                                     { purchaseMenus.map(menu =>
+                                         <tr key={menu.name}>
+                                             <td>{menu.name}</td>
+                                             <td>{menu.providerName}</td>
+                                             <td>{menu.quantity}</td>
+                                             <td>{menu.price}</td>
+                                             <td>
+                                                 <Button color='danger' size='sm'
+                                                         onClick={this.removeFromPurchase.bind(this, menu.name)}>
+                                                     Quitar de la compra
+                                                 </Button>
+                                             </td>
+                                         </tr>
+                                     )}
+                                     </tbody>
+                                 </Table>
+                             </Col>
+                         </Row>
+                         <Form>
+                            {/* NAME */}
+                            <FormGroup row>
+                                <Label for="total" sm={2}><b>Total:</b></Label>
+                                <Col sm={5}>
+                                    <Label sm={10}><b>{this.state.totalAmount}</b></Label>
+                                </Col>
+                            </FormGroup>
+                         </Form>
+
+                     </ModalBody>
+                     <ModalFooter>
+                         <Button color="primary" onClick={this.makePurchase.bind(this)}>
+                             Realizar la compra
+                         </Button>
+                     </ModalFooter>
                 </Modal>
 
                 {/* MENU CRUD TABLE */}
