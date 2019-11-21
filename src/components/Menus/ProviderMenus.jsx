@@ -53,12 +53,25 @@ class ProviderMenus extends Menus {
 
     render() {
         const {menus, purchaseMenus, errorMsg} = this.state
+        let filteredMenus = menus.filter(
+            (menu) => {
+                return menu.name.toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1;
+            }
+        );
 
         return (
             <Container>
                 <Row>
                     <Col xs={8}>
                         <h1 className="my-3">Menús de {this.providerName}</h1>
+                    </Col>
+                    <Col xs={8} className="my-3">
+                        <Label for="search" sm={3} style={{width: 300, padding: 19}} ><b>Filtrar por nombre:</b></Label>
+                        <input type = "text"
+                               style={{width: 300}}
+                               placeholder = "Escriba un nombre de menú"
+                               value = {this.state.search}
+                               onChange = {this.updateSearch.bind(this)}/>
                     </Col>
                     <Col xs={2} className="my-3">
                         <Button className="my-3" color="primary" onClick={this.toggleNewMenuModal.bind(this)}>
@@ -283,7 +296,7 @@ class ProviderMenus extends Menus {
 
                             {/* MENU INFO FETCHED FROM SERVER */}
                             <tbody>
-                            {menus.map(menu =>
+                            {filteredMenus.map(menu =>
                                 <tr key={menu.id}>
                                     <th hidden scope="row">{menu.id}</th>
                                     <td>{menu.name}</td>
