@@ -43,6 +43,7 @@ class Providers extends React.Component {
         super(props)
 
         this.state = {
+            search: '',
             users: [],
             newUserData: {
                 name: '',
@@ -259,6 +260,10 @@ class Providers extends React.Component {
         this.props.history.push('/providerMenus/' + id)
     }
 
+    updateSearch(event) {
+        this.setState({search: event.target.value.substr(0,20)});
+    }
+
     //RENDER
 
     render() {
@@ -268,6 +273,12 @@ class Providers extends React.Component {
 
         const username = this.state.editUserData.name;
 
+        let filteredUsers = users.filter(
+            (user) => {
+                return user.name.toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1;
+            }
+        );
+
         return (
             <Container>
                 <Row>
@@ -275,6 +286,14 @@ class Providers extends React.Component {
                         <h1 className="my-3">
                             <Translate content='providerTitle'/>
                         </h1>
+                    </Col>
+                    <Col xs={8} className="my-3">
+                        <Label for="search" sm={3} style={{width: 300, padding: 19}} ><b>Filtrar por nombre:</b></Label>
+                        <input type = "text"
+                               style={{width: 300}}
+                               placeholder = "Escriba un nombre de proveedor"
+                               value = {this.state.search}
+                               onChange = {this.updateSearch.bind(this)}/>
                     </Col>
                     <Col xs={2} className="my-3">
                         <Button className="my-3" color="primary" onClick={this.toggleNewUserModal.bind(this)}>
@@ -807,7 +826,7 @@ class Providers extends React.Component {
 
                             {/* USER INFO FETCHED FROM SERVER */}
                             <tbody>
-                            {users.map(user =>
+                            {filteredUsers.map(user =>
                                 <tr key={user.id}>
                                     <th hidden scope="row">{user.id}</th>
                                     <td>{user.name}</td>
