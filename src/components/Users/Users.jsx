@@ -6,6 +6,7 @@ import Col from "reactstrap/es/Col";
 import Input from "reactstrap/es/Input";
 import Container from "reactstrap/es/Container";
 import Row from "reactstrap/es/Row";
+import PaginationComponent from "react-reactstrap-pagination";
 
 function ModalAlert({ errorsToShow }) {
     const hasErrorsToShow = errorsToShow.length > 0
@@ -48,11 +49,19 @@ class Users extends React.Component {
             },
             newUserModal: false,
             editUserModal: false,
+            selectedPage: 1,
+            usersSize:'',
             errorMessages: []
         }
     }
 
     //METHODS
+
+    handleSelected(selectedPage) {
+        // console.log("selected", selectedPage);
+        this.setState({ selectedPage: selectedPage });
+        this._refreshUsers()
+    }
 
     componentDidMount() {
         this._refreshUsers();
@@ -141,10 +150,11 @@ class Users extends React.Component {
     _refreshUsers() {
         //TODO: CHANGE THIS WITH THE HEROKU URL
         // axios.get('http://viandas-ya.herokuapp.com/users')
-        axios.get('http://localhost:8080/users')
+        axios.get('http://localhost:8080/users?page='+ (this.state.selectedPage - 1) +'&size=5')
             .then(response => {
                 this.setState({
-                    users: response.data
+                    users: response.data,
+                    usersSize: this.usersSize()
                 })
             })
             .catch(error => {
@@ -165,6 +175,15 @@ class Users extends React.Component {
         let {newUserData} = this.state;
         newUserData[field] = ev.target.value;
         this.setState({newUserData})
+    }
+
+    usersSize() {
+        return axios.get('http://localhost:8080/totalUsers')
+            .then(response => {
+                this.setState({
+                    usersSize:response.data
+                })
+            })
     }
 
     render() {
@@ -466,6 +485,16 @@ class Users extends React.Component {
                         </Table>
                     </Col>
                 </Row>
+                <PaginationComponent
+                    firstPageText="<<"
+                    previousPageText="<"
+                    nextPageText=">"
+                    lastPageText=">>"
+                    totalItems={this.state.usersSize}
+                    pageSize={5}
+                    activePage={this.state.selectedPage}
+                    onSelect={this.handleSelected.bind(this)}
+                />
             </Container>
         )
     }

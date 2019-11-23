@@ -24,7 +24,9 @@ export default {
         editButton: 'Editar',
         deleteButton: 'Borrar',
         loginButton: 'Iniciar sesion',
-        logoutButton: 'Cerrar sesion'
+        logoutButton: 'Cerrar sesion',
+        withdrawCredit: 'Retirar credito',
+        depositCredit: 'Depositar credito'
     },
 
     labels: {
@@ -36,13 +38,14 @@ export default {
         longitudeLabel: 'Longitud',
         descriptionLabel: 'Descripcion',
         websiteLabel: 'Pagina web',
-        hoursFromLabel: 'Hora de inicio de servicio',
-        hoursToLabel: 'Hora de finalizacion de servicio',
-        officeDaysFromLabel: 'Servicio empezando los',
-        officeDaysToLabel: 'Servicio finalizando los',
+        hoursFromLabel: 'Hora inicio',
+        hoursToLabel: 'Hora finalizacion',
+        officeDaysFromLabel: 'Comenzando los',
+        officeDaysToLabel: 'Finalizando los',
         accountCreditLabel: 'Credito',
         actionsLabel: 'Acciones',
-        chooseADayLabel: 'Elija un dia'
+        chooseADayLabel: 'Elija un dia',
+        availableAccountCredit: 'Tu credito disponible es %(credit)s ARS'
     },
 
     placeholders: {
