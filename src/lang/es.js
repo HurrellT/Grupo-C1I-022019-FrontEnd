@@ -45,7 +45,8 @@ export default {
         accountCreditLabel: 'Credito',
         actionsLabel: 'Acciones',
         chooseADayLabel: 'Elija un dia',
-        availableAccountCredit: 'Tu credito disponible es %(credit)s ARS'
+        availableAccountCredit: 'Tu credito disponible es %(credit)s ARS',
+        newUserRegistration: 'Registrese!'
     },
 
     placeholders: {

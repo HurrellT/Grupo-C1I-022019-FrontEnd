@@ -29,7 +29,7 @@ const NavBar = () => {
             <Navbar color="light" light expand="md">
                 <NavbarToggler onClick={toggle} />
 
-                <NavbarBrand href="/">
+                <NavbarBrand href="/home">
                     Viandas Ya
                 </NavbarBrand>
                 <Collapse isOpen={isOpen} navbar>
