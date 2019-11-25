@@ -231,7 +231,7 @@ class Menus extends React.Component {
         let{addedToPurchase} = this.state;
 
         this.state.purchases.map(p => {if(p.menuName === menuName){addedToPurchase = true}});
-        if(addedToPurchase){
+        if(addedToPurchase && !this.state.purchaseModal){
             this.setState({
                 message: counterpart.translate('messages.menuInPurchaseMessage'),
                 messageModal: !this.state.messageModal,
@@ -247,9 +247,8 @@ class Menus extends React.Component {
     }
 
     acceptAskQuantityModal(){
-        let {purchases} = this.state;
-        let {errorMessages} = this.state;
 
+        let {errorMessages} = this.state;
         if (this.state.purchaseRequest.quantity < 1){
            errorMessages = [];
            errorMessages.push("La cantidad debe ser mayor a 0");
@@ -258,15 +257,27 @@ class Menus extends React.Component {
            });
         }
         else{
-            this.state.purchases.push({ providerId: this.state.purchaseRequest.providerId,
-                                        menuName: this.state.purchaseRequest.menuName,
-                                        quantity: this.state.purchaseRequest.quantity });
-            this.setState({
-                purchases,
-                errorMessages: [],
-                askQuantityModal: !this.state.askQuantityModal
-            })
+            if(!this.state.purchaseModal){
+                this.addMenuToPurchase();
+            }
+            else{
+                this.changeQuantityOfMenu();
+            }
         }
+    }
+
+    addMenuToPurchase(){
+
+        let {purchases} = this.state;
+        this.state.purchases.push({ providerId: this.state.purchaseRequest.providerId,
+                                    menuName: this.state.purchaseRequest.menuName,
+                                    quantity: this.state.purchaseRequest.quantity });
+        this.setState({
+            purchases,
+            errorMessages: [],
+            askQuantityModal: !this.state.askQuantityModal
+        })
+
     }
 
     seeMyPurchase(){
@@ -317,6 +328,33 @@ class Menus extends React.Component {
             totalAmount,
             purchaseMenus,
             purchases
+        })
+
+    }
+
+    changeQuantityOfMenu(){
+
+        let {purchaseMenus} = this.state;
+        let {purchases} = this.state;
+        let {newMenuData} = this.state;
+        let {totalAmount} = this.state;
+        let {purchaseRequest} = this.state;
+        totalAmount = 0;
+        purchases.map(p => {if(p.menuName === purchaseRequest.menuName) {
+                               p.quantity = this.state.purchaseRequest.quantity
+                           }});
+        purchaseMenus.map(p => {  newMenuData = this.state.menus.find(menu => menu.name === purchaseRequest.menuName);
+                                  if (p.name === purchaseRequest.menuName){
+                                     p.quantity = purchaseRequest.quantity;
+                                     p.price = newMenuData.price * purchaseRequest.quantity;
+                                }
+                               });
+        purchaseMenus.map(p => totalAmount = totalAmount + p.price);
+        this.setState({
+            totalAmount,
+            purchaseMenus,
+            purchases,
+            askQuantityModal: !this.state.askQuantityModal
         })
 
     }
@@ -561,6 +599,10 @@ class Menus extends React.Component {
                                              <td>{menu.quantity}</td>
                                              <td>{menu.price}</td>
                                              <td>
+                                                <Button color='warning' size='sm'
+                                                        onClick={this.askForQuantity.bind(this, menu.name, menu.providerId)}>
+                                                    Cambiar cantidad
+                                                </Button>
                                                  <Button color='danger' size='sm'
                                                          onClick={this.removeFromPurchase.bind(this, menu.name)}>
                                                      Quitar de la compra
