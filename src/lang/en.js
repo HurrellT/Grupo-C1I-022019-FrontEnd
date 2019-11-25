@@ -27,6 +27,9 @@ export default {
         deleteButton: 'Delete',
         loginButton: 'Log in',
         logoutButton: 'Log out',
+        withdrawCredit: 'Withdraw credit',
+        depositCredit: 'Deposit credit',
+        logoutButton: 'Log out',
         seePurchaseButton: 'See my purchase',
         addMenuButton: 'Add to my purchase'
     },
@@ -46,6 +49,8 @@ export default {
         officeDaysToLabel: 'Service finishing on',
         accountCreditLabel: 'Credit',
         actionsLabel: 'Actions',
+        chooseADayLabel: 'Choose a day',
+        availableAccountCredit: 'Your available credit is %(credit)s USD',
         chooseADayLabel: 'Choose a day',
         nameFilterLabel: 'Filter by name:',
         providerLabel: 'Provider',
