@@ -56,7 +56,9 @@ const NavBar = () => {
                             </NavLink>
                         </NavItem>
                         <NavItem>
-                             <NavLink href="/menus">Buscar Menú</NavLink>
+                             <NavLink href="/menus">
+                                <Translate content='searchMenu'/>
+                             </NavLink>
                           </NavItem>
                         <UncontrolledDropdown nav inNavbar>
                             <DropdownToggle nav caret>

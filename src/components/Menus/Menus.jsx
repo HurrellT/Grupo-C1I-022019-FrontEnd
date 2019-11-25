@@ -7,6 +7,7 @@ import Input from "reactstrap/es/Input";
 import Container from "reactstrap/es/Container";
 import Row from "reactstrap/es/Row";
 import counterpart from 'counterpart';
+import Translate from 'react-translate-component';
 import NumericInput from 'react-numeric-input';
 
 function ModalAlert({ errorsToShow }) {
@@ -205,12 +206,12 @@ class Menus extends React.Component {
         axios.post('http://localhost:8080/makePurchase/' + 4, this.state.purchases)
             .then((response) => {
                 this.setState({
-                    message: 'Su compra ha sido realizada con éxito'
+                    message: counterpart.translate('messages.successfulPurchaseMessage')
                 })
             })
             .catch((error) => {
                 this.setState({
-                    message: 'No se pudo realizar la compra'
+                    message: counterpart.translate('messages.failedPurchaseMessage')
                 })
             })
         this.setState({
@@ -232,7 +233,7 @@ class Menus extends React.Component {
         this.state.purchases.map(p => {if(p.menuName === menuName){addedToPurchase = true}});
         if(addedToPurchase){
             this.setState({
-                message: 'Este menú ya está en la compra',
+                message: counterpart.translate('messages.menuInPurchaseMessage'),
                 messageModal: !this.state.messageModal,
             })
         }
@@ -334,6 +335,7 @@ class Menus extends React.Component {
 
     render() {
         const {menus, purchaseMenus, errorMsg} = this.state;
+        const placeholderTranslations = counterpart;
         let filteredMenus = menus.filter(
             (menu) => {
                 return menu.name.toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1;
@@ -344,24 +346,25 @@ class Menus extends React.Component {
             <Container>
                 <Row>
                     <Col xs={10}>
-                        <h1 className="my-3">Menús</h1>
+                        <h1 className="my-3"><Translate content='titles.menusTitle'/></h1>
                     </Col>
                     <Col xs={8} className="my-3">
-                        <Label for="search" sm={3} style={{width: 300, padding: 19}} ><b>Filtrar por nombre:</b></Label>
+                        <Label for="search" sm={3} style={{width: 300, padding: 19}} >
+                        <b><Translate content='labels.nameFilterLabel'/></b></Label>
                         <input type = "text"
                                style={{width: 300}}
-                               placeholder = "Escriba un nombre de menú"
+                               placeholder = {placeholderTranslations.translate('placeholders.filterMenuNamePlaceholder')}
                                value = {this.state.search}
                                onChange = {this.updateSearch.bind(this)}/>
                     </Col>
                     <Col xs={2} className="my-3">
                         <Button className="my-3" color="primary" onClick={this.toggleNewMenuModal.bind(this)}>
-                            Nuevo Menú
+                            <Translate content='buttons.newMenuButton'/>
                         </Button>
                     </Col>
                     <Col xs={2} className="my-3">
                         <Button className="my-3" color="primary" onClick={this.seeMyPurchase.bind(this)}>
-                            Ver mi compra
+                            <Translate content='buttons.seePurchaseButton'/>
                         </Button>
                     </Col>
                 </Row>
@@ -541,11 +544,11 @@ class Menus extends React.Component {
                                      <thead>
                                      <tr>
                                          <th hidden>#</th>
-                                         <th>Nombre</th>
-                                         <th>Proveedor</th>
-                                         <th>Cantidad</th>
-                                         <th>Precio</th>
-                                         <th>Acciones</th>
+                                         <th><Translate content='labels.nameLabel'/></th>
+                                         <th><Translate content='labels.providerLabel'/></th>
+                                         <th><Translate content='labels.quantityLabel'/></th>
+                                         <th><Translate content='labels.priceLabel'/></th>
+                                         <th><Translate content='labels.actionsLabel'/></th>
                                      </tr>
                                      </thead>
 
@@ -594,12 +597,12 @@ class Menus extends React.Component {
                             <thead>
                             <tr>
                                 <th hidden>#</th>
-                                <th>Nombre</th>
-                                <th>Descripción</th>
-                                <th>Categoría</th>
-                                <th>Precio</th>
-                                <th>Proveedor</th>
-                                <th>Acciones</th>
+                                <th><Translate content='labels.nameLabel'/></th>
+                                <th><Translate content='labels.descriptionLabel'/></th>
+                                <th><Translate content='labels.categoryLabel'/></th>
+                                <th><Translate content='labels.priceLabel'/></th>
+                                <th><Translate content='labels.providerLabel'/></th>
+                                <th><Translate content='labels.actionsLabel'/></th>
                             </tr>
                             </thead>
 
@@ -616,7 +619,7 @@ class Menus extends React.Component {
                                     <td>
                                         <Button color='warning' size='sm'
                                                 onClick={this.askForQuantity.bind(this, menu.name, menu.providerId)}>
-                                            Agregar a mi compra
+                                            <Translate content='buttons.addMenuButton'/>
                                         </Button>
                                     </td>
                                 </tr>

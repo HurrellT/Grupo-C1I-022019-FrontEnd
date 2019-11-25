@@ -8,6 +8,8 @@ import Container from "reactstrap/es/Container";
 import Row from "reactstrap/es/Row";
 import NumericInput from 'react-numeric-input';
 import Menus from "./Menus";
+import counterpart from 'counterpart';
+import Translate from 'react-translate-component';
 
 function ModalAlert({ errorsToShow }) {
     const hasErrorsToShow = errorsToShow.length > 0
@@ -53,6 +55,8 @@ class ProviderMenus extends Menus {
 
     render() {
         const {menus, purchaseMenus, errorMsg} = this.state
+        const placeholderTranslations = counterpart;
+        const providername = this.providerName;
         let filteredMenus = menus.filter(
             (menu) => {
                 return menu.name.toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1;
@@ -63,24 +67,27 @@ class ProviderMenus extends Menus {
             <Container>
                 <Row>
                     <Col xs={8}>
-                        <h1 className="my-3">Menús de {this.providerName}</h1>
+                        <h1 className="my-3">
+                            <Translate content='titles.providerMenusTitle' with={{providername}}/>
+                        </h1>
                     </Col>
                     <Col xs={8} className="my-3">
-                        <Label for="search" sm={3} style={{width: 300, padding: 19}} ><b>Filtrar por nombre:</b></Label>
+                        <Label for="search" sm={3} style={{width: 300, padding: 19}} >
+                        <b><Translate content='labels.nameFilterLabel'/></b></Label>
                         <input type = "text"
                                style={{width: 300}}
-                               placeholder = "Escriba un nombre de menú"
+                               placeholder = {placeholderTranslations.translate('placeholders.filterMenuNamePlaceholder')}
                                value = {this.state.search}
                                onChange = {this.updateSearch.bind(this)}/>
                     </Col>
                     <Col xs={2} className="my-3">
                         <Button className="my-3" color="primary" onClick={this.toggleNewMenuModal.bind(this)}>
-                            Nuevo Menú
+                            <Translate content='buttons.newMenuButton'/>
                         </Button>
                     </Col>
                     <Col xs={2} className="my-3">
                         <Button className="my-3" color="primary" onClick={this.seeMyPurchase.bind(this)}>
-                            Ver mi compra
+                            <Translate content='buttons.seePurchaseButton'/>
                         </Button>
                     </Col>
                 </Row>
@@ -286,11 +293,11 @@ class ProviderMenus extends Menus {
                             <thead>
                             <tr>
                                 <th hidden>#</th>
-                                <th>Nombre</th>
-                                <th>Descripción</th>
-                                <th>Categoría</th>
-                                <th>Precio</th>
-                                <th>Acciones</th>
+                                <th><Translate content='labels.nameLabel'/></th>
+                                <th><Translate content='labels.descriptionLabel'/></th>
+                                <th><Translate content='labels.categoryLabel'/></th>
+                                <th><Translate content='labels.priceLabel'/></th>
+                                <th><Translate content='labels.actionsLabel'/></th>
                             </tr>
                             </thead>
 
@@ -306,7 +313,7 @@ class ProviderMenus extends Menus {
                                     <td>
                                         <Button color='warning' size='sm'
                                                 onClick={this.askForQuantity.bind(this, menu.name, menu.providerId)}>
-                                            Agregar a mi compra
+                                            <Translate content='buttons.addMenuButton'/>
                                         </Button>
                                     </td>
                                 </tr>
