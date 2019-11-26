@@ -26,7 +26,8 @@ export default {
         loginButton: 'Iniciar sesion',
         logoutButton: 'Cerrar sesion',
         withdrawCredit: 'Retirar credito',
-        depositCredit: 'Depositar credito'
+        depositCredit: 'Depositar credito',
+        beAProvider: 'Convertite en Proveedor!'
     },
 
     labels: {

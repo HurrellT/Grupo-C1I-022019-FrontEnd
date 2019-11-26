@@ -63,7 +63,9 @@ function App() {
                     <PrivateRoute path="/users" component={Users} />
                     {/* TODO: USERS ES TEMPORAL */}
                     <PrivateRoute path="/clientAccount" component={ClientAccount} />
-                    <PrivateRoute path="/providers" component={Providers} />
+                    {/*<PrivateRoute path="/providers" component={Providers} />*/}
+                    <PrivateRoute path="/providers" component={() => <Providers loggedUser={user} />} />
+                    <PrivateRoute path="/beAProvider" component={() => <BecomeAProvider loggedUser={user} />} />
                     <PrivateRoute path="/menus" component={Menus} />
                     <PrivateRoute path="/providerMenus/:provId" exact strict component={ProviderMenus} />
                 </Switch>

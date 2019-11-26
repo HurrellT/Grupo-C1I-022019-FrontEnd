@@ -26,7 +26,8 @@ export default {
         loginButton: 'Log in',
         logoutButton: 'Log out',
         withdrawCredit: 'Withdraw credit',
-        depositCredit: 'Deposit credit'
+        depositCredit: 'Deposit credit',
+        beAProvider: 'Be a Provider!'
     },
 
     labels: {

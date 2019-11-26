@@ -1,3 +1,4 @@
+import { useHistory } from "react-router-dom";
 import React from 'react'
 import axios from 'axios'
 import {
@@ -21,7 +22,7 @@ import counterpart from 'counterpart';
 import Translate from 'react-translate-component';
 import PaginationComponent from "react-reactstrap-pagination";
 
-function ModalAlert({ errorsToShow }) {
+function ModalAlert({errorsToShow}) {
     const hasErrorsToShow = errorsToShow.length > 0;
 
     if (hasErrorsToShow) {
@@ -31,7 +32,90 @@ function ModalAlert({ errorsToShow }) {
             </Alert>
         )
     }
-    return <div />
+    return <div/>
+}
+
+function AddProviderButton(props) {
+    const enabled = props.enabled
+    const onClickFunction = props.onClick
+
+    if (enabled) {
+        return (
+            <Col xs={2} className="my-3">
+                <Button className="my-3" color="primary" onClick={onClickFunction}>
+                    <Translate content='buttons.newProviderButton'/>
+                </Button>
+            </Col>)
+    } else {
+        return <div></div>
+    }
+}
+
+function EditAccountCreditButton(props) {
+    const enabled = props.enabled
+    const onClickFunction = props.onClick
+
+    if (enabled) {
+        return (
+            <Button color='primary' size='sm' className='mr-2'
+                    onClick={onClickFunction}>
+                <Translate content='buttons.accountCreditButton'/>
+            </Button>)
+    } else {
+        return <div></div>
+    }
+}
+
+function DeleteAccountButton(props) {
+    const enabled = props.enabled
+    const onClickFunction = props.onClick
+
+    if (enabled) {
+        return (
+            <Button color='danger' size='sm'
+                    onClick={onClickFunction}>
+                <Translate content='buttons.deleteButton'/>
+            </Button>
+        )
+    }
+    else {
+        return <div></div>
+    }
+}
+
+function EditAccountButton(props) {
+    const enabled = props.enabled
+    const onClickFunction = props.onClick
+
+    if (enabled) {
+        return (
+            <Button color='success' size='sm' className='mr-2'
+                    onClick={onClickFunction}>
+                <Translate content='buttons.editButton'/>
+            </Button>
+        )
+    }
+    else {
+        return <div></div>
+    }
+}
+
+function MenusButton(props) {
+
+    const userId = props.userId
+
+    let history = useHistory();
+
+    function handleClick() {
+        history.push('/providerMenus/' + userId);
+    }
+
+    return (
+        <Button color='warning' size='sm'
+                onClick={handleClick}>
+            Ver menús
+        </Button>
+    )
 }
 
 const username = (props) => {
@@ -42,11 +126,14 @@ class Providers extends React.Component {
 
     constructor(props) {
         super(props)
+        console.log(props)
 
         this.state = {
+            loggedUser: props.loggedUser,
             search: '',
             users: [],
             newUserData: {
+                type: '',
                 name: '',
                 state: '',
                 address: '',
@@ -99,7 +186,7 @@ class Providers extends React.Component {
 
     handleSelected(selectedPage) {
         // console.log("selected", selectedPage);
-        this.setState({ selectedPage: selectedPage });
+        this.setState({selectedPage: selectedPage});
     }
 
     componentDidMount() {
@@ -137,6 +224,7 @@ class Providers extends React.Component {
                         users,
                         newUserModal: false,
                         newUserData: {
+                            type: '',
                             name: '',
                             state: '',
                             address: '',
@@ -170,10 +258,12 @@ class Providers extends React.Component {
              officeHoursFrom, officeHoursTo, officeDaysFrom,
              officeDaysTo, accountCredit, delivery) {
         this.setState({
-            editUserData: {id, name, state, address, email, phone,
-                            logo, latitude, longitude, description, website,
-                            officeHoursFrom, officeHoursTo, officeDaysFrom,
-                            officeDaysTo, accountCredit, delivery},
+            editUserData: {
+                id, name, state, address, email, phone,
+                logo, latitude, longitude, description, website,
+                officeHoursFrom, officeHoursTo, officeDaysFrom,
+                officeDaysTo, accountCredit, delivery
+            },
             editUserModal: !this.state.editUserModal
         })
     }
@@ -183,16 +273,19 @@ class Providers extends React.Component {
                       officeHoursFrom, officeHoursTo, officeDaysFrom,
                       officeDaysTo, accountCredit, delivery) {
         this.setState({
-            editUserData: {id, name, state, address, email, phone,
+            editUserData: {
+                id, name, state, address, email, phone,
                 logo, latitude, longitude, description, website,
                 officeHoursFrom, officeHoursTo, officeDaysFrom,
-                officeDaysTo, accountCredit, delivery},
+                officeDaysTo, accountCredit, delivery
+            },
             accountCreditModal: !this.state.accountCreditModal
         })
     }
 
     updateProvider() {
-        let {name, state, address, email, phone, accountCredit, logo, latitude, longitude,
+        let {
+            name, state, address, email, phone, accountCredit, logo, latitude, longitude,
             description, website, officeHoursFrom, officeHoursTo, officeDaysFrom, officeDaysTo, menus, delivery
         } = this.state.editUserData;
 
@@ -313,7 +406,7 @@ class Providers extends React.Component {
     _refreshUsers() {
         //TODO: CHANGE THIS WITH THE HEROKU URL
         // axios.get('http://viandas-ya.herokuapp.com/users')
-        axios.get('http://localhost:8080/providers?page='+this.state.selectedPage+'&size=5')
+        axios.get('http://localhost:8080/providers?page=' + this.state.selectedPage + '&size=5')
             .then(response => {
                 this.setState({
                     users: response.data
@@ -343,12 +436,8 @@ class Providers extends React.Component {
         this.setState({editUserData})
     }
 
-    seeProviderMenus(id) {
-        this.props.history.push('/providerMenus/' + id)
-    }
-
     updateSearch(event) {
-        this.setState({search: event.target.value.substr(0,20)});
+        this.setState({search: event.target.value.substr(0, 20)});
     }
 
     //RENDER
@@ -368,6 +457,8 @@ class Providers extends React.Component {
             }
         );
 
+        let isProvider = this.state.loggedUser.type == 'provider';
+
         return (
             <Container>
                 <Row>
@@ -377,18 +468,16 @@ class Providers extends React.Component {
                         </h1>
                     </Col>
                     <Col xs={8} className="my-3">
-                        <Label for="search" sm={3} style={{width: 300, padding: 19}} ><b>Filtrar por nombre:</b></Label>
-                        <input type = "text"
+                        <Label for="search" sm={3} style={{width: 300, padding: 19}}><b>Filtrar por nombre:</b></Label>
+                        <input type="text"
                                style={{width: 300}}
-                               placeholder = "Escriba un nombre de proveedor"
-                               value = {this.state.search}
-                               onChange = {this.updateSearch.bind(this)}/>
+                               placeholder="Escriba un nombre de proveedor"
+                               value={this.state.search}
+                               onChange={this.updateSearch.bind(this)}/>
                     </Col>
-                    <Col xs={2} className="my-3">
-                        <Button className="my-3" color="primary" onClick={this.toggleNewUserModal.bind(this)}>
-                            <Translate content='buttons.newProviderButton'/>
-                        </Button>
-                    </Col>
+                    <AddProviderButton
+                        onClick={this.toggleNewUserModal.bind(this)}
+                        enabled={isProvider}/>
                 </Row>
 
                 {/* ADD USER MODAL */}
@@ -398,7 +487,7 @@ class Providers extends React.Component {
                         <Translate content='newProviderModalTitle'/>
                     </ModalHeader>
                     <ModalBody>
-                        <ModalAlert errorsToShow={this.state.errorMessages} />
+                        <ModalAlert errorsToShow={this.state.errorMessages}/>
 
                         {/* ADD CLIENT MODAL FORM */}
                         <Form>
@@ -433,7 +522,7 @@ class Providers extends React.Component {
                             {/* ADDRESS */}
                             <FormGroup row>
                                 <Label for="address" sm={2}>
-                                    <Translate content='labels.addressLabel' />
+                                    <Translate content='labels.addressLabel'/>
                                 </Label>
                                 <Col sm={10}>
                                     <Input name="address" id="address"
@@ -561,8 +650,8 @@ class Providers extends React.Component {
                                 </Label>
                                 <Col sm={10}>
                                     <CustomInput type="select" name="officeDaysFrom" id="officeDaysFrom"
-                                           value={this.state.newUserData.officeDaysFrom}
-                                           onChange={this.updateNewUserField('officeDaysFrom')}>
+                                                 value={this.state.newUserData.officeDaysFrom}
+                                                 onChange={this.updateNewUserField('officeDaysFrom')}>
                                         <option value="">
                                             {counterpart.translate('labels.chooseADayLabel')}
                                         </option>
@@ -582,8 +671,8 @@ class Providers extends React.Component {
                                 </Label>
                                 <Col sm={10}>
                                     <CustomInput type="select" name="officeDaysTo" id="officeDaysTo"
-                                           value={this.state.newUserData.officeDaysTo}
-                                           onChange={this.updateNewUserField('officeDaysTo')}>
+                                                 value={this.state.newUserData.officeDaysTo}
+                                                 onChange={this.updateNewUserField('officeDaysTo')}>
                                         <option value="">
                                             {counterpart.translate('labels.chooseADayLabel')}
                                         </option>
@@ -658,7 +747,7 @@ class Providers extends React.Component {
                             {/* ADDRESS */}
                             <FormGroup row>
                                 <Label for="address" sm={2}>
-                                    <Translate content='labels.addressLabel' />
+                                    <Translate content='labels.addressLabel'/>
                                 </Label>
                                 <Col sm={10}>
                                     <Input name="address" id="address"
@@ -787,8 +876,8 @@ class Providers extends React.Component {
                                 </Label>
                                 <Col sm={10}>
                                     <CustomInput type="select" name="officeDaysFrom" id="officeDaysFrom"
-                                           value={this.state.editUserData.officeDaysFrom}
-                                           onChange={this.updateEditUserField('officeDaysFrom')}>
+                                                 value={this.state.editUserData.officeDaysFrom}
+                                                 onChange={this.updateEditUserField('officeDaysFrom')}>
                                         <option value="">
                                             {counterpart.translate('labels.chooseADayLabel')}
                                         </option>
@@ -808,8 +897,8 @@ class Providers extends React.Component {
                                 </Label>
                                 <Col sm={10}>
                                     <CustomInput type="select" name="officeDaysTo" id="officeDaysTo"
-                                           value={this.state.editUserData.officeDaysTo}
-                                           onChange={this.updateEditUserField('officeDaysTo')}>
+                                                 value={this.state.editUserData.officeDaysTo}
+                                                 onChange={this.updateEditUserField('officeDaysTo')}>
                                         <option value="">
                                             {counterpart.translate('labels.chooseADayLabel')}
                                         </option>
@@ -856,7 +945,7 @@ class Providers extends React.Component {
                         <Translate content='accountCreditModalTitle' with={{username}}/>
                     </ModalHeader>
                     <ModalBody>
-                        <ModalAlert errorsToShow={this.state.errorMessages} />
+                        <ModalAlert errorsToShow={this.state.errorMessages}/>
                         <Form>
 
                             {/* ACCOUNT CREDIT */}
@@ -878,7 +967,7 @@ class Providers extends React.Component {
                                            onChange={(e) => {
                                                let {amount} = this.state.amount;
                                                amount = e.target.value;
-                                               this.setState({amount:amount})
+                                               this.setState({amount: amount})
                                            }}/>
                                 </Col>
                             </FormGroup>
@@ -947,34 +1036,30 @@ class Providers extends React.Component {
                                     <td>{user.accountCredit}</td>
 
                                     <td>
-                                        <Button color='warning' size='sm'
-                                                 onClick={this.seeProviderMenus.bind(this, user.id)}>
-                                             Ver menús
-                                         </Button>
-                                        <Button color='success' size='sm' className='mr-2'
-                                                onClick={this.editUser.bind(this, user.id, user.name,
-                                                    user.state, user.address, user.email, user.phone,
-                                                    user.logo, user.latitude, user.longitude,
-                                                    user.description, user.website, user.officeHoursFrom,
-                                                    user.officeHoursTo, user.officeDaysFrom, user.officeDaysTo,
-                                                    user.accountCredit, user.delivery)}>
-                                            <Translate content='buttons.editButton'/>
-                                        </Button>
+                                        <MenusButton
+                                            userId={user.id}/>
 
-                                        <Button color='primary' size='sm' className='mr-2'
-                                                onClick={this.editAccountCredit.bind(this, user.id, user.name,
-                                                    user.state, user.address, user.email, user.phone,
-                                                    user.logo, user.latitude, user.longitude,
-                                                    user.description, user.website, user.officeHoursFrom,
-                                                    user.officeHoursTo, user.officeDaysFrom, user.officeDaysTo,
-                                                    user.accountCredit, user.delivery)}>
-                                            <Translate content='buttons.accountCreditButton'/>
-                                        </Button>
+                                        <EditAccountButton
+                                            onClick={this.editUser.bind(this, user.id, user.name,
+                                                user.state, user.address, user.email, user.phone,
+                                                user.logo, user.latitude, user.longitude,
+                                                user.description, user.website, user.officeHoursFrom,
+                                                user.officeHoursTo, user.officeDaysFrom, user.officeDaysTo,
+                                                user.accountCredit, user.delivery)}
+                                            enabled={isProvider}/>
 
-                                        <Button color='danger' size='sm'
-                                                onClick={this.deleteProvider.bind(this, user.id)}>
-                                            <Translate content='buttons.deleteButton'/>
-                                        </Button>
+                                        <EditAccountCreditButton
+                                            onClick={this.editAccountCredit.bind(this, user.id, user.name,
+                                                user.state, user.address, user.email, user.phone,
+                                                user.logo, user.latitude, user.longitude,
+                                                user.description, user.website, user.officeHoursFrom,
+                                                user.officeHoursTo, user.officeDaysFrom, user.officeDaysTo,
+                                                user.accountCredit, user.delivery)}
+                                            enabled={isProvider}/>
+
+                                        <DeleteAccountButton
+                                            onClick={this.deleteProvider.bind(this, user.id)}
+                                            enabled={isProvider}/>
                                     </td>
                                     {errorMsg ? <div>{errorMsg}</div> : null}
                                 </tr>
