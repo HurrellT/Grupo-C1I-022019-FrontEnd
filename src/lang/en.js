@@ -8,6 +8,7 @@ export default {
     account:'Account',
     myAccount:'My account',
     searchMenu: 'Search menu',
+    purchaseHistory: 'My purchase history',
 
     providerTitle:'Providers',
     newProviderModalTitle:'Add new provider',
@@ -52,10 +53,12 @@ export default {
         chooseADayLabel: 'Choose a day',
         availableAccountCredit: 'Your available credit is %(credit)s USD',
         chooseADayLabel: 'Choose a day',
+        chooseADeliveryTypeLabel: 'Choose a delivery type',
         nameFilterLabel: 'Filter by name:',
         providerLabel: 'Provider',
         quantityLabel: 'Quantity',
         priceLabel: 'Price',
+        unitPriceLabel: 'Unit price',
         categoryLabel: 'Category'
     },
 
@@ -79,10 +82,13 @@ export default {
         successfulPurchaseMessage: 'Your purchase has been made successfully',
         failedPurchaseMessage: 'The purchase could not be made',
         menuInPurchaseMessage: 'This menu is already in purchase',
+        quantityGreaterThan0Message: 'The quantity must be greater than 0',
+        noMenusInPurchaseMessage: 'There are no menus in your purchase yet',
     },
 
     titles: {
         menusTitle: 'Menus',
-        providerMenusTitle: '%(providername)s menus'
+        providerMenusTitle: '%(providername)s menus',
+        purchaseHistoryTitle: 'Purchase history'
     }
 }

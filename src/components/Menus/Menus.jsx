@@ -39,7 +39,10 @@ class Menus extends React.Component {
             purchaseRequest: {
                 providerId: '',
                 menuName: '',
-                quantity: '1'
+                quantity: '1',
+                deliveryTime: '',
+                deliveryDate: '',
+                deliveryType: ''
             },
             newMenuData: {
                 name: '',
@@ -85,12 +88,14 @@ class Menus extends React.Component {
                 providerName: '',
                 score: []
             },
+            validDate: false,
             message: '',
             newMenuModal: false,
             editMenuModal: false,
             messageModal: false,
             askQuantityModal: false,
             purchaseModal: false,
+            purchaseDataModal: false,
             addedToPurchase: false,
             errorMessages: []
         }
@@ -124,6 +129,12 @@ class Menus extends React.Component {
     togglePurchaseModal() {
         this.setState({
             purchaseModal: !this.state.purchaseModal
+        })
+    }
+
+    togglePurchaseDataModal() {
+        this.setState({
+            purchaseDataModal: !this.state.purchaseDataModal
         })
     }
 
@@ -219,7 +230,10 @@ class Menus extends React.Component {
             purchaseRequest: {
                             providerId: '',
                             menuName: '',
-                            quantity: '1'
+                            quantity: '1',
+                            deliveryTime: '',
+                            deliveryDate: '',
+                            deliveryType: ''
                             },
             messageModal: !this.state.messageModal,
             purchaseModal: !this.state.purchaseModal
@@ -246,12 +260,12 @@ class Menus extends React.Component {
         }
     }
 
-    acceptAskQuantityModal(){
+    acceptPurchaseData(){
 
         let {errorMessages} = this.state;
         if (this.state.purchaseRequest.quantity < 1){
            errorMessages = [];
-           errorMessages.push("La cantidad debe ser mayor a 0");
+           errorMessages.push(counterpart.translate('messages.quantityGreaterThan0Message'));
            this.setState({
                errorMessages
            });
@@ -306,7 +320,7 @@ class Menus extends React.Component {
         }
         else{
              this.setState({
-                 message: 'Aún no hay menús en su compra',
+                 message: counterpart.translate('messages.noMenusInPurchaseMessage'),
                  messageModal: !this.state.messageModal
              })
         }
@@ -359,8 +373,38 @@ class Menus extends React.Component {
 
     }
 
+    setPurchaseData(){
+        let {purchases} = this.state;
+        let {purchaseRequest} = this.state;
+        let {errorMessages} = this.state;
+
+        purchases.map(p => { p.deliveryTime = purchaseRequest.deliveryTime;
+                             p.deliveryDate = purchaseRequest.deliveryDate;
+                             p.deliveryType = purchaseRequest.deliveryType; });
+        this.setState({
+            purchases,
+            purchaseRequest: {
+                            providerId: '',
+                            menuName: '',
+                            quantity: '1',
+                            deliveryTime: '',
+                            deliveryDate: '',
+                            deliveryType: ''
+                            },
+        })
+        this.togglePurchaseDataModal();
+        this.makePurchase();
+
+    }
+
     updateSearch(event) {
         this.setState({search: event.target.value.substr(0,20)});
+    }
+
+    updatePrField = (field) => (ev) => {
+        let {purchaseRequest} = this.state;
+        purchaseRequest[field] = ev.target.value;
+        this.setState({purchaseRequest})
     }
 
     //RENDER
@@ -558,7 +602,7 @@ class Menus extends React.Component {
 
                      </ModalBody>
                      <ModalFooter>
-                         <Button color="primary" onClick={this.acceptAskQuantityModal.bind(this)}>
+                         <Button color="primary" onClick={this.acceptPurchaseData.bind(this)}>
                              Aceptar
                          </Button>
                          <Button color="secondary" onClick={this.toggleAskQuantityModal.bind(this)}>
@@ -615,7 +659,6 @@ class Menus extends React.Component {
                              </Col>
                          </Row>
                          <Form>
-                            {/* NAME */}
                             <FormGroup row>
                                 <Label for="total" sm={2}><b>Total:</b></Label>
                                 <Col sm={5}>
@@ -624,12 +667,78 @@ class Menus extends React.Component {
                             </FormGroup>
                          </Form>
 
-                     </ModalBody>
-                     <ModalFooter>
-                         <Button color="primary" onClick={this.makePurchase.bind(this)}>
-                             Realizar la compra
-                         </Button>
-                     </ModalFooter>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="primary" onClick={this.togglePurchaseDataModal.bind(this)}>
+                            Realizar la compra
+                        </Button>
+                    </ModalFooter>
+                </Modal>
+
+                {/* PURCHASE DATA MODAL */}
+                <Modal isOpen={this.state.purchaseDataModal} toggle={this.togglePurchaseDataModal.bind(this)}
+                       style={{width: 3000}}>
+                    <ModalHeader toggle={this.togglePurchaseDataModal.bind(this)}>
+                        Seleccionar fecha, hora y tipo de entrega
+                    </ModalHeader>
+                    <ModalBody>
+                        <ModalAlert errorsToShow={this.state.errorMessages} />
+
+                        {/* PURCHASE DATA FORM */}
+                        <Form>
+
+                            {/* DELIVERY TIME */}
+                            <FormGroup row>
+                                <Label for="deliveryTime" sm={2}>
+                                    Hora de entrega
+                                </Label>
+                                <Col sm={10}>
+                                    <Input type="time" name="deliveryTime" id="deliveryTime"
+                                           value={this.state.purchaseRequest.deliveryTime}
+                                           onChange={this.updatePrField('deliveryTime')}
+                                    />
+                                </Col>
+                            </FormGroup>
+
+                            {/* DELIVERY DATE */}
+                            <FormGroup row>
+                                <Label for="deliveryDate" sm={2}>
+                                    Fecha de entrega
+                                </Label>
+                                <Col sm={10}>
+                                    <Input type="date" name="deliveryDate" id="deliveryDate"
+                                           value={this.state.purchaseRequest.deliveryDate}
+                                           onChange={this.updatePrField('deliveryDate')}
+                                    />
+                                </Col>
+                            </FormGroup>
+
+                            {/* DELIVERY TYPE */}
+                            <FormGroup row>
+                                <Label for="deliveryType" sm={2}>
+                                    Tipo de entrega
+                                </Label>
+                                <Col sm={10}>
+                                    <CustomInput type="select" name="deliveryType" id="deliveryType"
+                                           value={this.state.purchaseRequest.deliveryType}
+                                           onChange={this.updatePrField('deliveryType')}>
+                                        <option value="">
+                                            {counterpart.translate('labels.chooseADeliveryTypeLabel')}
+                                        </option>
+                                        <option>DELIVERY</option>
+                                        <option>PICK UP</option>
+                                    </CustomInput>
+                                </Col>
+                            </FormGroup>
+
+                        </Form>
+
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="primary" onClick={this.setPurchaseData.bind(this)} disabled={this.state.validDate}>
+                            Aceptar
+                        </Button>
+                    </ModalFooter>
                 </Modal>
 
                 {/* MENU CRUD TABLE */}

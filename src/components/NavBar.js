@@ -65,7 +65,12 @@ const NavBar = () => {
                              <NavLink href="/menus">
                                 <Translate content='searchMenu'/>
                              </NavLink>
-                          </NavItem>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink href="/purchaseHistory">
+                               <Translate content='purchaseHistory'/>
+                            </NavLink>
+                        </NavItem>
                         <UncontrolledDropdown nav inNavbar>
                             <DropdownToggle nav caret>
                                 <Translate content='account'/>

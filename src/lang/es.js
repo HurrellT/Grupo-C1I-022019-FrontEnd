@@ -8,6 +8,7 @@ export default {
     account:'Cuenta',
     myAccount:'Mi cuenta',
     searchMenu: 'Buscar menú',
+    purchaseHistory: 'Mi historial de compras',
 
     providerTitle:'Proveedores',
     newProviderModalTitle:'Agregar nuevo proveedor',
@@ -50,11 +51,13 @@ export default {
         accountCreditLabel: 'Credito',
         actionsLabel: 'Acciones',
         chooseADayLabel: 'Elija un dia',
+        chooseADeliveryTypeLabel: 'Elegí el tipo de entrega',
         availableAccountCredit: 'Tu credito disponible es %(credit)s ARS',
         nameFilterLabel: 'Filtrar por nombre:',
         providerLabel: 'Proveedor',
         quantityLabel: 'Cantidad',
         priceLabel: 'Precio',
+        unitPriceLabel: 'Precio unitario',
         categoryLabel: 'Categoria'
     },
 
@@ -78,10 +81,13 @@ export default {
         successfulPurchaseMessage: 'Su compra ha sido realizada con éxito',
         failedPurchaseMessage: 'No se pudo realizar la compra',
         menuInPurchaseMessage: 'Este menú ya está en la compra',
+        quantityGreaterThan0Message: 'La cantidad debe ser mayor a 0',
+        noMenusInPurchaseMessage: 'Aún no hay menús en su compra',
     },
 
     titles: {
         menusTitle: 'Menús',
-        providerMenusTitle: 'Menús de %(providername)s'
+        providerMenusTitle: 'Menús de %(providername)s',
+        purchaseHistoryTitle: 'Historial de compras'
     }
 }
