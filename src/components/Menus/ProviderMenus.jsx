@@ -218,7 +218,7 @@ class ProviderMenus extends Menus {
 
                      </ModalBody>
                      <ModalFooter>
-                         <Button color="primary" onClick={this.acceptAskQuantityModal.bind(this)}>
+                         <Button color="primary" onClick={this.acceptPurchaseData.bind(this)}>
                              Aceptar
                          </Button>
                          <Button color="secondary" onClick={this.toggleAskQuantityModal.bind(this)}>
