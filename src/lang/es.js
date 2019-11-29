@@ -58,7 +58,8 @@ export default {
         quantityLabel: 'Cantidad',
         priceLabel: 'Precio',
         unitPriceLabel: 'Precio unitario',
-        categoryLabel: 'Categoria'
+        categoryLabel: 'Categoria',
+        pendingLabel: 'Pendiente',
     },
 
     placeholders: {
@@ -79,10 +80,13 @@ export default {
 
     messages: {
         successfulPurchaseMessage: 'Su compra ha sido realizada con éxito',
+        successfulScoreMessage: 'Tu puntaje fue guardado correctamente',
         failedPurchaseMessage: 'No se pudo realizar la compra',
         menuInPurchaseMessage: 'Este menú ya está en la compra',
         quantityGreaterThan0Message: 'La cantidad debe ser mayor a 0',
+        scoreBetween1And5: 'El puntaje debe estar entre 1 y 5',
         noMenusInPurchaseMessage: 'Aún no hay menús en su compra',
+        alreadyScoredMessage: 'Esta compra ya tiene un puntaje, no se puede puntuar dos veces',
     },
 
     titles: {

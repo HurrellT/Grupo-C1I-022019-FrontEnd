@@ -38,6 +38,8 @@ class PurchaseHistory extends React.Component {
             message: '',
             seeMenusModal: false,
             setScoreModal: false,
+            messageScoreModal: false,
+            messageModal: false,
             errorMessages: []
         }
     }
@@ -61,17 +63,43 @@ class PurchaseHistory extends React.Component {
         })
     }
 
+    toggleMessageScoreModal() {
+        this.setState({
+            messageScoreModal: !this.state.messageScoreModal
+        })
+    }
+
+    toggleMessageModal() {
+        this.setState({
+            messageModal: !this.state.messageModal
+        })
+    }
+
     _refreshPurchases(clientId) {
         axios.get('http://localhost:8080/cpurchases/' + 4)
             .then(response => {
                 this.setState({
                     purchases: response.data
-                })
+                });
+                this.formatScore();
             })
             .catch(error => {
                 // console.log(error)
                 this.setState({errorMsg: 'Error retreiving data'})
             })
+
+    }
+
+    formatScore(){
+        let{purchases} = this.state;
+        purchases = purchases.reverse();
+        purchases.map(p => {if(p.score === 0){
+                                p.showScore = counterpart.translate('labels.pendingLabel')
+                                }
+                            else{
+                                p.showScore = p.score
+                            }});
+        this.setState({ purchases })
     }
 
     seePurchaseMenus(order){
@@ -81,29 +109,72 @@ class PurchaseHistory extends React.Component {
         })
     }
 
-    setScore(id){
+    setScore(id, score){
         let{purchaseScore} = this.state;
-        purchaseScore.id = id;
-        this.setState({
-            purchaseScore,
-            setScoreModal: !this.state.setScoreModal
-            })
+        let{message} = this.state;
+
+        if(score > 0){
+            message = counterpart.translate('messages.alreadyScoredMessage')
+            this.setState({message})
+            this.toggleMessageModal();
+        }
+        else{
+            purchaseScore.id = id;
+            this.setState({
+                purchaseScore,
+                setScoreModal: !this.state.setScoreModal
+                })
+        }
+    }
+
+    cancelScore(){
+        this.setState({ errorMessages: [],
+                        purchaseScore: {
+                            id: '',
+                            score: '1'
+                        },
+                      });
+        this.toggleSetScoreModal();
     }
 
     acceptScore(){
-        axios.post('http://localhost:8080/setScore', this.state.purchaseScore)
-            .then((response) => {
-                this.setState({
-                    message: counterpart.translate('messages.successfulPurchaseMessage')
+
+        let{errorMessages} = this.state;
+
+        if (this.state.purchaseScore.score < 1 || this.state.purchaseScore.score > 5){
+           errorMessages = [];
+           errorMessages.push(counterpart.translate('messages.scoreBetween1And5'));
+           this.setState({
+               errorMessages
+           });
+        }
+        else{
+            axios.post('http://localhost:8080/setScore', this.state.purchaseScore)
+                .then((response) => {
+                    this.setState({
+                        message: counterpart.translate('messages.successfulScoreMessage')
+                    })
                 })
-            })
-            .catch((error) => {
-                this.setState({
-                    message: counterpart.translate('messages.failedPurchaseMessage')
+                .catch((error) => {
+                    this.setState({
+                        message: counterpart.translate('messages.failedScoreMessage')
+                    })
                 })
-            })
+            errorMessages = [];
+            this.setState({ errorMessages });
+            this._refreshPurchases();
+            this.toggleSetScoreModal();
+            this.toggleMessageScoreModal();
+        }
+    }
+
+    acceptScoreMessage(){
+        let{purchaseScore} = this.state;
         this._refreshPurchases();
-        this.toggleSetScoreModal();
+        this.toggleMessageScoreModal();
+        purchaseScore.id = '';
+        purchaseScore.score = '1';
+        this.setState({purchaseScore})
     }
 
     //RENDER
@@ -117,6 +188,56 @@ class PurchaseHistory extends React.Component {
                         <h1 className="my-3"><Translate content='titles.purchaseHistoryTitle'/></h1>
                     </Col>
                 </Row>
+
+                {/* MESSAGE SCORE MODAL */}
+                <Modal isOpen={this.state.messageScoreModal} toggle={this.toggleMessageScoreModal.bind(this)}>
+                    <ModalHeader toggle={this.toggleMessageScoreModal.bind(this)}>
+                        Información
+                    </ModalHeader>
+                    <ModalBody>
+                         <ModalAlert errorsToShow={this.state.errorMessages} />
+
+                         {/* MESSAGE FORM */}
+                         <Form>
+                             {/* MESSAGE */}
+                             <FormGroup row>
+                                 <Label sm={20}>{this.state.message}</Label>
+                             </FormGroup>
+                         </Form>
+
+                     </ModalBody>
+                     <ModalFooter>
+                         <Button color="primary" onClick={this.acceptScoreMessage.bind(this)}>
+                             Aceptar
+                         </Button>
+                     </ModalFooter>
+
+                </Modal>
+
+                {/* MESSAGE MODAL */}
+                <Modal isOpen={this.state.messageModal} toggle={this.toggleMessageModal.bind(this)}>
+                    <ModalHeader toggle={this.toggleMessageModal.bind(this)}>
+                        Información
+                    </ModalHeader>
+                    <ModalBody>
+                         <ModalAlert errorsToShow={this.state.errorMessages} />
+
+                         {/* MESSAGE FORM */}
+                         <Form>
+                             {/* MESSAGE */}
+                             <FormGroup row>
+                                 <Label sm={20}>{this.state.message}</Label>
+                             </FormGroup>
+                         </Form>
+
+                     </ModalBody>
+                     <ModalFooter>
+                         <Button color="primary" onClick={this.toggleMessageModal.bind(this)}>
+                             Aceptar
+                         </Button>
+                     </ModalFooter>
+
+                </Modal>
 
                 {/* SEE MENUS MODAL */}
                 <Modal isOpen={this.state.seeMenusModal} toggle={this.toggleSeeMenusModal.bind(this)}
@@ -185,7 +306,7 @@ class PurchaseHistory extends React.Component {
                          <Button color="primary" onClick={this.acceptScore.bind(this)}>
                              Aceptar
                          </Button>
-                         <Button color="secondary" onClick={this.toggleSetScoreModal.bind(this)}>
+                         <Button color="secondary" onClick={this.cancelScore.bind(this)}>
                              Cancelar
                          </Button>
                      </ModalFooter>
@@ -212,13 +333,13 @@ class PurchaseHistory extends React.Component {
 
                             {/* MENU INFO FETCHED FROM SERVER */}
                             <tbody>
-                            { purchases.map(purchase =>
+                            {   purchases.map(purchase =>
                                 <tr key={purchase.id}>
                                     <th hidden scope="row">{purchase.id}</th>
                                     <td>{purchase.orderDate}</td>
                                     <td>{purchase.totalAmount}</td>
                                     <td>{purchase.order[0].menu.providerName}</td>
-                                    <td>{purchase.score}</td>
+                                    <td>{purchase.showScore}</td>
                                     <td>{purchase.deliveryDate}</td>
                                     <td>{purchase.deliveryTime}</td>
                                     <td>{purchase.deliveryType}</td>
@@ -230,7 +351,7 @@ class PurchaseHistory extends React.Component {
                                     </td>
                                     <td>
                                         <Button color='warning' size='sm'
-                                                onClick={this.setScore.bind(this, purchase.id)}>
+                                                onClick={this.setScore.bind(this, purchase.id, purchase.score)}>
                                             Puntuar
                                         </Button>
                                     </td>

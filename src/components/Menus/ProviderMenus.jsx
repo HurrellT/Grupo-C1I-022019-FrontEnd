@@ -35,6 +35,7 @@ class ProviderMenus extends Menus {
     componentDidMount() {
         let {provId} = this.props.match.params;
         super.getProviderName(provId);
+        this.getPendingScoredPurchases(4);
         this._refreshMenus(provId);
     }
 
@@ -257,6 +258,10 @@ class ProviderMenus extends Menus {
                                              <td>{menu.quantity}</td>
                                              <td>{menu.price}</td>
                                              <td>
+                                                <Button color='warning' size='sm'
+                                                         onClick={this.askForQuantity.bind(this, menu.name, menu.providerId)}>
+                                                     Cambiar cantidad
+                                                 </Button>
                                                  <Button color='danger' size='sm'
                                                          onClick={this.removeFromPurchase.bind(this, menu.name)}>
                                                      Quitar de la compra
@@ -280,10 +285,76 @@ class ProviderMenus extends Menus {
 
                      </ModalBody>
                      <ModalFooter>
-                         <Button color="primary" onClick={this.makePurchase.bind(this)}>
+                         <Button color="primary" onClick={this.togglePurchaseDataModal.bind(this)}>
                              Realizar la compra
                          </Button>
                      </ModalFooter>
+                </Modal>
+
+                {/* PURCHASE DATA MODAL */}
+                <Modal isOpen={this.state.purchaseDataModal} toggle={this.togglePurchaseDataModal.bind(this)}
+                       style={{width: 3000}}>
+                    <ModalHeader toggle={this.togglePurchaseDataModal.bind(this)}>
+                        Seleccionar fecha, hora y tipo de entrega
+                    </ModalHeader>
+                    <ModalBody>
+                        <ModalAlert errorsToShow={this.state.errorMessages} />
+
+                        {/* PURCHASE DATA FORM */}
+                        <Form>
+
+                            {/* DELIVERY TIME */}
+                            <FormGroup row>
+                                <Label for="deliveryTime" sm={2}>
+                                    Hora de entrega
+                                </Label>
+                                <Col sm={10}>
+                                    <Input type="time" name="deliveryTime" id="deliveryTime"
+                                           value={this.state.purchaseRequest.deliveryTime}
+                                           onChange={this.updatePrField('deliveryTime')}
+                                    />
+                                </Col>
+                            </FormGroup>
+
+                            {/* DELIVERY DATE */}
+                            <FormGroup row>
+                                <Label for="deliveryDate" sm={2}>
+                                    Fecha de entrega
+                                </Label>
+                                <Col sm={10}>
+                                    <Input type="date" name="deliveryDate" id="deliveryDate"
+                                           value={this.state.purchaseRequest.deliveryDate}
+                                           onChange={this.updatePrField('deliveryDate')}
+                                    />
+                                </Col>
+                            </FormGroup>
+
+                            {/* DELIVERY TYPE */}
+                            <FormGroup row>
+                                <Label for="deliveryType" sm={2}>
+                                    Tipo de entrega
+                                </Label>
+                                <Col sm={10}>
+                                    <CustomInput type="select" name="deliveryType" id="deliveryType"
+                                           value={this.state.purchaseRequest.deliveryType}
+                                           onChange={this.updatePrField('deliveryType')}>
+                                        <option value="">
+                                            {counterpart.translate('labels.chooseADeliveryTypeLabel')}
+                                        </option>
+                                        <option>DELIVERY</option>
+                                        <option>PICK UP</option>
+                                    </CustomInput>
+                                </Col>
+                            </FormGroup>
+
+                        </Form>
+
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="primary" onClick={this.setPurchaseData.bind(this)} disabled={this.state.validDate}>
+                            Aceptar
+                        </Button>
+                    </ModalFooter>
                 </Modal>
 
                 {/* MENU CRUD TABLE */}

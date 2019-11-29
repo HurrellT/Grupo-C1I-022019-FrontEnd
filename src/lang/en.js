@@ -59,7 +59,8 @@ export default {
         quantityLabel: 'Quantity',
         priceLabel: 'Price',
         unitPriceLabel: 'Unit price',
-        categoryLabel: 'Category'
+        categoryLabel: 'Category',
+        pendingLabel: 'Pending',
     },
 
     placeholders: {
@@ -80,10 +81,13 @@ export default {
 
     messages: {
         successfulPurchaseMessage: 'Your purchase has been made successfully',
+        successfulScoreMessage: 'Your score was saved correctly',
         failedPurchaseMessage: 'The purchase could not be made',
         menuInPurchaseMessage: 'This menu is already in purchase',
         quantityGreaterThan0Message: 'The quantity must be greater than 0',
+        scoreBetween1And5: 'The score must be between 1 and 5',
         noMenusInPurchaseMessage: 'There are no menus in your purchase yet',
+        alreadyScoredMessage: 'This purchase already has a score, it cannot be scored twice',
     },
 
     titles: {

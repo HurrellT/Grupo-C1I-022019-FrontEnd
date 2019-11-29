@@ -29,11 +29,13 @@ class Menus extends React.Component {
         super(props)
 
         this.providerName = '';
+        this.pendigScoredPurchases = '0';
         this.state = {
             menus: [],
             menuNames: [],
             purchases: [],
             purchaseMenus: [],
+            purchasesHistory: [],
             totalAmount: 0,
             search: '',
             purchaseRequest: {
@@ -89,6 +91,7 @@ class Menus extends React.Component {
                 score: []
             },
             validDate: false,
+            purchaseMaked: false,
             message: '',
             newMenuModal: false,
             editMenuModal: false,
@@ -104,6 +107,8 @@ class Menus extends React.Component {
     //METHODS
 
     componentDidMount() {
+        this.setState({purchaseMaked : false});
+        this.getPendingScoredPurchases(4);
         this._refreshMenus();
     }
 
@@ -213,7 +218,7 @@ class Menus extends React.Component {
 
 
     makePurchase() {
-        //TODO: change the 4 fot the logged client id
+        //TODO: change the 4 for the logged client id
         axios.post('http://localhost:8080/makePurchase/' + 4, this.state.purchases)
             .then((response) => {
                 this.setState({
@@ -235,28 +240,49 @@ class Menus extends React.Component {
                             deliveryDate: '',
                             deliveryType: ''
                             },
+            purchaseMaked: true,
             messageModal: !this.state.messageModal,
             purchaseModal: !this.state.purchaseModal
+        })
+    }
+
+    getPendingScoredPurchases(clientId){
+        axios.get('http://localhost:8080/pendingScoredPurchases/' + 4)
+        .then(response => {
+                this.pendigScoredPurchases = response.data;
+        })
+        .catch(error => {
+            // console.log(error)
+            this.setState({errorMsg: 'Error retreiving data'})
         })
     }
 
     askForQuantity(menuName, providerId){
         let {purchaseRequest} = this.state;
         let{addedToPurchase} = this.state;
+        let{purchaseMaked} = this.state;
+        let{message} = this.state;
 
-        this.state.purchases.map(p => {if(p.menuName === menuName){addedToPurchase = true}});
-        if(addedToPurchase && !this.state.purchaseModal){
-            this.setState({
-                message: counterpart.translate('messages.menuInPurchaseMessage'),
-                messageModal: !this.state.messageModal,
-            })
+        if(this.pendigScoredPurchases > 0 || purchaseMaked){
+            message = 'Tenes pendiente un puntaje';
+            this.setState({message})
+            this.toggleMessageModal();
         }
         else{
-            purchaseRequest.providerId = providerId;
-            purchaseRequest.menuName = menuName;
-            purchaseRequest.quantity = '1';
-            this.setState({ purchaseRequest });
-            this.toggleAskQuantityModal()
+            this.state.purchases.map(p => {if(p.menuName === menuName){addedToPurchase = true}});
+            if(addedToPurchase && !this.state.purchaseModal){
+                this.setState({
+                    message: counterpart.translate('messages.menuInPurchaseMessage'),
+                    messageModal: !this.state.messageModal,
+                })
+            }
+            else{
+                purchaseRequest.providerId = providerId;
+                purchaseRequest.menuName = menuName;
+                purchaseRequest.quantity = '1';
+                this.setState({ purchaseRequest });
+                this.toggleAskQuantityModal()
+            }
         }
     }
 
