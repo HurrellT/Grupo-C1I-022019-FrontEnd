@@ -110,8 +110,8 @@ class Registration extends React.Component {
         const placeholderTranslations = counterpart;
 
         return (
-            <Modal isOpen={this.state.newUserModal} toggle={this.toggleNewUserModal.bind(this)}>
-                <ModalHeader toggle={this.toggleNewUserModal.bind(this)}>
+            <Modal isOpen={this.state.newUserModal} >
+                <ModalHeader >
                     <Translate content="labels.newUserRegistration" />
                 </ModalHeader>
                 <ModalBody>

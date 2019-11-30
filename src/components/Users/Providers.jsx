@@ -118,15 +118,10 @@ function MenusButton(props) {
     )
 }
 
-const username = (props) => {
-    return props.content
-}
-
 class Providers extends React.Component {
 
     constructor(props) {
         super(props)
-        console.log(props)
 
         this.state = {
             loggedUser: props.loggedUser,
@@ -176,7 +171,8 @@ class Providers extends React.Component {
             accountCreditModal: false,
             amount: '',
             selectedPage: 0,
-            errorMessages: []
+            errorMessages: [],
+            userType:''
         }
 
         this.handleSelected = this.handleSelected.bind(this);
@@ -185,13 +181,24 @@ class Providers extends React.Component {
     //METHODS
 
     handleSelected(selectedPage) {
-        // console.log("selected", selectedPage);
         this.setState({selectedPage: selectedPage});
     }
 
     componentDidMount() {
         this._refreshUsers();
+        this.updateUserTypeSearchingByEmail(this.state.loggedUser.email)
     }
+
+    updateUserTypeSearchingByEmail(email) {
+        return axios.get('http://localhost:8080/userWithEmail/' + email)
+            .then((response) => {
+                let user = response.data
+                this.setState({
+                    userType:user.type
+                })
+            })
+    }
+
 
     toggleNewUserModal() {
         this.setState({
@@ -412,10 +419,6 @@ class Providers extends React.Component {
                     users: response.data
                 })
             })
-            .catch(error => {
-                // console.log(error)
-                this.setState({errorMsg: 'Error retreiving data'})
-            })
     }
 
     //TODO: Depending on the user role (client, provider) you see the table with all
@@ -443,7 +446,7 @@ class Providers extends React.Component {
     //RENDER
 
     render() {
-        const {users, errorMsg} = this.state;
+        const {users} = this.state;
 
         const placeholderTranslations = counterpart;
 
@@ -457,7 +460,7 @@ class Providers extends React.Component {
             }
         );
 
-        let isProvider = this.state.loggedUser.type == 'provider';
+        let isProvider = this.state.userType === 'provider';
 
         return (
             <Container>
@@ -1061,7 +1064,6 @@ class Providers extends React.Component {
                                             onClick={this.deleteProvider.bind(this, user.id)}
                                             enabled={isProvider}/>
                                     </td>
-                                    {errorMsg ? <div>{errorMsg}</div> : null}
                                 </tr>
                             )}
                             </tbody>

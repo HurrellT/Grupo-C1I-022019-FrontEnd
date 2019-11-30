@@ -3,7 +3,7 @@
 import React from "react";
 import NavBar from "./components/NavBar";
 import { useAuth0 } from "./react-auth0-spa";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import {BrowserRouter, Route, Switch} from "react-router-dom";
 import Profile from "./components/Profile";
 import PrivateRoute from "./components/PrivateRoute";
 import Map from "./components/Map/Map";
@@ -57,7 +57,7 @@ function App() {
                 <Switch>
                     <Route path="/" exact />
                     {/*<PrivateRoute path="/registration" component={() => <Registration loggedUser={user}/>} />*/}
-                    <PrivateRoute path="/home" component={Home} />
+                    <PrivateRoute path="/home" component={() => <Home loggedUser={user}/>} />
                     <PrivateRoute path="/profile" component={Profile} />
                     <PrivateRoute path="/map" component={Map} />
                     <PrivateRoute path="/users" component={Users} />
@@ -65,10 +65,25 @@ function App() {
                     <PrivateRoute path="/clientAccount" component={ClientAccount} />
                     {/*<PrivateRoute path="/providers" component={Providers} />*/}
                     <PrivateRoute path="/providers" component={() => <Providers loggedUser={user} />} />
-                    <PrivateRoute path="/beAProvider" component={() => <BecomeAProvider loggedUser={user} />} />
+                    {/*<PrivateRoute path="/beAProvider" component={() => <BecomeAProvider loggedUser={user} />} />*/}
                     <PrivateRoute path="/menus" component={Menus} />
                     <PrivateRoute path="/providerMenus/:provId" exact strict component={ProviderMenus} />
                 </Switch>
+
+                {/*<footer style={*/}
+                {/*    {fontSize: 'small',*/}
+                {/*    padding: 4,*/}
+                {/*    position: 'fixed',*/}
+                {/*    left: 0,*/}
+                {/*    bottom: 0,*/}
+                {/*    width: '100%',*/}
+                {/*    backgroundColor: '#f8f9fa',*/}
+                {/*    textAlign: 'right'}*/}
+                {/*}>*/}
+                {/*    <Link to='/beAProvider'>*/}
+                {/*        <Translate content='buttons.beAProvider'/>*/}
+                {/*    </Link>*/}
+                {/*</footer>*/}
             </BrowserRouter>
         </div>
     );

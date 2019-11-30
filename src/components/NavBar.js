@@ -1,4 +1,3 @@
-import axios from 'axios'
 import React, {useState} from 'react';
 import {useAuth0} from "../react-auth0-spa";
 // import {Link} from "react-router-dom";
@@ -16,35 +15,13 @@ import {
 import Translate from 'react-translate-component';
 import Language from '../lang/Language'
 
-function BeAProviderButton(props) {
-    const user = props.user
-    const enabled = props.enabled
-
-    if (enabled) {
-        return (
-            <DropdownItem href="/beAProvider">
-                <Translate content='buttons.beAProvider'/>
-            </DropdownItem>)
-    }
-    else {
-        return <div></div>
-    }
-}
-
 //TODO: voy a buscar el user para tener el type, despues verifico su tipo para mostrar o no
 // con el user se lo paso al beAProvider para usar su data (O MEJOR AGARRALO DE LA BASE QUE TIENE MAS INFO)
 // y le pongo las cosas en la view para pasar a ser proveedor
 // ARMAR METODO PARA CONVERTIR DE CLIENTE A PROVEEDOR
 
-function getUserByEmail(email) {
-    return axios.get('http://localhost:8080/user/' + email)
-        .then((response) => {
-            return response.data
-        })
-}
-
 const NavBar = () => {
-    const {isAuthenticated, loginWithRedirect, logout, user} = useAuth0();
+    const {isAuthenticated, loginWithRedirect, logout} = useAuth0();
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -99,9 +76,6 @@ const NavBar = () => {
                                     <DropdownItem href="/clientAccount">
                                         <Translate content='myAccount'/>
                                     </DropdownItem>
-                                    <BeAProviderButton
-                                        user={user}
-                                        enabled={getUserByEmail(user.email)['type'] == 'client'}/>
                                     {/* TODO:AGREGAR EL ID PARA IDENTIFICAR AL USUARIO LOGGEADO */}
                                     {/*<DropdownItem divider />*/}
                                 </DropdownMenu>

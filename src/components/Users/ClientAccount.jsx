@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Alert} from 'reactstrap';
+import {Button, Form, FormGroup} from 'reactstrap';
 import Label from "reactstrap/es/Label";
 import Col from "reactstrap/es/Col";
 import Input from "reactstrap/es/Input";
@@ -130,10 +130,6 @@ class Users extends React.Component {
                     users: response.data
                 })
             })
-            .catch(error => {
-                console.log(error)
-                this.setState({errorMsg: 'Error retreiving data'})
-            })
     }
 
     homeRoute() {
@@ -150,8 +146,6 @@ class Users extends React.Component {
     //RENDER
 
     render() {
-        const {users, errorMsg} = this.state
-
         return (
             <Container>
 
