@@ -24,6 +24,7 @@ export default {
         accountCreditButton: 'Deposit/Withdraw credit',
         confirmButton: 'Confirm',
         cancelButton: 'Cancel',
+        acceptButton: 'Accept',
         editButton: 'Edit',
         deleteButton: 'Delete',
         loginButton: 'Log in',
@@ -32,7 +33,12 @@ export default {
         depositCredit: 'Deposit credit',
         logoutButton: 'Log out',
         seePurchaseButton: 'See my purchase',
-        addMenuButton: 'Add to my purchase'
+        addMenuButton: 'Add to my purchase',
+        changeQuantityButton: 'Change quantity',
+        removeFromPurchaseButton: 'Remove from purchase',
+        addMenuButton: 'Add menu',
+        makeThePurchaseButton: 'Make the purchase',
+        selectPurchaseDataButton: 'Select date, time and type of delivery',
     },
 
     labels: {
@@ -61,6 +67,9 @@ export default {
         unitPriceLabel: 'Unit price',
         categoryLabel: 'Category',
         pendingLabel: 'Pending',
+        deliveryTimeLabel: 'Delivery time',
+        deliveryDateLabel: 'Delivery date',
+        deliveryTypeLabel: 'Delivery type',
     },
 
     placeholders: {
@@ -88,11 +97,16 @@ export default {
         scoreBetween1And5: 'The score must be between 1 and 5',
         noMenusInPurchaseMessage: 'There are no menus in your purchase yet',
         alreadyScoredMessage: 'This purchase already has a score, it cannot be scored twice',
+        pendingScoreMessage: 'You still have purchases without scoring',
     },
 
     titles: {
         menusTitle: 'Menus',
         providerMenusTitle: '%(providername)s menus',
-        purchaseHistoryTitle: 'Purchase history'
+        purchaseHistoryTitle: 'Purchase history',
+        addMenuTitle: 'Add new menu',
+        informationTitle: 'Information',
+        selectQuantityTitle: 'Select quantity',
+        myPurchaseTitle: 'My purchase',
     }
 }

@@ -34,6 +34,7 @@ class ProviderMenus extends Menus {
 
     componentDidMount() {
         let {provId} = this.props.match.params;
+        this.setState({purchaseMaked : false});
         super.getProviderName(provId);
         this.getPendingScoredPurchases(4);
         this._refreshMenus(provId);

@@ -246,8 +246,8 @@ class Menus extends React.Component {
         })
     }
 
-    getPendingScoredPurchases(clientId){
-        axios.get('http://localhost:8080/pendingScoredPurchases/' + 4)
+    getPendingScoredPurchases(id){
+        axios.get('http://localhost:8080/pendingScoredPurchases/' + id)
         .then(response => {
                 this.pendigScoredPurchases = response.data;
         })
@@ -264,7 +264,7 @@ class Menus extends React.Component {
         let{message} = this.state;
 
         if(this.pendigScoredPurchases > 0 || purchaseMaked){
-            message = 'Tenes pendiente un puntaje';
+            message = counterpart.translate('messages.pendingScoreMessage');
             this.setState({message})
             this.toggleMessageModal();
         }
@@ -480,7 +480,7 @@ class Menus extends React.Component {
                 {/* ADD MENU MODAL */}
                 <Modal isOpen={this.state.newMenuModal} toggle={this.toggleNewMenuModal.bind(this)}>
                     <ModalHeader toggle={this.toggleNewMenuModal.bind(this)}>
-                        Añadir un nuevo Menú
+                        <Translate content='titles.addMenuTitle'/>
                     </ModalHeader>
                     <ModalBody>
                         <ModalAlert errorsToShow={this.state.errorMessages} />
@@ -489,7 +489,9 @@ class Menus extends React.Component {
                         <Form>
                             {/* NAME */}
                             <FormGroup row>
-                                <Label for="name" sm={10}>Nombre</Label>
+                                <Label for="name" sm={10}>
+                                    <Translate content='labels.nameLabel'/>
+                                </Label>
                                 <Col sm={10}>
                                     <Input name="name" id="name" placeholder="Escriba el nombre del menú"
                                            value={this.state.newMenuData.name}
@@ -499,7 +501,9 @@ class Menus extends React.Component {
 
                             {/* DESCRIPTION */}
                             <FormGroup row>
-                                <Label for="description" sm={10}>Descripción</Label>
+                                <Label for="description" sm={10}>
+                                    <Translate content='labels.descriptionLabel'/>
+                                </Label>
                                 <Col sm={10}>
                                     <Input name="description" id="description" placeholder="Escriba la descripción del menú"
                                            value={this.state.newMenuData.description}
@@ -513,7 +517,9 @@ class Menus extends React.Component {
 
                             {/* CATEGORY */}
                             <FormGroup row>
-                                <Label for="category" sm={10}>Categoría</Label>
+                                <Label for="category" sm={10}>
+                                    <Translate content='labels.categoryLabel'/>
+                                </Label>
                                 <Col sm={10}>
                                     <CustomInput type="select" name="category" id="category"
                                            value={this.state.newMenuData.category}
@@ -569,10 +575,10 @@ class Menus extends React.Component {
                     </ModalBody>
                     <ModalFooter>
                         <Button color="primary" onClick={this.addMenu.bind(this)}>
-                            Agregar Menú
+                            <Translate content='buttons.addMenuButton'/>
                         </Button>{' '}
                         <Button color="secondary" onClick={this.toggleNewMenuModal.bind(this)}>
-                            Cancelar
+                            <Translate content='buttons.cancelButton'/>
                         </Button>
                     </ModalFooter>
                 </Modal>
@@ -580,7 +586,7 @@ class Menus extends React.Component {
                 {/* MESSAGE MODAL */}
                 <Modal isOpen={this.state.messageModal} toggle={this.toggleMessageModal.bind(this)}>
                     <ModalHeader toggle={this.toggleMessageModal.bind(this)}>
-                        Información
+                        <Translate content='titles.informationTitle'/>
                     </ModalHeader>
                     <ModalBody>
                          <ModalAlert errorsToShow={this.state.errorMessages} />
@@ -596,7 +602,7 @@ class Menus extends React.Component {
                      </ModalBody>
                      <ModalFooter>
                          <Button color="primary" onClick={this.toggleMessageModal.bind(this)}>
-                             Aceptar
+                             <Translate content='buttons.acceptButton'/>
                          </Button>
                      </ModalFooter>
 
@@ -606,7 +612,7 @@ class Menus extends React.Component {
                 {/* ASK QUANTITY MODAL */}
                 <Modal isOpen={this.state.askQuantityModal} toggle={this.toggleAskQuantityModal.bind(this)}>
                     <ModalHeader toggle={this.toggleAskQuantityModal.bind(this)}>
-                        Seleccionar la cantidad
+                        <Translate content='titles.selectQuantityTitle'/>
                     </ModalHeader>
                     <ModalBody>
                          <ModalAlert errorsToShow={this.state.errorMessages} />
@@ -629,10 +635,10 @@ class Menus extends React.Component {
                      </ModalBody>
                      <ModalFooter>
                          <Button color="primary" onClick={this.acceptPurchaseData.bind(this)}>
-                             Aceptar
+                             <Translate content='buttons.acceptButton'/>
                          </Button>
                          <Button color="secondary" onClick={this.toggleAskQuantityModal.bind(this)}>
-                             Cancelar
+                             <Translate content='buttons.cancelButton'/>
                          </Button>
                      </ModalFooter>
                 </Modal>
@@ -641,7 +647,7 @@ class Menus extends React.Component {
                 <Modal isOpen={this.state.purchaseModal} toggle={this.togglePurchaseModal.bind(this)}
                        style={{width: 3000}}>
                     <ModalHeader toggle={this.togglePurchaseModal.bind(this)}>
-                        Mi compra
+                        <Translate content='titles.myPurchaseTitle'/>
                     </ModalHeader>
                     <ModalBody>
                          <ModalAlert errorsToShow={this.state.errorMessages} />
@@ -671,11 +677,11 @@ class Menus extends React.Component {
                                              <td>
                                                 <Button color='warning' size='sm'
                                                         onClick={this.askForQuantity.bind(this, menu.name, menu.providerId)}>
-                                                    Cambiar cantidad
+                                                    <Translate content='buttons.changeQuantityButton'/>
                                                 </Button>
                                                  <Button color='danger' size='sm'
                                                          onClick={this.removeFromPurchase.bind(this, menu.name)}>
-                                                     Quitar de la compra
+                                                     <Translate content='buttons.removeFromPurchaseButton'/>
                                                  </Button>
                                              </td>
                                          </tr>
@@ -696,7 +702,7 @@ class Menus extends React.Component {
                     </ModalBody>
                     <ModalFooter>
                         <Button color="primary" onClick={this.togglePurchaseDataModal.bind(this)}>
-                            Realizar la compra
+                            <Translate content='buttons.makeThePurchaseButton'/>
                         </Button>
                     </ModalFooter>
                 </Modal>
@@ -705,7 +711,7 @@ class Menus extends React.Component {
                 <Modal isOpen={this.state.purchaseDataModal} toggle={this.togglePurchaseDataModal.bind(this)}
                        style={{width: 3000}}>
                     <ModalHeader toggle={this.togglePurchaseDataModal.bind(this)}>
-                        Seleccionar fecha, hora y tipo de entrega
+                        <Translate content='buttons.selectPurchaseDataButton'/>
                     </ModalHeader>
                     <ModalBody>
                         <ModalAlert errorsToShow={this.state.errorMessages} />
@@ -716,7 +722,7 @@ class Menus extends React.Component {
                             {/* DELIVERY TIME */}
                             <FormGroup row>
                                 <Label for="deliveryTime" sm={2}>
-                                    Hora de entrega
+                                    <Translate content='labels.deliveryTimeLabel'/>
                                 </Label>
                                 <Col sm={10}>
                                     <Input type="time" name="deliveryTime" id="deliveryTime"
@@ -729,7 +735,7 @@ class Menus extends React.Component {
                             {/* DELIVERY DATE */}
                             <FormGroup row>
                                 <Label for="deliveryDate" sm={2}>
-                                    Fecha de entrega
+                                    <Translate content='labels.deliveryDateLabel'/>
                                 </Label>
                                 <Col sm={10}>
                                     <Input type="date" name="deliveryDate" id="deliveryDate"
@@ -742,7 +748,7 @@ class Menus extends React.Component {
                             {/* DELIVERY TYPE */}
                             <FormGroup row>
                                 <Label for="deliveryType" sm={2}>
-                                    Tipo de entrega
+                                    <Translate content='labels.deliveryTypeLabel'/>
                                 </Label>
                                 <Col sm={10}>
                                     <CustomInput type="select" name="deliveryType" id="deliveryType"
@@ -762,7 +768,7 @@ class Menus extends React.Component {
                     </ModalBody>
                     <ModalFooter>
                         <Button color="primary" onClick={this.setPurchaseData.bind(this)} disabled={this.state.validDate}>
-                            Aceptar
+                            <Translate content='buttons.acceptButton'/>
                         </Button>
                     </ModalFooter>
                 </Modal>
