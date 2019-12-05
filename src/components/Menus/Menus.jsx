@@ -493,7 +493,8 @@ class Menus extends React.Component {
                                     <Translate content='labels.nameLabel'/>
                                 </Label>
                                 <Col sm={10}>
-                                    <Input name="name" id="name" placeholder="Escriba el nombre del menú"
+                                    <Input name="name" id="name"
+                                           placeholder={placeholderTranslations.translate('placeholders.filterMenuNamePlaceholder')}
                                            value={this.state.newMenuData.name}
                                            onChange={this.updateField('name')}/>
                                 </Col>
@@ -505,7 +506,8 @@ class Menus extends React.Component {
                                     <Translate content='labels.descriptionLabel'/>
                                 </Label>
                                 <Col sm={10}>
-                                    <Input name="description" id="description" placeholder="Escriba la descripción del menú"
+                                    <Input name="description" id="description"
+                                           placeholder={placeholderTranslations.translate('placeholders.menuDescriptionPlaceholder')}
                                            value={this.state.newMenuData.description}
                                            onChange={(e) => {
                                                let {newMenuData} = this.state;
@@ -559,9 +561,12 @@ class Menus extends React.Component {
 
                             {/* DELIVERY PRICE */}
                             <FormGroup row>
-                                <Label for="deliveryPrice" sm={10}>Precio de delivery</Label>
+                                <Label for="deliveryPrice" sm={10}>
+                                    <Translate content='labels.deliveryPriceLabel'/>
+                                </Label>
                                 <Col sm={10}>
-                                    <Input type="deliveryPrice" name="deliveryPrice" id="deliveryPrice" placeholder="Escriba el precio de delivery"
+                                    <Input type="deliveryPrice" name="deliveryPrice" id="deliveryPrice"
+                                           placeholder={placeholderTranslations.translate('placeholders.deliveryPricePlaceholder')}
                                            value={this.state.newMenuData.deliveryPrice}
                                            onChange={(e) => {
                                                let {newMenuData} = this.state;
@@ -576,7 +581,7 @@ class Menus extends React.Component {
                     <ModalFooter>
                         <Button color="primary" onClick={this.addMenu.bind(this)}>
                             <Translate content='buttons.addMenuButton'/>
-                        </Button>{' '}
+                        </Button>
                         <Button color="secondary" onClick={this.toggleNewMenuModal.bind(this)}>
                             <Translate content='buttons.cancelButton'/>
                         </Button>

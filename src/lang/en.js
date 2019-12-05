@@ -39,6 +39,8 @@ export default {
         addMenuButton: 'Add menu',
         makeThePurchaseButton: 'Make the purchase',
         selectPurchaseDataButton: 'Select date, time and type of delivery',
+        rateButton: 'Rate',
+        seePurchaseMenusButton: 'See purchase menus',
     },
 
     labels: {
@@ -70,6 +72,9 @@ export default {
         deliveryTimeLabel: 'Delivery time',
         deliveryDateLabel: 'Delivery date',
         deliveryTypeLabel: 'Delivery type',
+        deliveryPriceLabel: 'Delivery price',
+        orderDateLabel: 'Order date',
+        scoreLabel: 'Score',
     },
 
     placeholders: {
@@ -85,7 +90,9 @@ export default {
         longitudePlaceholder: 'Type your longitude',
         descriptionPlaceholder: 'Type a description',
         websitePlaceholder: 'Type the URL of your website',
-        accountCreditPlaceholder: 'Type an amount'
+        accountCreditPlaceholder: 'Type an amount',
+        menuDescriptionPlaceholder: 'Type the description of the menu',
+        deliveryPricePlaceholder: 'Type the delivery price',
     },
 
     messages: {
@@ -108,5 +115,8 @@ export default {
         informationTitle: 'Information',
         selectQuantityTitle: 'Select quantity',
         myPurchaseTitle: 'My purchase',
+        providerPurchaseTitle: 'My purchase for %(providername)s',
+        purchaseMenusTitle: 'Purchase menus',
+        selectScoreTitle: 'Select score',
     }
 }

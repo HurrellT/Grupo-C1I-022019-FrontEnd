@@ -39,6 +39,8 @@ export default {
         addMenuButton: 'Agregar menú',
         makeThePurchaseButton: 'Realizar la compra',
         selectPurchaseDataButton: 'Seleccionar fecha, hora y tipo de entrega',
+        rateButton: 'Puntuar',
+        seePurchaseMenusButton: 'Ver menús de la compra',
     },
 
     labels: {
@@ -69,6 +71,9 @@ export default {
         deliveryTimeLabel: 'Hora de entrega',
         deliveryDateLabel: 'Fecha de entrega',
         deliveryTypeLabel: 'Tipo de entrega',
+        deliveryPriceLabel: 'Precio de la entrega',
+        orderDateLabel: 'Fecha del pedido',
+        scoreLabel: 'Puntuación',
     },
 
     placeholders: {
@@ -84,7 +89,9 @@ export default {
         longitudePlaceholder: 'Escriba su longitud',
         descriptionPlaceholder: 'Escriba una descripcion',
         websitePlaceholder: 'Escriba la URL de su pagina web',
-        accountCreditPlaceholder: 'Escriba una cantidad'
+        accountCreditPlaceholder: 'Escriba una cantidad',
+        menuDescriptionPlaceholder: 'Escriba la descripción del menú',
+        deliveryPricePlaceholder: 'Escriba el precio del delivery',
     },
 
     messages: {
@@ -107,5 +114,8 @@ export default {
         informationTitle: 'Información',
         selectQuantityTitle: 'Seleccionar cantidad',
         myPurchaseTitle: 'Mi compra',
+        providerPurchaseTitle: 'Mi compra para %(providername)s',
+        purchaseMenusTitle: 'Menús de la compra',
+        selectScoreTitle: 'Seleccionar puntaje',
     }
 }

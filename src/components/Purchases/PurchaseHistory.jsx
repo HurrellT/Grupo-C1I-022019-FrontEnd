@@ -192,7 +192,7 @@ class PurchaseHistory extends React.Component {
                 {/* MESSAGE SCORE MODAL */}
                 <Modal isOpen={this.state.messageScoreModal} toggle={this.toggleMessageScoreModal.bind(this)}>
                     <ModalHeader toggle={this.toggleMessageScoreModal.bind(this)}>
-                        Información
+                        <Translate content='titles.informationTitle'/>
                     </ModalHeader>
                     <ModalBody>
                          <ModalAlert errorsToShow={this.state.errorMessages} />
@@ -208,7 +208,7 @@ class PurchaseHistory extends React.Component {
                      </ModalBody>
                      <ModalFooter>
                          <Button color="primary" onClick={this.acceptScoreMessage.bind(this)}>
-                             Aceptar
+                             <Translate content='buttons.acceptButton'/>
                          </Button>
                      </ModalFooter>
 
@@ -217,7 +217,7 @@ class PurchaseHistory extends React.Component {
                 {/* MESSAGE MODAL */}
                 <Modal isOpen={this.state.messageModal} toggle={this.toggleMessageModal.bind(this)}>
                     <ModalHeader toggle={this.toggleMessageModal.bind(this)}>
-                        Información
+                        <Translate content='titles.informationTitle'/>
                     </ModalHeader>
                     <ModalBody>
                          <ModalAlert errorsToShow={this.state.errorMessages} />
@@ -233,7 +233,7 @@ class PurchaseHistory extends React.Component {
                      </ModalBody>
                      <ModalFooter>
                          <Button color="primary" onClick={this.toggleMessageModal.bind(this)}>
-                             Aceptar
+                             <Translate content='buttons.acceptButton'/>
                          </Button>
                      </ModalFooter>
 
@@ -243,7 +243,7 @@ class PurchaseHistory extends React.Component {
                 <Modal isOpen={this.state.seeMenusModal} toggle={this.toggleSeeMenusModal.bind(this)}
                        style={{width: 3000}}>
                     <ModalHeader toggle={this.toggleSeeMenusModal.bind(this)}>
-                        Menús de la compra
+                        <Translate content='titles.purchaseMenusTitle'/>
                     </ModalHeader>
                     <ModalBody>
                          <ModalAlert errorsToShow={this.state.errorMessages} />
@@ -281,7 +281,7 @@ class PurchaseHistory extends React.Component {
                 {/* SET SCORE MODAL */}
                 <Modal isOpen={this.state.setScoreModal} toggle={this.toggleSetScoreModal.bind(this)}>
                     <ModalHeader toggle={this.toggleSetScoreModal.bind(this)}>
-                        Seleccionar puntaje
+                        <Translate content='titles.selectScoreTitle'/>
                     </ModalHeader>
                     <ModalBody>
                          <ModalAlert errorsToShow={this.state.errorMessages} />
@@ -304,10 +304,10 @@ class PurchaseHistory extends React.Component {
                      </ModalBody>
                      <ModalFooter>
                          <Button color="primary" onClick={this.acceptScore.bind(this)}>
-                             Aceptar
+                             <Translate content='buttons.acceptButton'/>
                          </Button>
                          <Button color="secondary" onClick={this.cancelScore.bind(this)}>
-                             Cancelar
+                             <Translate content='buttons.cancelButton'/>
                          </Button>
                      </ModalFooter>
                 </Modal>
@@ -319,15 +319,15 @@ class PurchaseHistory extends React.Component {
                             <thead>
                             <tr>
                                 <th hidden>#</th>
-                                <th>Fecha de pedido</th>
-                                <th>Valor</th>
-                                <th>Proveedor</th>
-                                <th>Puntuación</th>
-                                <th>Fecha de entrega</th>
-                                <th>Hora de entrega</th>
-                                <th>Tipo de entrega</th>
-                                <th>Menús</th>
-                                <th>Puntuar</th>
+                                <th><Translate content='labels.orderDateLabel'/></th>
+                                <th><Translate content='labels.priceLabel'/></th>
+                                <th><Translate content='labels.providerLabel'/></th>
+                                <th><Translate content='labels.scoreLabel'/></th>
+                                <th><Translate content='labels.deliveryDateLabel'/></th>
+                                <th><Translate content='labels.deliveryTimeLabel'/></th>
+                                <th><Translate content='labels.deliveryTypeLabel'/></th>
+                                <th><Translate content='titles.menusTitle'/></th>
+                                <th><Translate content='buttons.rateButton'/></th>
                             </tr>
                             </thead>
 
@@ -346,13 +346,13 @@ class PurchaseHistory extends React.Component {
                                     <td>
                                         <Button color='primary' size='sm'
                                                 onClick={this.seePurchaseMenus.bind(this, purchase.order)}>
-                                            Ver menús de la compra
+                                            <Translate content='buttons.seePurchaseMenusButton'/>
                                         </Button>
                                     </td>
                                     <td>
                                         <Button color='warning' size='sm'
                                                 onClick={this.setScore.bind(this, purchase.id, purchase.score)}>
-                                            Puntuar
+                                            <Translate content='buttons.rateButton'/>
                                         </Button>
                                     </td>
                                 </tr>
