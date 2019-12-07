@@ -7,6 +7,7 @@ import Input from "reactstrap/es/Input";
 import Container from "reactstrap/es/Container";
 import Row from "reactstrap/es/Row";
 import counterpart from 'counterpart';
+import Translate from 'react-translate-component';
 import NumericInput from 'react-numeric-input';
 
 function ModalAlert({ errorsToShow }) {
@@ -28,17 +29,22 @@ class Menus extends React.Component {
         super(props)
 
         this.providerName = '';
+        this.pendigScoredPurchases = '0';
         this.state = {
             menus: [],
             menuNames: [],
             purchases: [],
             purchaseMenus: [],
+            purchasesHistory: [],
             totalAmount: 0,
             search: '',
             purchaseRequest: {
                 providerId: '',
                 menuName: '',
-                quantity: '1'
+                quantity: '1',
+                deliveryTime: '',
+                deliveryDate: '',
+                deliveryType: ''
             },
             newMenuData: {
                 name: '',
@@ -84,12 +90,15 @@ class Menus extends React.Component {
                 providerName: '',
                 score: []
             },
+            validDate: false,
+            purchaseMaked: false,
             message: '',
             newMenuModal: false,
             editMenuModal: false,
             messageModal: false,
             askQuantityModal: false,
             purchaseModal: false,
+            purchaseDataModal: false,
             addedToPurchase: false,
             errorMessages: []
         }
@@ -98,6 +107,8 @@ class Menus extends React.Component {
     //METHODS
 
     componentDidMount() {
+        this.setState({purchaseMaked : false});
+        this.getPendingScoredPurchases(4);
         this._refreshMenus();
     }
 
@@ -123,6 +134,12 @@ class Menus extends React.Component {
     togglePurchaseModal() {
         this.setState({
             purchaseModal: !this.state.purchaseModal
+        })
+    }
+
+    togglePurchaseDataModal() {
+        this.setState({
+            purchaseDataModal: !this.state.purchaseDataModal
         })
     }
 
@@ -193,16 +210,16 @@ class Menus extends React.Component {
 
 
     makePurchase() {
-        //TODO: change the 4 fot the logged client id
+        //TODO: change the 4 for the logged client id
         axios.post('http://localhost:8080/makePurchase/' + 4, this.state.purchases)
             .then((response) => {
                 this.setState({
-                    message: 'Su compra ha sido realizada con éxito'
+                    message: counterpart.translate('messages.successfulPurchaseMessage')
                 })
             })
             .catch((error) => {
                 this.setState({
-                    message: 'No se pudo realizar la compra'
+                    message: counterpart.translate('messages.failedPurchaseMessage')
                 })
             })
         this.setState({
@@ -210,55 +227,89 @@ class Menus extends React.Component {
             purchaseRequest: {
                             providerId: '',
                             menuName: '',
-                            quantity: '1'
+                            quantity: '1',
+                            deliveryTime: '',
+                            deliveryDate: '',
+                            deliveryType: ''
                             },
+            purchaseMaked: true,
             messageModal: !this.state.messageModal,
             purchaseModal: !this.state.purchaseModal
+        })
+    }
+
+    getPendingScoredPurchases(id){
+        axios.get('http://localhost:8080/pendingScoredPurchases/' + id)
+        .then(response => {
+                this.pendigScoredPurchases = response.data;
+        })
+        .catch(error => {
+            // console.log(error)
+            this.setState({errorMsg: 'Error retreiving data'})
         })
     }
 
     askForQuantity(menuName, providerId){
         let {purchaseRequest} = this.state;
         let{addedToPurchase} = this.state;
+        let{purchaseMaked} = this.state;
+        let{message} = this.state;
 
-        // eslint-disable-next-line array-callback-return
-        this.state.purchases.map(p => {if(p.menuName === menuName){addedToPurchase = true}});
-        if(addedToPurchase){
-            this.setState({
-                message: 'Este menú ya está en la compra',
-                messageModal: !this.state.messageModal,
-            })
+        if(this.pendigScoredPurchases > 0 || purchaseMaked){
+            message = counterpart.translate('messages.pendingScoreMessage');
+            this.setState({message})
+            this.toggleMessageModal();
         }
         else{
-            purchaseRequest.providerId = providerId;
-            purchaseRequest.menuName = menuName;
-            purchaseRequest.quantity = '1';
-            this.setState({ purchaseRequest });
-            this.toggleAskQuantityModal()
+            this.state.purchases.map(p => {if(p.menuName === menuName){addedToPurchase = true}});
+            if(addedToPurchase && !this.state.purchaseModal){
+                this.setState({
+                    message: counterpart.translate('messages.menuInPurchaseMessage'),
+                    messageModal: !this.state.messageModal,
+                })
+            }
+            else{
+                purchaseRequest.providerId = providerId;
+                purchaseRequest.menuName = menuName;
+                purchaseRequest.quantity = '1';
+                this.setState({ purchaseRequest });
+                this.toggleAskQuantityModal()
+            }
         }
     }
 
-    acceptAskQuantityModal(){
-        let {purchases} = this.state;
-        let {errorMessages} = this.state;
+    acceptPurchaseData(){
 
+        let {errorMessages} = this.state;
         if (this.state.purchaseRequest.quantity < 1){
            errorMessages = [];
-           errorMessages.push("La cantidad debe ser mayor a 0");
+           errorMessages.push(counterpart.translate('messages.quantityGreaterThan0Message'));
            this.setState({
                errorMessages
            });
         }
         else{
-            this.state.purchases.push({ providerId: this.state.purchaseRequest.providerId,
-                                        menuName: this.state.purchaseRequest.menuName,
-                                        quantity: this.state.purchaseRequest.quantity });
-            this.setState({
-                purchases,
-                errorMessages: [],
-                askQuantityModal: !this.state.askQuantityModal
-            })
+            if(!this.state.purchaseModal){
+                this.addMenuToPurchase();
+            }
+            else{
+                this.changeQuantityOfMenu();
+            }
         }
+    }
+
+    addMenuToPurchase(){
+
+        let {purchases} = this.state;
+        this.state.purchases.push({ providerId: this.state.purchaseRequest.providerId,
+                                    menuName: this.state.purchaseRequest.menuName,
+                                    quantity: this.state.purchaseRequest.quantity });
+        this.setState({
+            purchases,
+            errorMessages: [],
+            askQuantityModal: !this.state.askQuantityModal
+        })
+
     }
 
     seeMyPurchase(){
@@ -288,7 +339,7 @@ class Menus extends React.Component {
         }
         else{
              this.setState({
-                 message: 'Aún no hay menús en su compra',
+                 message: counterpart.translate('messages.noMenusInPurchaseMessage'),
                  messageModal: !this.state.messageModal
              })
         }
@@ -314,8 +365,65 @@ class Menus extends React.Component {
 
     }
 
+    changeQuantityOfMenu(){
+
+        let {purchaseMenus} = this.state;
+        let {purchases} = this.state;
+        let {newMenuData} = this.state;
+        let {totalAmount} = this.state;
+        let {purchaseRequest} = this.state;
+        totalAmount = 0;
+        purchases.map(p => {if(p.menuName === purchaseRequest.menuName) {
+                               p.quantity = this.state.purchaseRequest.quantity
+                           }});
+        purchaseMenus.map(p => {  newMenuData = this.state.menus.find(menu => menu.name === purchaseRequest.menuName);
+                                  if (p.name === purchaseRequest.menuName){
+                                     p.quantity = purchaseRequest.quantity;
+                                     p.price = newMenuData.price * purchaseRequest.quantity;
+                                }
+                               });
+        purchaseMenus.map(p => totalAmount = totalAmount + p.price);
+        this.setState({
+            totalAmount,
+            purchaseMenus,
+            purchases,
+            askQuantityModal: !this.state.askQuantityModal
+        })
+
+    }
+
+    setPurchaseData(){
+        let {purchases} = this.state;
+        let {purchaseRequest} = this.state;
+        let {errorMessages} = this.state;
+
+        purchases.map(p => { p.deliveryTime = purchaseRequest.deliveryTime;
+                             p.deliveryDate = purchaseRequest.deliveryDate;
+                             p.deliveryType = purchaseRequest.deliveryType; });
+        this.setState({
+            purchases,
+            purchaseRequest: {
+                            providerId: '',
+                            menuName: '',
+                            quantity: '1',
+                            deliveryTime: '',
+                            deliveryDate: '',
+                            deliveryType: ''
+                            },
+        })
+        this.togglePurchaseDataModal();
+        this.makePurchase();
+
+    }
+
     updateSearch(event) {
         this.setState({search: event.target.value.substr(0,20)});
+    }
+
+    updatePrField = (field) => (ev) => {
+        let {purchaseRequest} = this.state;
+        purchaseRequest[field] = ev.target.value;
+        this.setState({purchaseRequest})
     }
 
     //RENDER
@@ -327,7 +435,8 @@ class Menus extends React.Component {
     }
 
     render() {
-        const {menus, purchaseMenus} = this.state;
+        const {menus, purchaseMenus, errorMsg} = this.state;
+        const placeholderTranslations = counterpart;
         let filteredMenus = menus.filter(
             (menu) => {
                 return menu.name.toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1;
@@ -338,24 +447,25 @@ class Menus extends React.Component {
             <Container>
                 <Row>
                     <Col xs={10}>
-                        <h1 className="my-3">Menús</h1>
+                        <h1 className="my-3"><Translate content='titles.menusTitle'/></h1>
                     </Col>
                     <Col xs={8} className="my-3">
-                        <Label for="search" sm={3} style={{width: 300, padding: 19}} ><b>Filtrar por nombre:</b></Label>
+                        <Label for="search" sm={3} style={{width: 300, padding: 19}} >
+                        <b><Translate content='labels.nameFilterLabel'/></b></Label>
                         <input type = "text"
                                style={{width: 300}}
-                               placeholder = "Escriba un nombre de menú"
+                               placeholder = {placeholderTranslations.translate('placeholders.filterMenuNamePlaceholder')}
                                value = {this.state.search}
                                onChange = {this.updateSearch.bind(this)}/>
                     </Col>
                     <Col xs={2} className="my-3">
                         <Button className="my-3" color="primary" onClick={this.toggleNewMenuModal.bind(this)}>
-                            Nuevo Menú
+                            <Translate content='buttons.newMenuButton'/>
                         </Button>
                     </Col>
                     <Col xs={2} className="my-3">
                         <Button className="my-3" color="primary" onClick={this.seeMyPurchase.bind(this)}>
-                            Ver mi compra
+                            <Translate content='buttons.seePurchaseButton'/>
                         </Button>
                     </Col>
                 </Row>
@@ -363,7 +473,7 @@ class Menus extends React.Component {
                 {/* ADD MENU MODAL */}
                 <Modal isOpen={this.state.newMenuModal} toggle={this.toggleNewMenuModal.bind(this)}>
                     <ModalHeader toggle={this.toggleNewMenuModal.bind(this)}>
-                        Añadir un nuevo Menú
+                        <Translate content='titles.addMenuTitle'/>
                     </ModalHeader>
                     <ModalBody>
                         <ModalAlert errorsToShow={this.state.errorMessages} />
@@ -372,9 +482,12 @@ class Menus extends React.Component {
                         <Form>
                             {/* NAME */}
                             <FormGroup row>
-                                <Label for="name" sm={10}>Nombre</Label>
+                                <Label for="name" sm={10}>
+                                    <Translate content='labels.nameLabel'/>
+                                </Label>
                                 <Col sm={10}>
-                                    <Input name="name" id="name" placeholder="Escriba el nombre del menú"
+                                    <Input name="name" id="name"
+                                           placeholder={placeholderTranslations.translate('placeholders.filterMenuNamePlaceholder')}
                                            value={this.state.newMenuData.name}
                                            onChange={this.updateField('name')}/>
                                 </Col>
@@ -382,9 +495,12 @@ class Menus extends React.Component {
 
                             {/* DESCRIPTION */}
                             <FormGroup row>
-                                <Label for="description" sm={10}>Descripción</Label>
+                                <Label for="description" sm={10}>
+                                    <Translate content='labels.descriptionLabel'/>
+                                </Label>
                                 <Col sm={10}>
-                                    <Input name="description" id="description" placeholder="Escriba la descripción del menú"
+                                    <Input name="description" id="description"
+                                           placeholder={placeholderTranslations.translate('placeholders.menuDescriptionPlaceholder')}
                                            value={this.state.newMenuData.description}
                                            onChange={(e) => {
                                                let {newMenuData} = this.state;
@@ -396,7 +512,9 @@ class Menus extends React.Component {
 
                             {/* CATEGORY */}
                             <FormGroup row>
-                                <Label for="category" sm={10}>Categoría</Label>
+                                <Label for="category" sm={10}>
+                                    <Translate content='labels.categoryLabel'/>
+                                </Label>
                                 <Col sm={10}>
                                     <CustomInput type="select" name="category" id="category"
                                            value={this.state.newMenuData.category}
@@ -436,9 +554,12 @@ class Menus extends React.Component {
 
                             {/* DELIVERY PRICE */}
                             <FormGroup row>
-                                <Label for="deliveryPrice" sm={10}>Precio de delivery</Label>
+                                <Label for="deliveryPrice" sm={10}>
+                                    <Translate content='labels.deliveryPriceLabel'/>
+                                </Label>
                                 <Col sm={10}>
-                                    <Input type="deliveryPrice" name="deliveryPrice" id="deliveryPrice" placeholder="Escriba el precio de delivery"
+                                    <Input type="deliveryPrice" name="deliveryPrice" id="deliveryPrice"
+                                           placeholder={placeholderTranslations.translate('placeholders.deliveryPricePlaceholder')}
                                            value={this.state.newMenuData.deliveryPrice}
                                            onChange={(e) => {
                                                let {newMenuData} = this.state;
@@ -452,10 +573,10 @@ class Menus extends React.Component {
                     </ModalBody>
                     <ModalFooter>
                         <Button color="primary" onClick={this.addMenu.bind(this)}>
-                            Agregar Menú
-                        </Button>{' '}
+                            <Translate content='buttons.addMenuButton'/>
+                        </Button>
                         <Button color="secondary" onClick={this.toggleNewMenuModal.bind(this)}>
-                            Cancelar
+                            <Translate content='buttons.cancelButton'/>
                         </Button>
                     </ModalFooter>
                 </Modal>
@@ -463,7 +584,7 @@ class Menus extends React.Component {
                 {/* MESSAGE MODAL */}
                 <Modal isOpen={this.state.messageModal} toggle={this.toggleMessageModal.bind(this)}>
                     <ModalHeader toggle={this.toggleMessageModal.bind(this)}>
-                        Información
+                        <Translate content='titles.informationTitle'/>
                     </ModalHeader>
                     <ModalBody>
                          <ModalAlert errorsToShow={this.state.errorMessages} />
@@ -479,7 +600,7 @@ class Menus extends React.Component {
                      </ModalBody>
                      <ModalFooter>
                          <Button color="primary" onClick={this.toggleMessageModal.bind(this)}>
-                             Aceptar
+                             <Translate content='buttons.acceptButton'/>
                          </Button>
                      </ModalFooter>
 
@@ -489,7 +610,7 @@ class Menus extends React.Component {
                 {/* ASK QUANTITY MODAL */}
                 <Modal isOpen={this.state.askQuantityModal} toggle={this.toggleAskQuantityModal.bind(this)}>
                     <ModalHeader toggle={this.toggleAskQuantityModal.bind(this)}>
-                        Seleccionar la cantidad
+                        <Translate content='titles.selectQuantityTitle'/>
                     </ModalHeader>
                     <ModalBody>
                          <ModalAlert errorsToShow={this.state.errorMessages} />
@@ -511,11 +632,11 @@ class Menus extends React.Component {
 
                      </ModalBody>
                      <ModalFooter>
-                         <Button color="primary" onClick={this.acceptAskQuantityModal.bind(this)}>
-                             Aceptar
+                         <Button color="primary" onClick={this.acceptPurchaseData.bind(this)}>
+                             <Translate content='buttons.acceptButton'/>
                          </Button>
                          <Button color="secondary" onClick={this.toggleAskQuantityModal.bind(this)}>
-                             Cancelar
+                             <Translate content='buttons.cancelButton'/>
                          </Button>
                      </ModalFooter>
                 </Modal>
@@ -524,7 +645,7 @@ class Menus extends React.Component {
                 <Modal isOpen={this.state.purchaseModal} toggle={this.togglePurchaseModal.bind(this)}
                        style={{width: 3000}}>
                     <ModalHeader toggle={this.togglePurchaseModal.bind(this)}>
-                        Mi compra
+                        <Translate content='titles.myPurchaseTitle'/>
                     </ModalHeader>
                     <ModalBody>
                          <ModalAlert errorsToShow={this.state.errorMessages} />
@@ -535,11 +656,11 @@ class Menus extends React.Component {
                                      <thead>
                                      <tr>
                                          <th hidden>#</th>
-                                         <th>Nombre</th>
-                                         <th>Proveedor</th>
-                                         <th>Cantidad</th>
-                                         <th>Precio</th>
-                                         <th>Acciones</th>
+                                         <th><Translate content='labels.nameLabel'/></th>
+                                         <th><Translate content='labels.providerLabel'/></th>
+                                         <th><Translate content='labels.quantityLabel'/></th>
+                                         <th><Translate content='labels.priceLabel'/></th>
+                                         <th><Translate content='labels.actionsLabel'/></th>
                                      </tr>
                                      </thead>
 
@@ -552,9 +673,13 @@ class Menus extends React.Component {
                                              <td>{menu.quantity}</td>
                                              <td>{menu.price}</td>
                                              <td>
+                                                <Button color='warning' size='sm'
+                                                        onClick={this.askForQuantity.bind(this, menu.name, menu.providerId)}>
+                                                    <Translate content='buttons.changeQuantityButton'/>
+                                                </Button>
                                                  <Button color='danger' size='sm'
                                                          onClick={this.removeFromPurchase.bind(this, menu.name)}>
-                                                     Quitar de la compra
+                                                     <Translate content='buttons.removeFromPurchaseButton'/>
                                                  </Button>
                                              </td>
                                          </tr>
@@ -564,7 +689,6 @@ class Menus extends React.Component {
                              </Col>
                          </Row>
                          <Form>
-                            {/* NAME */}
                             <FormGroup row>
                                 <Label for="total" sm={2}><b>Total:</b></Label>
                                 <Col sm={5}>
@@ -573,12 +697,78 @@ class Menus extends React.Component {
                             </FormGroup>
                          </Form>
 
-                     </ModalBody>
-                     <ModalFooter>
-                         <Button color="primary" onClick={this.makePurchase.bind(this)}>
-                             Realizar la compra
-                         </Button>
-                     </ModalFooter>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="primary" onClick={this.togglePurchaseDataModal.bind(this)}>
+                            <Translate content='buttons.makeThePurchaseButton'/>
+                        </Button>
+                    </ModalFooter>
+                </Modal>
+
+                {/* PURCHASE DATA MODAL */}
+                <Modal isOpen={this.state.purchaseDataModal} toggle={this.togglePurchaseDataModal.bind(this)}
+                       style={{width: 3000}}>
+                    <ModalHeader toggle={this.togglePurchaseDataModal.bind(this)}>
+                        <Translate content='buttons.selectPurchaseDataButton'/>
+                    </ModalHeader>
+                    <ModalBody>
+                        <ModalAlert errorsToShow={this.state.errorMessages} />
+
+                        {/* PURCHASE DATA FORM */}
+                        <Form>
+
+                            {/* DELIVERY TIME */}
+                            <FormGroup row>
+                                <Label for="deliveryTime" sm={2}>
+                                    <Translate content='labels.deliveryTimeLabel'/>
+                                </Label>
+                                <Col sm={10}>
+                                    <Input type="time" name="deliveryTime" id="deliveryTime"
+                                           value={this.state.purchaseRequest.deliveryTime}
+                                           onChange={this.updatePrField('deliveryTime')}
+                                    />
+                                </Col>
+                            </FormGroup>
+
+                            {/* DELIVERY DATE */}
+                            <FormGroup row>
+                                <Label for="deliveryDate" sm={2}>
+                                    <Translate content='labels.deliveryDateLabel'/>
+                                </Label>
+                                <Col sm={10}>
+                                    <Input type="date" name="deliveryDate" id="deliveryDate"
+                                           value={this.state.purchaseRequest.deliveryDate}
+                                           onChange={this.updatePrField('deliveryDate')}
+                                    />
+                                </Col>
+                            </FormGroup>
+
+                            {/* DELIVERY TYPE */}
+                            <FormGroup row>
+                                <Label for="deliveryType" sm={2}>
+                                    <Translate content='labels.deliveryTypeLabel'/>
+                                </Label>
+                                <Col sm={10}>
+                                    <CustomInput type="select" name="deliveryType" id="deliveryType"
+                                           value={this.state.purchaseRequest.deliveryType}
+                                           onChange={this.updatePrField('deliveryType')}>
+                                        <option value="">
+                                            {counterpart.translate('labels.chooseADeliveryTypeLabel')}
+                                        </option>
+                                        <option>DELIVERY</option>
+                                        <option>PICK UP</option>
+                                    </CustomInput>
+                                </Col>
+                            </FormGroup>
+
+                        </Form>
+
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="primary" onClick={this.setPurchaseData.bind(this)} disabled={this.state.validDate}>
+                            <Translate content='buttons.acceptButton'/>
+                        </Button>
+                    </ModalFooter>
                 </Modal>
 
                 {/* MENU CRUD TABLE */}
@@ -588,12 +778,12 @@ class Menus extends React.Component {
                             <thead>
                             <tr>
                                 <th hidden>#</th>
-                                <th>Nombre</th>
-                                <th>Descripción</th>
-                                <th>Categoría</th>
-                                <th>Precio</th>
-                                <th>Proveedor</th>
-                                <th>Acciones</th>
+                                <th><Translate content='labels.nameLabel'/></th>
+                                <th><Translate content='labels.descriptionLabel'/></th>
+                                <th><Translate content='labels.categoryLabel'/></th>
+                                <th><Translate content='labels.priceLabel'/></th>
+                                <th><Translate content='labels.providerLabel'/></th>
+                                <th><Translate content='labels.actionsLabel'/></th>
                             </tr>
                             </thead>
 
@@ -610,7 +800,7 @@ class Menus extends React.Component {
                                     <td>
                                         <Button color='warning' size='sm'
                                                 onClick={this.askForQuantity.bind(this, menu.name, menu.providerId)}>
-                                            Agregar a mi compra
+                                            <Translate content='buttons.addMenuButton'/>
                                         </Button>
                                     </td>
                                 </tr>

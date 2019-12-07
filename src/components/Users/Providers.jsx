@@ -471,12 +471,14 @@ class Providers extends React.Component {
                         </h1>
                     </Col>
                     <Col xs={8} className="my-3">
-                        <Label for="search" sm={3} style={{width: 300, padding: 19}}><b>Filtrar por nombre:</b></Label>
-                        <input type="text"
+
+                        <Label for="search" sm={3} style={{width: 300, padding: 19}} >
+                        <b><Translate content='labels.nameFilterLabel'/></b></Label>
+                        <input type = "text"
                                style={{width: 300}}
-                               placeholder="Escriba un nombre de proveedor"
-                               value={this.state.search}
-                               onChange={this.updateSearch.bind(this)}/>
+                               placeholder = {placeholderTranslations.translate('placeholders.filterProviderNamePlaceholder')}
+                               value = {this.state.search}
+                               onChange = {this.updateSearch.bind(this)}/>
                     </Col>
                     <AddProviderButton
                         onClick={this.toggleNewUserModal.bind(this)}

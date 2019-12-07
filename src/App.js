@@ -13,6 +13,7 @@ import Users from "./components/Users/Users";
 import Providers from "./components/Users/Providers";
 import Menus from "./components/Menus/Menus";
 import ProviderMenus from "./components/Menus/ProviderMenus";
+import PurchaseHistory from "./components/Purchases/PurchaseHistory";
 import counterpart from 'counterpart'
 import es from "./lang/es";
 import en from "./lang/en";
@@ -68,6 +69,7 @@ function App() {
                     {/*<PrivateRoute path="/beAProvider" component={() => <BecomeAProvider loggedUser={user} />} />*/}
                     <PrivateRoute path="/menus" component={Menus} />
                     <PrivateRoute path="/providerMenus/:provId" exact strict component={ProviderMenus} />
+                    <PrivateRoute path="/purchaseHistory" component={PurchaseHistory} />
                 </Switch>
 
                 {/*<footer style={*/}

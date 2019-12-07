@@ -8,6 +8,8 @@ import Container from "reactstrap/es/Container";
 import Row from "reactstrap/es/Row";
 import NumericInput from 'react-numeric-input';
 import Menus from "./Menus";
+import counterpart from 'counterpart';
+import Translate from 'react-translate-component';
 
 function ModalAlert({ errorsToShow }) {
     const hasErrorsToShow = errorsToShow.length > 0
@@ -32,7 +34,9 @@ class ProviderMenus extends Menus {
 
     componentDidMount() {
         let {provId} = this.props.match.params;
+        this.setState({purchaseMaked : false});
         super.getProviderName(provId);
+        this.getPendingScoredPurchases(4);
         this._refreshMenus(provId);
     }
 
@@ -48,7 +52,10 @@ class ProviderMenus extends Menus {
     //RENDER
 
     render() {
-        const {menus, purchaseMenus} = this.state
+        const {menus, purchaseMenus, errorMsg} = this.state
+        const placeholderTranslations = counterpart;
+        const providername = this.providerName;
+       
         let filteredMenus = menus.filter(
             (menu) => {
                 return menu.name.toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1;
@@ -59,24 +66,27 @@ class ProviderMenus extends Menus {
             <Container>
                 <Row>
                     <Col xs={8}>
-                        <h1 className="my-3">Menús de {this.providerName}</h1>
+                        <h1 className="my-3">
+                            <Translate content='titles.providerMenusTitle' with={{providername}}/>
+                        </h1>
                     </Col>
                     <Col xs={8} className="my-3">
-                        <Label for="search" sm={3} style={{width: 300, padding: 19}} ><b>Filtrar por nombre:</b></Label>
+                        <Label for="search" sm={3} style={{width: 300, padding: 19}} >
+                        <b><Translate content='labels.nameFilterLabel'/></b></Label>
                         <input type = "text"
                                style={{width: 300}}
-                               placeholder = "Escriba un nombre de menú"
+                               placeholder = {placeholderTranslations.translate('placeholders.filterMenuNamePlaceholder')}
                                value = {this.state.search}
                                onChange = {this.updateSearch.bind(this)}/>
                     </Col>
                     <Col xs={2} className="my-3">
                         <Button className="my-3" color="primary" onClick={this.toggleNewMenuModal.bind(this)}>
-                            Nuevo Menú
+                            <Translate content='buttons.newMenuButton'/>
                         </Button>
                     </Col>
                     <Col xs={2} className="my-3">
                         <Button className="my-3" color="primary" onClick={this.seeMyPurchase.bind(this)}>
-                            Ver mi compra
+                            <Translate content='buttons.seePurchaseButton'/>
                         </Button>
                     </Col>
                 </Row>
@@ -85,7 +95,7 @@ class ProviderMenus extends Menus {
 
                 <Modal isOpen={this.state.newMenuModal} toggle={this.toggleNewMenuModal.bind(this)}>
                     <ModalHeader toggle={this.toggleNewMenuModal.bind(this)}>
-                        Añadir un nuevo Menú
+                        <Translate content='titles.addMenuTitle'/>
                     </ModalHeader>
                     <ModalBody>
                         <ModalAlert errorsToShow={this.state.errorMessages} />
@@ -94,9 +104,12 @@ class ProviderMenus extends Menus {
                         <Form>
                             {/* NAME */}
                             <FormGroup row>
-                                <Label for="name" sm={10}>Nombre</Label>
+                                <Label for="name" sm={10}>
+                                    <Translate content='labels.nameLabel'/>
+                                </Label>
                                 <Col sm={10}>
-                                    <Input name="name" id="name" placeholder="Escriba el nombre del menú"
+                                    <Input name="name" id="name"
+                                           placeholder={placeholderTranslations.translate('placeholders.filterMenuNamePlaceholder')}
                                            value={this.state.newMenuData.name}
                                            onChange={this.updateField('name')}/>
                                 </Col>
@@ -104,9 +117,12 @@ class ProviderMenus extends Menus {
 
                             {/* DESCRIPTION */}
                             <FormGroup row>
-                                <Label for="description" sm={10}>Descripción</Label>
+                                <Label for="description" sm={10}>
+                                    <Translate content='labels.descriptionLabel'/>
+                                </Label>
                                 <Col sm={10}>
-                                    <Input name="description" id="description" placeholder="Escriba la descripción del menú"
+                                    <Input name="description" id="description"
+                                           placeholder={placeholderTranslations.translate('placeholders.menuDescriptionPlaceholder')}
                                            value={this.state.newMenuData.description}
                                            onChange={(e) => {
                                                let {newMenuData} = this.state;
@@ -118,7 +134,9 @@ class ProviderMenus extends Menus {
 
                             {/* CATEGORY */}
                             <FormGroup row>
-                                <Label for="category" sm={10}>Categoría</Label>
+                                <Label for="category" sm={10}>
+                                    <Translate content='labels.categoryLabel'/>
+                                </Label>
                                 <Col sm={10}>
                                     <Input name="category" id="category" placeholder="Escriba la categoría del menú"
                                            value={this.state.newMenuData.category}
@@ -132,9 +150,12 @@ class ProviderMenus extends Menus {
 
                             {/* DELIVERY PRICE */}
                             <FormGroup row>
-                                <Label for="deliveryPrice" sm={10}>Precio de delivery</Label>
+                                <Label for="deliveryPrice" sm={10}>
+                                    <Translate content='labels.deliveryPriceLabel'/>
+                                </Label>
                                 <Col sm={10}>
-                                    <Input type="deliveryPrice" name="deliveryPrice" id="deliveryPrice" placeholder="Escriba el precio de delivery"
+                                    <Input type="deliveryPrice" name="deliveryPrice" id="deliveryPrice"
+                                           placeholder={placeholderTranslations.translate('placeholders.deliveryPricePlaceholder')}
                                            value={this.state.newMenuData.deliveryPrice}
                                            onChange={(e) => {
                                                let {newMenuData} = this.state;
@@ -148,10 +169,10 @@ class ProviderMenus extends Menus {
                     </ModalBody>
                     <ModalFooter>
                         <Button color="primary" onClick={this.addMenu.bind(this)}>
-                            Agregar Menú
+                            <Translate content='buttons.addMenuButton'/>
                         </Button>{' '}
                         <Button color="secondary" onClick={this.toggleNewMenuModal.bind(this)}>
-                            Cancelar
+                            <Translate content='buttons.cancelButton'/>
                         </Button>
                     </ModalFooter>
                 </Modal>
@@ -160,7 +181,7 @@ class ProviderMenus extends Menus {
 
                 <Modal isOpen={this.state.messageModal} toggle={this.toggleMessageModal.bind(this)}>
                     <ModalHeader toggle={this.toggleMessageModal.bind(this)}>
-                        Información
+                        <Translate content='titles.informationTitle'/>
                     </ModalHeader>
                     <ModalBody>
                          <ModalAlert errorsToShow={this.state.errorMessages} />
@@ -176,7 +197,7 @@ class ProviderMenus extends Menus {
                      </ModalBody>
                      <ModalFooter>
                          <Button color="primary" onClick={this.toggleMessageModal.bind(this)}>
-                             Aceptar
+                             <Translate content='buttons.acceptButton'/>
                          </Button>
                      </ModalFooter>
 
@@ -185,7 +206,7 @@ class ProviderMenus extends Menus {
                 {/* ASK QUANTITY MODAL */}
                 <Modal isOpen={this.state.askQuantityModal} toggle={this.toggleAskQuantityModal.bind(this)}>
                     <ModalHeader toggle={this.toggleAskQuantityModal.bind(this)}>
-                        Seleccionar la cantidad
+                        <Translate content='titles.selectQuantityTitle'/>
                     </ModalHeader>
                     <ModalBody>
                          <ModalAlert errorsToShow={this.state.errorMessages} />
@@ -207,11 +228,11 @@ class ProviderMenus extends Menus {
 
                      </ModalBody>
                      <ModalFooter>
-                         <Button color="primary" onClick={this.acceptAskQuantityModal.bind(this)}>
-                             Aceptar
+                         <Button color="primary" onClick={this.acceptPurchaseData.bind(this)}>
+                             <Translate content='buttons.acceptButton'/>
                          </Button>
                          <Button color="secondary" onClick={this.toggleAskQuantityModal.bind(this)}>
-                             Cancelar
+                             <Translate content='buttons.cancelButton'/>
                          </Button>
                      </ModalFooter>
                 </Modal>
@@ -220,7 +241,7 @@ class ProviderMenus extends Menus {
                 <Modal isOpen={this.state.purchaseModal} toggle={this.togglePurchaseModal.bind(this)}
                        style={{width: 3000}}>
                     <ModalHeader toggle={this.togglePurchaseModal.bind(this)}>
-                        Mi compra para {this.providerName}
+                        <Translate content='titles.providerPurchaseTitle' with={{providername}}/>
                     </ModalHeader>
                     <ModalBody>
                          <ModalAlert errorsToShow={this.state.errorMessages} />
@@ -231,10 +252,10 @@ class ProviderMenus extends Menus {
                                      <thead>
                                      <tr>
                                          <th hidden>#</th>
-                                         <th>Nombre</th>
-                                         <th>Cantidad</th>
-                                         <th>Precio</th>
-                                         <th>Acciones</th>
+                                         <th><Translate content='labels.nameLabel'/></th>
+                                         <th><Translate content='labels.quantityLabel'/></th>
+                                         <th><Translate content='labels.priceLabel'/></th>
+                                         <th><Translate content='labels.actionsLabel'/></th>
                                      </tr>
                                      </thead>
 
@@ -246,10 +267,14 @@ class ProviderMenus extends Menus {
                                              <td>{menu.quantity}</td>
                                              <td>{menu.price}</td>
                                              <td>
-                                                 <Button color='danger' size='sm'
-                                                         onClick={this.removeFromPurchase.bind(this, menu.name)}>
-                                                     Quitar de la compra
-                                                 </Button>
+                                                <Button color='warning' size='sm'
+                                                         onClick={this.askForQuantity.bind(this, menu.name, menu.providerId)}>
+                                                     <Translate content='buttons.changeQuantityButton'/>
+                                                </Button>
+                                                <Button color='danger' size='sm'
+                                                        onClick={this.removeFromPurchase.bind(this, menu.name)}>
+                                                    <Translate content='buttons.removeFromPurchaseButton'/>
+                                                </Button>
                                              </td>
                                          </tr>
                                      )}
@@ -269,10 +294,76 @@ class ProviderMenus extends Menus {
 
                      </ModalBody>
                      <ModalFooter>
-                         <Button color="primary" onClick={this.makePurchase.bind(this)}>
-                             Realizar la compra
+                         <Button color="primary" onClick={this.togglePurchaseDataModal.bind(this)}>
+                             <Translate content='buttons.makeThePurchaseButton'/>
                          </Button>
                      </ModalFooter>
+                </Modal>
+
+                {/* PURCHASE DATA MODAL */}
+                <Modal isOpen={this.state.purchaseDataModal} toggle={this.togglePurchaseDataModal.bind(this)}
+                       style={{width: 3000}}>
+                    <ModalHeader toggle={this.togglePurchaseDataModal.bind(this)}>
+                        <Translate content='buttons.selectPurchaseDataButton'/>
+                    </ModalHeader>
+                    <ModalBody>
+                        <ModalAlert errorsToShow={this.state.errorMessages} />
+
+                        {/* PURCHASE DATA FORM */}
+                        <Form>
+
+                            {/* DELIVERY TIME */}
+                            <FormGroup row>
+                                <Label for="deliveryTime" sm={2}>
+                                    <Translate content='labels.deliveryTimeLabel'/>
+                                </Label>
+                                <Col sm={10}>
+                                    <Input type="time" name="deliveryTime" id="deliveryTime"
+                                           value={this.state.purchaseRequest.deliveryTime}
+                                           onChange={this.updatePrField('deliveryTime')}
+                                    />
+                                </Col>
+                            </FormGroup>
+
+                            {/* DELIVERY DATE */}
+                            <FormGroup row>
+                                <Label for="deliveryDate" sm={2}>
+                                    <Translate content='labels.deliveryDateLabel'/>
+                                </Label>
+                                <Col sm={10}>
+                                    <Input type="date" name="deliveryDate" id="deliveryDate"
+                                           value={this.state.purchaseRequest.deliveryDate}
+                                           onChange={this.updatePrField('deliveryDate')}
+                                    />
+                                </Col>
+                            </FormGroup>
+
+                            {/* DELIVERY TYPE */}
+                            <FormGroup row>
+                                <Label for="deliveryType" sm={2}>
+                                    <Translate content='labels.deliveryTypeLabel'/>
+                                </Label>
+                                <Col sm={10}>
+                                    <CustomInput type="select" name="deliveryType" id="deliveryType"
+                                           value={this.state.purchaseRequest.deliveryType}
+                                           onChange={this.updatePrField('deliveryType')}>
+                                        <option value="">
+                                            {counterpart.translate('labels.chooseADeliveryTypeLabel')}
+                                        </option>
+                                        <option>DELIVERY</option>
+                                        <option>PICK UP</option>
+                                    </CustomInput>
+                                </Col>
+                            </FormGroup>
+
+                        </Form>
+
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="primary" onClick={this.setPurchaseData.bind(this)} disabled={this.state.validDate}>
+                            <Translate content='buttons.acceptButton'/>
+                        </Button>
+                    </ModalFooter>
                 </Modal>
 
                 {/* MENU CRUD TABLE */}
@@ -282,11 +373,11 @@ class ProviderMenus extends Menus {
                             <thead>
                             <tr>
                                 <th hidden>#</th>
-                                <th>Nombre</th>
-                                <th>Descripción</th>
-                                <th>Categoría</th>
-                                <th>Precio</th>
-                                <th>Acciones</th>
+                                <th><Translate content='labels.nameLabel'/></th>
+                                <th><Translate content='labels.descriptionLabel'/></th>
+                                <th><Translate content='labels.categoryLabel'/></th>
+                                <th><Translate content='labels.priceLabel'/></th>
+                                <th><Translate content='labels.actionsLabel'/></th>
                             </tr>
                             </thead>
 
@@ -302,7 +393,7 @@ class ProviderMenus extends Menus {
                                     <td>
                                         <Button color='warning' size='sm'
                                                 onClick={this.askForQuantity.bind(this, menu.name, menu.providerId)}>
-                                            Agregar a mi compra
+                                            <Translate content='buttons.addMenuButton'/>
                                         </Button>
                                     </td>
                                 </tr>
