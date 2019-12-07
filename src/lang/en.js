@@ -1,5 +1,4 @@
-import {ModalHeader} from "reactstrap";
-import React from "react";
+// import React from "react";
 
 export default {
     loading: 'Loading...',
@@ -41,6 +40,7 @@ export default {
         selectPurchaseDataButton: 'Select date, time and type of delivery',
         rateButton: 'Rate',
         seePurchaseMenusButton: 'See purchase menus',
+        beAProvider: 'Be a Provider!'
     },
 
     labels: {
@@ -60,7 +60,6 @@ export default {
         actionsLabel: 'Actions',
         chooseADayLabel: 'Choose a day',
         availableAccountCredit: 'Your available credit is %(credit)s USD',
-        chooseADayLabel: 'Choose a day',
         chooseADeliveryTypeLabel: 'Choose a delivery type',
         nameFilterLabel: 'Filter by name:',
         providerLabel: 'Provider',
@@ -75,6 +74,7 @@ export default {
         deliveryPriceLabel: 'Delivery price',
         orderDateLabel: 'Order date',
         scoreLabel: 'Score',
+        newUserRegistration: 'Register!'
     },
 
     placeholders: {

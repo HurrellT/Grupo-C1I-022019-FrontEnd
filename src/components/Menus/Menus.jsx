@@ -199,10 +199,6 @@ class Menus extends React.Component {
                     menus: response.data
                 })
             })
-            .catch(error => {
-                // console.log(error)
-                this.setState({errorMsg: 'Error retreiving data'})
-            })
     }
 
     getProviderName(id){
@@ -210,10 +206,6 @@ class Menus extends React.Component {
             .then(response => {
                 this.providerName = response.data;
              })
-            .catch(error => {
-                //console.log(error)
-                this.setState({errorMsg: 'Error retreiving data'})
-            })
     }
 
 
@@ -328,6 +320,7 @@ class Menus extends React.Component {
             let {totalAmount} = this.state;
             purchaseMenus = [];
             totalAmount = 0;
+            // eslint-disable-next-line array-callback-return
             this.state.purchases.map(p => {
                                             newMenuData = this.state.menus.find(menu => menu.name === p.menuName);
                                             purchaseMenus.push({

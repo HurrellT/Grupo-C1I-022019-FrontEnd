@@ -3,7 +3,7 @@
 import React from "react";
 import NavBar from "./components/NavBar";
 import { useAuth0 } from "./react-auth0-spa";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import {BrowserRouter, Route, Switch} from "react-router-dom";
 import Profile from "./components/Profile";
 import PrivateRoute from "./components/PrivateRoute";
 import Map from "./components/Map/Map";
@@ -18,13 +18,16 @@ import counterpart from 'counterpart'
 import es from "./lang/es";
 import en from "./lang/en";
 import Translate from 'react-translate-component';
+import Registration from "./components/Registration";
+import Home from "./components/Home";
 
 counterpart.registerTranslations('es', es)
 counterpart.registerTranslations('en', en)
 counterpart.setLocale(localStorage.getItem('lang'))
 
 function App() {
-    const { loading } = useAuth0();
+
+    const { loading, user, isAuthenticated } = useAuth0();
 
     const padding = {
         padding: 10
@@ -50,19 +53,39 @@ function App() {
             <BrowserRouter>
                 <header>
                     <NavBar />
+                    {isAuthenticated && <Registration loggedUser={user}/>}
                 </header>
                 <Switch>
                     <Route path="/" exact />
+                    {/*<PrivateRoute path="/registration" component={() => <Registration loggedUser={user}/>} />*/}
+                    <PrivateRoute path="/home" component={() => <Home loggedUser={user}/>} />
                     <PrivateRoute path="/profile" component={Profile} />
                     <PrivateRoute path="/map" component={Map} />
                     <PrivateRoute path="/users" component={Users} />
                     {/* TODO: USERS ES TEMPORAL */}
                     <PrivateRoute path="/clientAccount" component={ClientAccount} />
-                    <PrivateRoute path="/providers" component={Providers} />
+                    {/*<PrivateRoute path="/providers" component={Providers} />*/}
+                    <PrivateRoute path="/providers" component={() => <Providers loggedUser={user} />} />
+                    {/*<PrivateRoute path="/beAProvider" component={() => <BecomeAProvider loggedUser={user} />} />*/}
                     <PrivateRoute path="/menus" component={Menus} />
                     <PrivateRoute path="/providerMenus/:provId" exact strict component={ProviderMenus} />
                     <PrivateRoute path="/purchaseHistory" component={PurchaseHistory} />
                 </Switch>
+
+                {/*<footer style={*/}
+                {/*    {fontSize: 'small',*/}
+                {/*    padding: 4,*/}
+                {/*    position: 'fixed',*/}
+                {/*    left: 0,*/}
+                {/*    bottom: 0,*/}
+                {/*    width: '100%',*/}
+                {/*    backgroundColor: '#f8f9fa',*/}
+                {/*    textAlign: 'right'}*/}
+                {/*}>*/}
+                {/*    <Link to='/beAProvider'>*/}
+                {/*        <Translate content='buttons.beAProvider'/>*/}
+                {/*    </Link>*/}
+                {/*</footer>*/}
             </BrowserRouter>
         </div>
     );

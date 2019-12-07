@@ -1,5 +1,4 @@
-import {ModalHeader} from "reactstrap";
-import React from "react";
+// import React from "react";
 
 export default {
     loading: 'Cargando...',
@@ -31,7 +30,6 @@ export default {
         logoutButton: 'Cerrar sesion',
         withdrawCredit: 'Retirar credito',
         depositCredit: 'Depositar credito',
-        logoutButton: 'Cerrar sesion',
         seePurchaseButton: 'Ver mi compra',
         addMenuButton: 'Agregar a mi compra',
         changeQuantityButton: 'Cambiar la cantidad',
@@ -41,6 +39,7 @@ export default {
         selectPurchaseDataButton: 'Seleccionar fecha, hora y tipo de entrega',
         rateButton: 'Puntuar',
         seePurchaseMenusButton: 'Ver menús de la compra',
+        beAProvider: 'Convertite en Proveedor!'
     },
 
     labels: {
@@ -74,6 +73,7 @@ export default {
         deliveryPriceLabel: 'Precio de la entrega',
         orderDateLabel: 'Fecha del pedido',
         scoreLabel: 'Puntuación',
+        newUserRegistration: 'Registrese!'
     },
 
     placeholders: {
