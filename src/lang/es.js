@@ -1,5 +1,4 @@
-import {ModalHeader} from "reactstrap";
-import React from "react";
+// import React from "react";
 
 export default {
     loading: 'Cargando...',
@@ -26,7 +25,8 @@ export default {
         loginButton: 'Iniciar sesion',
         logoutButton: 'Cerrar sesion',
         withdrawCredit: 'Retirar credito',
-        depositCredit: 'Depositar credito'
+        depositCredit: 'Depositar credito',
+        beAProvider: 'Convertite en Proveedor!'
     },
 
     labels: {
@@ -45,7 +45,8 @@ export default {
         accountCreditLabel: 'Credito',
         actionsLabel: 'Acciones',
         chooseADayLabel: 'Elija un dia',
-        availableAccountCredit: 'Tu credito disponible es %(credit)s ARS'
+        availableAccountCredit: 'Tu credito disponible es %(credit)s ARS',
+        newUserRegistration: 'Registrese!'
     },
 
     placeholders: {

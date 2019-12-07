@@ -182,10 +182,6 @@ class Menus extends React.Component {
                     menus: response.data
                 })
             })
-            .catch(error => {
-                // console.log(error)
-                this.setState({errorMsg: 'Error retreiving data'})
-            })
     }
 
     getProviderName(id){
@@ -193,10 +189,6 @@ class Menus extends React.Component {
             .then(response => {
                 this.providerName = response.data;
              })
-            .catch(error => {
-                //console.log(error)
-                this.setState({errorMsg: 'Error retreiving data'})
-            })
     }
 
 
@@ -229,6 +221,7 @@ class Menus extends React.Component {
         let {purchaseRequest} = this.state;
         let{addedToPurchase} = this.state;
 
+        // eslint-disable-next-line array-callback-return
         this.state.purchases.map(p => {if(p.menuName === menuName){addedToPurchase = true}});
         if(addedToPurchase){
             this.setState({
@@ -276,6 +269,7 @@ class Menus extends React.Component {
             let {totalAmount} = this.state;
             purchaseMenus = [];
             totalAmount = 0;
+            // eslint-disable-next-line array-callback-return
             this.state.purchases.map(p => {
                                             newMenuData = this.state.menus.find(menu => menu.name === p.menuName);
                                             purchaseMenus.push({
@@ -333,7 +327,7 @@ class Menus extends React.Component {
     }
 
     render() {
-        const {menus, purchaseMenus, errorMsg} = this.state;
+        const {menus, purchaseMenus} = this.state;
         let filteredMenus = menus.filter(
             (menu) => {
                 return menu.name.toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1;
