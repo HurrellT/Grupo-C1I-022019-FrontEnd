@@ -21,6 +21,7 @@ import NumericInput from 'react-numeric-input';
 import Menus from "./Menus";
 import counterpart from 'counterpart';
 import Translate from 'react-translate-component';
+import {useAuth0} from "../../react-auth0-spa";
 
 function ModalAlert({ errorsToShow }) {
     const hasErrorsToShow = errorsToShow.length > 0
@@ -60,12 +61,34 @@ class ProviderMenus extends Menus {
     //METHODS
 
     componentDidMount() {
-        let {provId} = this.props.match.params;
+        let {provId, clientId} = this.props.match.params;
         this.setState({purchaseMaked : false});
         super.getProviderName(provId);
-        this.getPendingScoredPurchases(4);
+        this.getUserById(clientId);
         this._refreshMenus(provId);
     }
+
+    getUserById(id) {
+        axios.get('http://localhost:8080/userById/' + id)
+            .then((response) => {
+                let user = response.data
+                this.setState({
+                    user: user
+                }, () => {
+                    if (this.state.user.type === 'client') {
+                        axios.get('http://localhost:8080/pendingScoredPurchases/' + this.state.user.id)
+                            .then(response => {
+                                this.state.pendigScoredPurchases = response.data;
+                            })
+                            .catch(error => {
+                                // console.log(error)
+                                this.setState({errorMsg: 'Error retreiving data'})
+                            })
+                    }
+                })
+            })
+    }
+
 
     _refreshMenus(provId) {
         axios.get('http://localhost:8080/menusp/' + provId)
@@ -79,7 +102,7 @@ class ProviderMenus extends Menus {
     //RENDER
 
     render() {
-        const {menus, purchaseMenus, errorMsg} = this.state
+        const {menus, purchaseMenus} = this.state
         const placeholderTranslations = counterpart;
         const providername = this.providerName;
        
@@ -89,7 +112,7 @@ class ProviderMenus extends Menus {
             }
         );
 
-        let isProvider = this.state.userType === 'provider';
+        let isProvider = this.state.user.type === 'provider';
 
         return (
             <Container>

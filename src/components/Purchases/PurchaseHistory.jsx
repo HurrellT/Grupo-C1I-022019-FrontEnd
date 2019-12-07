@@ -1,9 +1,8 @@
 import React from 'react'
 import axios from 'axios'
-import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Alert, CustomInput} from 'reactstrap';
+import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Alert} from 'reactstrap';
 import Label from "reactstrap/es/Label";
 import Col from "reactstrap/es/Col";
-import Input from "reactstrap/es/Input";
 import Container from "reactstrap/es/Container";
 import Row from "reactstrap/es/Row";
 import counterpart from 'counterpart';
@@ -40,15 +39,16 @@ class PurchaseHistory extends React.Component {
             setScoreModal: false,
             messageScoreModal: false,
             messageModal: false,
-            errorMessages: []
+            errorMessages: [],
+            loggedUser: this.props.loggedUser,
+            user: '',
         }
     }
 
     //METHODS
 
     componentDidMount() {
-        let {clientId} = this.props.match.params;
-        this._refreshPurchases(clientId);
+        this._refreshPurchases()
     }
 
     toggleSeeMenusModal() {
@@ -75,17 +75,31 @@ class PurchaseHistory extends React.Component {
         })
     }
 
-    _refreshPurchases(clientId) {
-        axios.get('http://localhost:8080/cpurchases/' + 4)
-            .then(response => {
+    _refreshPurchases(id) {
+        axios.get('http://localhost:8080/userWithEmail/' + this.state.loggedUser.email)
+            .then((response) => {
+                let user = response.data
                 this.setState({
-                    purchases: response.data
-                });
-                this.formatScore();
-            })
-            .catch(error => {
-                // console.log(error)
-                this.setState({errorMsg: 'Error retreiving data'})
+                    user: user
+                }, () => {
+                    console.log(this.state.user.id)
+                    let isProvider =  this.state.user.type === 'provider';
+                    let endpoint = 'cpurchases';
+                    if (isProvider) {
+                        endpoint = 'ppurchases'
+                    }
+                    axios.get('http://localhost:8080/' + endpoint + '/' + this.state.user.id)
+                        .then(response => {
+                            this.setState({
+                                purchases: response.data
+                            });
+                            this.formatScore();
+                        })
+                        .catch(error => {
+                            // console.log(error)
+                            this.setState({errorMsg: 'Error retreiving data'})
+                        })
+                })
             })
 
     }
@@ -180,6 +194,7 @@ class PurchaseHistory extends React.Component {
     //RENDER
     render() {
         const {purchases, order} = this.state;
+        let isProvider = this.state.userType === 'provider';
 
         return (
             <Container>
@@ -255,7 +270,7 @@ class PurchaseHistory extends React.Component {
                                      <tr>
                                          <th hidden>#</th>
                                          <th><Translate content='labels.nameLabel'/></th>
-                                         <th><Translate content='labels.providerLabel'/></th>
+                                         {isProvider && <th><Translate content='labels.providerLabel'/></th>}
                                          <th><Translate content='labels.quantityLabel'/></th>
                                          <th><Translate content='labels.unitPriceLabel'/></th>
                                      </tr>
@@ -266,7 +281,7 @@ class PurchaseHistory extends React.Component {
                                      { order.map(menu =>
                                          <tr key={menu.id}>
                                              <td>{menu.menuName}</td>
-                                             <td>{menu.menu.providerName}</td>
+                                             {isProvider && <td>{menu.menu.providerName}</td>}
                                              <td>{menu.quantity}</td>
                                              <td>{menu.menu.price}</td>
                                          </tr>
@@ -321,7 +336,7 @@ class PurchaseHistory extends React.Component {
                                 <th hidden>#</th>
                                 <th><Translate content='labels.orderDateLabel'/></th>
                                 <th><Translate content='labels.priceLabel'/></th>
-                                <th><Translate content='labels.providerLabel'/></th>
+                                {isProvider && <th><Translate content='labels.providerLabel'/></th>}
                                 <th><Translate content='labels.scoreLabel'/></th>
                                 <th><Translate content='labels.deliveryDateLabel'/></th>
                                 <th><Translate content='labels.deliveryTimeLabel'/></th>
@@ -338,7 +353,7 @@ class PurchaseHistory extends React.Component {
                                     <th hidden scope="row">{purchase.id}</th>
                                     <td>{purchase.orderDate}</td>
                                     <td>{purchase.totalAmount}</td>
-                                    <td>{purchase.order[0].menu.providerName}</td>
+                                    {isProvider && <td>{purchase.order[0].menu.providerName}</td>}
                                     <td>{purchase.showScore}</td>
                                     <td>{purchase.deliveryDate}</td>
                                     <td>{purchase.deliveryTime}</td>

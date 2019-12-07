@@ -39,6 +39,22 @@ function AddMenuButton(props) {
     }
 }
 
+function SeePurchasesButton(props) {
+    const enabled = props.enabled;
+    const onClickFunction = props.onClick;
+
+    if (enabled) {
+        return (
+            <Button className="my-3" color="primary" onClick={onClickFunction}>
+                <Translate content='buttons.seePurchaseButton'/>
+            </Button>
+        )
+    }
+    else {
+        return <div/>
+    }
+}
+
 class Menus extends React.Component {
 
     constructor(props) {
@@ -48,6 +64,7 @@ class Menus extends React.Component {
         this.pendigScoredPurchases = '0';
         this.state = {
             loggedUser: this.props.loggedUser,
+            user: '',
             menus: [],
             menuNames: [],
             purchases: [],
@@ -125,8 +142,28 @@ class Menus extends React.Component {
 
     componentDidMount() {
         this.setState({purchaseMaked : false});
-        this.getPendingScoredPurchases(4);
+        this.getUserByEmail(this.state.loggedUser.email);
+        // this.getPendingScoredPurchases(this.state.user.id);
         this._refreshMenus();
+    }
+
+    getUserByEmail(email) {
+        axios.get('http://localhost:8080/userWithEmail/' + email)
+            .then((response) => {
+                let user = response.data
+                this.setState({
+                    user: user
+                }, () => {
+                    axios.get('http://localhost:8080/pendingScoredPurchases/' + this.state.user.id)
+                        .then(response => {
+                            this.pendigScoredPurchases = response.data;
+                        })
+                        .catch(error => {
+                            // console.log(error)
+                            this.setState({errorMsg: 'Error retreiving data'})
+                        })
+                })
+            })
     }
 
     toggleNewMenuModal() {
@@ -227,8 +264,7 @@ class Menus extends React.Component {
 
 
     makePurchase() {
-        //TODO: change the 4 for the logged client id
-        axios.post('http://localhost:8080/makePurchase/' + 4, this.state.purchases)
+        axios.post('http://localhost:8080/makePurchase/' + this.state.user.id, this.state.purchases)
             .then((response) => {
                 this.setState({
                     message: counterpart.translate('messages.successfulPurchaseMessage')
@@ -252,17 +288,6 @@ class Menus extends React.Component {
             purchaseMaked: true,
             messageModal: !this.state.messageModal,
             purchaseModal: !this.state.purchaseModal
-        })
-    }
-
-    getPendingScoredPurchases(id){
-        axios.get('http://localhost:8080/pendingScoredPurchases/' + id)
-        .then(response => {
-                this.pendigScoredPurchases = response.data;
-        })
-        .catch(error => {
-            // console.log(error)
-            this.setState({errorMsg: 'Error retreiving data'})
         })
     }
 
@@ -412,7 +437,6 @@ class Menus extends React.Component {
     setPurchaseData(){
         let {purchases} = this.state;
         let {purchaseRequest} = this.state;
-        let {errorMessages} = this.state;
 
         purchases.map(p => { p.deliveryTime = purchaseRequest.deliveryTime;
                              p.deliveryDate = purchaseRequest.deliveryDate;
@@ -452,7 +476,7 @@ class Menus extends React.Component {
     }
 
     render() {
-        const {menus, purchaseMenus, errorMsg} = this.state;
+        const {menus, purchaseMenus} = this.state;
         const placeholderTranslations = counterpart;
         let filteredMenus = menus.filter(
             (menu) => {
@@ -460,7 +484,7 @@ class Menus extends React.Component {
             }
         );
 
-        let isProvider = this.state.userType === 'provider';
+        let isProvider = this.state.user.type === 'provider';
 
         return (
             <Container>
@@ -483,9 +507,9 @@ class Menus extends React.Component {
                             enabled={isProvider} />
                     </Col>
                     <Col xs={2} className="my-3">
-                        <Button className="my-3" color="primary" onClick={this.seeMyPurchase.bind(this)}>
-                            <Translate content='buttons.seePurchaseButton'/>
-                        </Button>
+                        <SeePurchasesButton
+                            onClick={this.seeMyPurchase.bind(this)}
+                            enabled={!isProvider} />
                     </Col>
                 </Row>
 
@@ -802,7 +826,7 @@ class Menus extends React.Component {
                                 <th><Translate content='labels.categoryLabel'/></th>
                                 <th><Translate content='labels.priceLabel'/></th>
                                 <th><Translate content='labels.providerLabel'/></th>
-                                <th><Translate content='labels.actionsLabel'/></th>
+                                {!isProvider && <th><Translate content='labels.actionsLabel'/></th>}
                             </tr>
                             </thead>
 
@@ -816,12 +840,12 @@ class Menus extends React.Component {
                                     <td>{menu.category}</td>
                                     <td>{menu.price}</td>
                                     <td>{menu.providerName}</td>
-                                    <td>
+                                    {!isProvider && <td>
                                         <Button color='warning' size='sm'
                                                 onClick={this.askForQuantity.bind(this, menu.name, menu.providerId)}>
                                             <Translate content='buttons.addMenuButton'/>
                                         </Button>
-                                    </td>
+                                    </td>}
                                 </tr>
                             )}
                             </tbody>
