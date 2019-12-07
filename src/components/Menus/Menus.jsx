@@ -23,6 +23,22 @@ function ModalAlert({ errorsToShow }) {
     return <div />
 }
 
+function AddMenuButton(props) {
+    const enabled = props.enabled;
+    const onClickFunction = props.onClick;
+
+    if (enabled) {
+        return (
+            <Button className="my-3" color="primary" onClick={onClickFunction}>
+                <Translate content='buttons.newMenuButton'/>
+            </Button>
+        )
+    }
+    else {
+        return <div/>
+    }
+}
+
 class Menus extends React.Component {
 
     constructor(props) {
@@ -31,6 +47,7 @@ class Menus extends React.Component {
         this.providerName = '';
         this.pendigScoredPurchases = '0';
         this.state = {
+            loggedUser: this.props.loggedUser,
             menus: [],
             menuNames: [],
             purchases: [],
@@ -443,6 +460,8 @@ class Menus extends React.Component {
             }
         );
 
+        let isProvider = this.state.userType === 'provider';
+
         return (
             <Container>
                 <Row>
@@ -459,9 +478,9 @@ class Menus extends React.Component {
                                onChange = {this.updateSearch.bind(this)}/>
                     </Col>
                     <Col xs={2} className="my-3">
-                        <Button className="my-3" color="primary" onClick={this.toggleNewMenuModal.bind(this)}>
-                            <Translate content='buttons.newMenuButton'/>
-                        </Button>
+                        <AddMenuButton
+                            onClick={this.toggleNewMenuModal.bind(this)}
+                            enabled={isProvider} />
                     </Col>
                     <Col xs={2} className="my-3">
                         <Button className="my-3" color="primary" onClick={this.seeMyPurchase.bind(this)}>

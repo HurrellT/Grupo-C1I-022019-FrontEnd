@@ -1,6 +1,17 @@
 import React from 'react'
 import axios from 'axios'
-import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Alert} from 'reactstrap';
+import {
+    Table,
+    Button,
+    Modal,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+    Form,
+    FormGroup,
+    Alert,
+    CustomInput
+} from 'reactstrap';
 import Label from "reactstrap/es/Label";
 import Col from "reactstrap/es/Col";
 import Input from "reactstrap/es/Input";
@@ -22,6 +33,22 @@ function ModalAlert({ errorsToShow }) {
         )
     }
     return <div />
+}
+
+function AddMenuButton(props) {
+    const enabled = props.enabled;
+    const onClickFunction = props.onClick;
+
+    if (enabled) {
+        return (
+            <Button className="my-3" color="primary" onClick={onClickFunction}>
+                <Translate content='buttons.newMenuButton'/>
+            </Button>
+        )
+    }
+    else {
+        return <div/>
+    }
 }
 
 class ProviderMenus extends Menus {
@@ -62,6 +89,8 @@ class ProviderMenus extends Menus {
             }
         );
 
+        let isProvider = this.state.userType === 'provider';
+
         return (
             <Container>
                 <Row>
@@ -80,9 +109,9 @@ class ProviderMenus extends Menus {
                                onChange = {this.updateSearch.bind(this)}/>
                     </Col>
                     <Col xs={2} className="my-3">
-                        <Button className="my-3" color="primary" onClick={this.toggleNewMenuModal.bind(this)}>
-                            <Translate content='buttons.newMenuButton'/>
-                        </Button>
+                        <AddMenuButton
+                            onClick={this.toggleNewMenuModal.bind(this)}
+                            enabled={isProvider} />
                     </Col>
                     <Col xs={2} className="my-3">
                         <Button className="my-3" color="primary" onClick={this.seeMyPurchase.bind(this)}>

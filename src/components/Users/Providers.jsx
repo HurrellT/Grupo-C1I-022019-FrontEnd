@@ -47,7 +47,7 @@ function AddProviderButton(props) {
                 </Button>
             </Col>)
     } else {
-        return <div></div>
+        return <div/>
     }
 }
 
