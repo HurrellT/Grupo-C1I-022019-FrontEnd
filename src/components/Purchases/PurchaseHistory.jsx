@@ -82,7 +82,6 @@ class PurchaseHistory extends React.Component {
                 this.setState({
                     user: user
                 }, () => {
-                    console.log(this.state.user.id)
                     let isProvider =  this.state.user.type === 'provider';
                     let endpoint = 'cpurchases';
                     if (isProvider) {
@@ -195,6 +194,8 @@ class PurchaseHistory extends React.Component {
     render() {
         const {purchases, order} = this.state;
         let isProvider = this.state.userType === 'provider';
+        let locale = localStorage.getItem('locale');
+        let currency = localStorage.getItem('currency');
 
         return (
             <Container>
@@ -351,11 +352,24 @@ class PurchaseHistory extends React.Component {
                             {   purchases.map(purchase =>
                                 <tr key={purchase.id}>
                                     <th hidden scope="row">{purchase.id}</th>
-                                    <td>{purchase.orderDate}</td>
-                                    <td>{purchase.totalAmount}</td>
+                                    <td>{new Intl.DateTimeFormat(locale, {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: '2-digit'
+                                    }).format(Date.parse(purchase.orderDate))}</td>
+                                    <td>{
+                                        new Intl.NumberFormat(locale, {
+                                            style: 'currency',
+                                            currency: currency,
+                                            currencyDisplay:'code',
+                                        }).format(purchase.totalAmount)}</td>
                                     {isProvider && <td>{purchase.order[0].menu.providerName}</td>}
                                     <td>{purchase.showScore}</td>
-                                    <td>{purchase.deliveryDate}</td>
+                                    <td>{new Intl.DateTimeFormat(locale, {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: '2-digit'
+                                    }).format(Date.parse(purchase.deliveryDate))}</td>
                                     <td>{purchase.deliveryTime}</td>
                                     <td>{purchase.deliveryType}</td>
                                     <td>

@@ -133,6 +133,8 @@ class Users extends React.Component {
         const username = this.state.newUserData.name;
         const credit = this.state.newUserData.accountCredit;
         let user = this.state.newUserData;
+        let locale = localStorage.getItem('locale');
+        let currency = localStorage.getItem('currency');
 
         return (
             <Container fluid={true}>
@@ -234,7 +236,12 @@ class Users extends React.Component {
                             <Translate content='labels.accountCreditLabel' />
                         </Label>
                         <Col sm={10}>
-                            <Input plaintext value={user.accountCredit} />
+                            <Input plaintext value={
+                                new Intl.NumberFormat(locale, {
+                                style: 'currency',
+                                currency: currency,
+                                currencyDisplay:'code',
+                                }).format(user.accountCredit)}/>
                         </Col>
                     </FormGroup>
 

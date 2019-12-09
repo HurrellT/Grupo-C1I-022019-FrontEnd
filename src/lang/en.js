@@ -48,7 +48,7 @@ export default {
         nameLabel: 'Name',
         lastNameLabel: 'Lastname',
         stateLabel: 'State',
-        addressLabel: 'Adress',
+        addressLabel: 'Address',
         phoneLabel: 'Phone number',
         latitudeLabel: 'Latitude',
         longitudeLabel: 'Longitude',
