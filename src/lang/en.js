@@ -40,7 +40,8 @@ export default {
         selectPurchaseDataButton: 'Select date, time and type of delivery',
         rateButton: 'Rate',
         seePurchaseMenusButton: 'See purchase menus',
-        beAProvider: 'Be a Provider!'
+        beAProvider: 'Be a Provider!',
+        seeMenusButton: 'See menus',
     },
 
     labels: {

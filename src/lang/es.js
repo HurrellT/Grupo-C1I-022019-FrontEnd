@@ -39,7 +39,8 @@ export default {
         selectPurchaseDataButton: 'Seleccionar fecha, hora y tipo de entrega',
         rateButton: 'Puntuar',
         seePurchaseMenusButton: 'Ver menús de la compra',
-        beAProvider: 'Convertite en Proveedor!'
+        beAProvider: 'Convertite en Proveedor!',
+        seeMenusButton: 'Ver menús',
     },
 
     labels: {

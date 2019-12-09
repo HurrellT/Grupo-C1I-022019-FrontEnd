@@ -28,9 +28,9 @@ class Menus extends React.Component {
     constructor(props) {
         super(props)
 
-        this.providerName = '';
-        this.pendigScoredPurchases = '0';
         this.state = {
+            loggedUser: props.loggedUser,
+            loggedClientId: '0',
             menus: [],
             menuNames: [],
             purchases: [],
@@ -102,13 +102,15 @@ class Menus extends React.Component {
             addedToPurchase: false,
             errorMessages: []
         }
+        this.providerName = '';
+        this.pendigScoredPurchases = 0
     }
 
     //METHODS
 
     componentDidMount() {
         this.setState({purchaseMaked : false});
-        this.getPendingScoredPurchases(4);
+        this.getLoggedClientId(this.state.loggedUser.email);
         this._refreshMenus();
     }
 
@@ -210,8 +212,7 @@ class Menus extends React.Component {
 
 
     makePurchase() {
-        //TODO: change the 4 for the logged client id
-        axios.post('http://localhost:8080/makePurchase/' + 4, this.state.purchases)
+        axios.post('http://localhost:8080/makePurchase/' + this.state.loggedClientId, this.state.purchases)
             .then((response) => {
                 this.setState({
                     message: counterpart.translate('messages.successfulPurchaseMessage')
@@ -414,6 +415,20 @@ class Menus extends React.Component {
         this.togglePurchaseDataModal();
         this.makePurchase();
 
+    }
+
+    getLoggedClientId(email){
+        axios.get('http://localhost:8080/userId/' + email)
+        .then(response => {
+            this.setState({
+                loggedClientId: response.data
+            })
+            this.getPendingScoredPurchases(this.state.loggedClientId);
+        })
+        .catch(error => {
+            // console.log(error)
+            this.setState({errorMsg: 'Error retreiving data'})
+        })
     }
 
     updateSearch(event) {

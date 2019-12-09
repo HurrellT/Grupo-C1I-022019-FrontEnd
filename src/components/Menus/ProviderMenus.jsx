@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Alert} from 'reactstrap';
+import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Alert, CustomInput} from 'reactstrap';
 import Label from "reactstrap/es/Label";
 import Col from "reactstrap/es/Col";
 import Input from "reactstrap/es/Input";
@@ -26,17 +26,22 @@ function ModalAlert({ errorsToShow }) {
 
 class ProviderMenus extends Menus {
 
-    // constructor(props) {
-    //     super(props)
-    // }
+    //constructor(props) {
+    //    super(props)
+    //}
 
     //METHODS
 
     componentDidMount() {
         let {provId} = this.props.match.params;
-        this.setState({purchaseMaked : false});
+        let {loggedId} = this.props.match.params;
+        this.setState({
+                        purchaseMaked: false,
+                        loggedClientId: loggedId
+                        });
         super.getProviderName(provId);
-        this.getPendingScoredPurchases(4);
+        //this.getLoggedClientId(this.state.loggedUser.email);
+        this.getPendingScoredPurchases(loggedId);
         this._refreshMenus(provId);
     }
 
@@ -55,7 +60,7 @@ class ProviderMenus extends Menus {
         const {menus, purchaseMenus, errorMsg} = this.state
         const placeholderTranslations = counterpart;
         const providername = this.providerName;
-       
+
         let filteredMenus = menus.filter(
             (menu) => {
                 return menu.name.toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1;

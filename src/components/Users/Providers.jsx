@@ -102,18 +102,19 @@ function EditAccountButton(props) {
 
 function MenusButton(props) {
 
-    const userId = props.userId
+    const userId = props.userId;
+    const loggedId = props.loggedId;
 
     let history = useHistory();
 
     function handleClick() {
-        history.push('/providerMenus/' + userId);
+        history.push('/providerMenus/' + userId + loggedId);
     }
 
     return (
         <Button color='warning' size='sm'
                 onClick={handleClick}>
-            Ver menús
+            <Translate content='buttons.seeMenusButton'/>
         </Button>
     )
 }
@@ -125,6 +126,7 @@ class Providers extends React.Component {
 
         this.state = {
             loggedUser: props.loggedUser,
+            loggedId: 0,
             search: '',
             users: [],
             newUserData: {
@@ -186,8 +188,9 @@ class Providers extends React.Component {
 
     componentDidMount() {
         this._refreshUsers();
-        this.updateUserTypeSearchingByEmail(this.state.loggedUser.email)
-    }
+        this.updateUserTypeSearchingByEmail(this.state.loggedUser.email);
+        this.getLoggedClientId(this.state.loggedUser.email);
+         }
 
     updateUserTypeSearchingByEmail(email) {
         return axios.get('http://localhost:8080/userWithEmail/' + email)
@@ -443,10 +446,23 @@ class Providers extends React.Component {
         this.setState({search: event.target.value.substr(0, 20)});
     }
 
+    getLoggedClientId(email){
+        axios.get('http://localhost:8080/userId/' + email)
+        .then(response => {
+            this.setState({
+                loggedId: response.data
+            })
+        })
+        .catch(error => {
+            // console.log(error)
+            this.setState({errorMsg: 'Error retreiving data'})
+        })
+    }
+
     //RENDER
 
     render() {
-        const {users} = this.state;
+        const {users, loggedId} = this.state;
 
         const placeholderTranslations = counterpart;
 
@@ -1042,7 +1058,8 @@ class Providers extends React.Component {
 
                                     <td>
                                         <MenusButton
-                                            userId={user.id}/>
+                                            userId={user.id}
+                                            loggedId={loggedId}/>
 
                                         <EditAccountButton
                                             onClick={this.editUser.bind(this, user.id, user.name,
