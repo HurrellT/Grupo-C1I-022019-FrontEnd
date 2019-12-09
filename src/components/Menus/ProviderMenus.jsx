@@ -434,7 +434,7 @@ class ProviderMenus extends Menus {
                                     <td>
                                         <Button color='warning' size='sm'
                                                 onClick={this.askForQuantity.bind(this, menu.name, menu.providerId)}>
-                                            <Translate content='buttons.addMenuButton'/>
+                                            <Translate content='buttons.addMenuToPurchaseButton'/>
                                         </Button>
                                     </td>
                                 </tr>

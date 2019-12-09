@@ -1,4 +1,3 @@
-import { useHistory } from "react-router-dom";
 import React from 'react'
 import axios from 'axios'
 import {
@@ -21,6 +20,7 @@ import {
 import counterpart from 'counterpart';
 import Translate from 'react-translate-component';
 import PaginationComponent from "react-reactstrap-pagination";
+import MenusButton from "../Buttons/MenusButton";
 
 function ModalAlert({errorsToShow}) {
     const hasErrorsToShow = errorsToShow.length > 0;
@@ -28,7 +28,9 @@ function ModalAlert({errorsToShow}) {
     if (hasErrorsToShow) {
         return (
             <Alert color="danger">
-                {errorsToShow.map(error => <div>{error}</div>)}
+                {errorsToShow.map(error => <div>{
+                    <Translate content={error} />
+                }</div>)}
             </Alert>
         )
     }
@@ -98,25 +100,6 @@ function EditAccountButton(props) {
     else {
         return <div></div>
     }
-}
-
-function MenusButton(props) {
-
-    const providerId = props.userId;
-    const clientId = props.clientId;
-
-    let history = useHistory();
-
-    function handleClick() {
-        history.push('/providerMenus/' + providerId + '/' + clientId);
-    }
-
-    return (
-        <Button color='warning' size='sm'
-                onClick={handleClick}>
-            <Translate content='buttons.seeMenusButton'/>
-        </Button>
-    )
 }
 
 class Providers extends React.Component {

@@ -17,19 +17,8 @@ import CardDeck from "reactstrap/es/CardDeck";
 import Translate from 'react-translate-component';
 import Col from "reactstrap/es/Col";
 import Container from "reactstrap/es/Container";
-
-function ModalAlert({errorsToShow}) {
-    const hasErrorsToShow = errorsToShow.length > 0;
-
-    if (hasErrorsToShow) {
-        return (
-            <Alert color="danger">
-                {errorsToShow.map(error => <div>{error}</div>)}
-            </Alert>
-        )
-    }
-    return <div/>
-}
+import ModalAlert from "./ModalAlert";
+import MenusButton from "./Buttons/MenusButton";
 
 function BecomeAProvider(props) {
     const enabled = props.enabled
@@ -38,19 +27,23 @@ function BecomeAProvider(props) {
     if (enabled) {
         return (
             <Col sm={4}>
-                <Card body className="text-center">
-                    <CardTitle>
-                        <Translate content='buttons.beAProvider'/>
-                    </CardTitle>
-                    <CardText>
-                        Translated Text
-                    </CardText>
-                    <Button onClick={onClickFunction}>
-                        <Translate content='buttons.beAProvider'/>
-                    </Button>
+                <Card>
+                    <CardImg top width="100%" src="/assets/provider.jpg" alt=""/>
+                    <CardBody>
+                        <CardTitle>
+                            <Translate content='buttons.beAProvider'/>
+                        </CardTitle>
+                        {/*<CardText>*/}
+                        {/*    Translated Text*/}
+                        {/*</CardText>*/}
+                        <Button onClick={onClickFunction}>
+                            <Translate content='buttons.beAProvider'/>
+                        </Button>
+                    </CardBody>
                 </Card>
             </Col>
-        )    } else {
+        )
+    } else {
         return <div/>
     }
 }
@@ -84,7 +77,8 @@ class Home extends React.Component {
             },
             loggedUser: props.loggedUser,
             becomeAProviderModal: false,
-            errorMessages: []
+            errorMessages: [],
+            menus: []
         }
     }
 
@@ -119,7 +113,17 @@ class Home extends React.Component {
     }
 
     componentDidMount() {
-        this.updateUserByEmail(this.state.loggedUser.email)
+        this.updateUserByEmail(this.state.loggedUser.email);
+        this._refreshMenus();
+    }
+
+    _refreshMenus() {
+        axios.get('http://localhost:8080/menus')
+            .then(response => {
+                this.setState({
+                    menus: response.data
+                })
+            })
     }
 
     toggleBecomeAProviderModal() {
@@ -148,25 +152,6 @@ class Home extends React.Component {
             .then((response) => {
                 this.setState({
                     becomeAProviderModal: false,
-                    // newUserData: {
-                    //     name: '',
-                    //     state: '',
-                    //     address: '',
-                    //     email: '',
-                    //     phone: '',
-                    //     accountCredit: 0.0,
-                    //     logo: '',
-                    //     latitude: '',
-                    //     longitude: '',
-                    //     description: '',
-                    //     website: '',
-                    //     officeHoursFrom: '',
-                    //     officeHoursTo: '',
-                    //     officeDaysFrom: '',
-                    //     officeDaysTo: '',
-                    //     menus: [],
-                    //     delivery: false
-                    // }
                 })
             })
     }
@@ -174,35 +159,30 @@ class Home extends React.Component {
     render() {
         const placeholderTranslations = counterpart;
         let isProvider = this.state.newUserData.type === 'provider';
+        let menus = this.state.menus;
+
         return (
             <Container fluid={true}>
-            <CardDeck style={{padding:20}}>
-                <BecomeAProvider
-                    onClick={this.toggleBecomeAProviderModal.bind(this)}
-                    enabled={!isProvider}/>
-                <Col sm={4}>
-                    <Card>
-                        <CardImg top width="100%" src="assets/pizza1.jpg" alt="Card image cap" />
-                        <CardBody>
-                            <CardTitle>Card title</CardTitle>
-                            <CardSubtitle>Card subtitle</CardSubtitle>
-                            <CardText>This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</CardText>
-                            <Button>Button</Button>
-                        </CardBody>
-                    </Card>
-                </Col>
-                <Col sm={4}>
-                    <Card>
-                        <CardImg top width="100%" src="assets/pizza1.jpg" alt="Card image cap" />
-                        <CardBody>
-                            <CardTitle>Card title</CardTitle>
-                            <CardSubtitle>Card subtitle</CardSubtitle>
-                            <CardText>This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</CardText>
-                            <Button>Button</Button>
-                        </CardBody>
-                    </Card>
-                </Col>
-            </CardDeck>
+                <CardDeck style={{padding: 20}}>
+                    <BecomeAProvider
+                        onClick={this.toggleBecomeAProviderModal.bind(this)}
+                        enabled={!isProvider}/>
+                    {menus.map(menu =>
+                        <Col sm={4}>
+                            <Card>
+                                <CardImg top width="100%" src="/assets/pizza1.jpg" alt=""/>
+                                <CardBody>
+                                    <CardTitle>{menu.name}</CardTitle>
+                                    <CardSubtitle>{menu.category}</CardSubtitle>
+                                    <CardText>{menu.description}</CardText>
+                                    <MenusButton
+                                        userId={menu.providerId}
+                                        clientId={this.state.newUserData.id}/>
+                                </CardBody>
+                            </Card>
+                        </Col>
+                    )}
+                </CardDeck>
 
                 <Modal isOpen={this.state.becomeAProviderModal} toggle={this.toggleBecomeAProviderModal.bind(this)}>
                     <ModalHeader toggle={this.toggleBecomeAProviderModal.bind(this)}>

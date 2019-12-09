@@ -31,7 +31,7 @@ export default {
         withdrawCredit: 'Retirar credito',
         depositCredit: 'Depositar credito',
         seePurchaseButton: 'Ver mi compra',
-        addMenuButton: 'Agregar a mi compra',
+        addMenuToPurchaseButton: 'Agregar a mi compra',
         changeQuantityButton: 'Cambiar la cantidad',
         removeFromPurchaseButton: 'Quitar de la compra',
         addMenuButton: 'Agregar menú',
@@ -45,6 +45,8 @@ export default {
 
     labels: {
         nameLabel: 'Nombre',
+        lastNameLabel: 'Apellido',
+
         stateLabel: 'Ciudad',
         addressLabel: 'Dirección',
         phoneLabel: 'Telefono',
@@ -78,6 +80,9 @@ export default {
     },
 
     placeholders: {
+        clientNamePlaceholder: 'Escriba su nombre',
+        clientLastnamePlaceholder: 'Escriba su apellido',
+
         providerNamePlaceholder: 'Escriba el nombre de Proveedor',
         filterProviderNamePlaceholder: 'Escriba un nombre de proveedor',
         filterMenuNamePlaceholder: 'Escriba un nombre de menú',
@@ -118,5 +123,13 @@ export default {
         providerPurchaseTitle: 'Mi compra para %(providername)s',
         purchaseMenusTitle: 'Menús de la compra',
         selectScoreTitle: 'Seleccionar puntaje',
+    },
+
+    validations: {
+        invalidPhoneNumber: 'Por favor, escriba un numero de telefono valido',
+        invalidEmail: 'Por favor, escriba un email valido',
+        address: 'Por favor, escriba su direccion',
+        state: 'Por favor, escriba su ciudad',
+        name: 'Por favor, escriba su nombre'
     }
 }
