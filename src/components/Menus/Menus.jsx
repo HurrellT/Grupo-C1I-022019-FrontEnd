@@ -270,7 +270,8 @@ class Menus extends React.Component {
         axios.post('http://localhost:8080/makePurchase/' + this.state.loggedClientId, this.state.purchases)
             .then((response) => {
                 this.setState({
-                    message: counterpart.translate('messages.successfulPurchaseMessage')
+                    message: counterpart.translate('messages.successfulPurchaseMessage'),
+                    purchaseMaked: true
                 })
             })
             .catch((error) => {
@@ -288,7 +289,6 @@ class Menus extends React.Component {
                             deliveryDate: '',
                             deliveryType: ''
                             },
-            purchaseMaked: true,
             messageModal: !this.state.messageModal,
             purchaseModal: !this.state.purchaseModal
         })
