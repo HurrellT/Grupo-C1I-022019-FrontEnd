@@ -1,17 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import {
-    Table,
-    Button,
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    Form,
-    FormGroup,
-    Alert,
-    CustomInput
-} from 'reactstrap';
+import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Alert, CustomInput} from 'reactstrap';
 import Label from "reactstrap/es/Label";
 import Col from "reactstrap/es/Col";
 import Input from "reactstrap/es/Input";
@@ -54,16 +43,16 @@ function AddMenuButton(props) {
 
 class ProviderMenus extends Menus {
 
-    // constructor(props) {
-    //     super(props)
-    // }
-
     //METHODS
 
     componentDidMount() {
         let {provId, clientId} = this.props.match.params;
-        this.setState({purchaseMaked : false});
+        this.setState({
+                        purchaseMaked: false,
+                        loggedClientId: clientId
+                        });
         super.getProviderName(provId);
+        this.getPendingScoredPurchases(clientId);
         this.getUserById(clientId);
         this._refreshMenus(provId);
     }
@@ -102,7 +91,7 @@ class ProviderMenus extends Menus {
     //RENDER
 
     render() {
-        const {menus, purchaseMenus} = this.state
+        const {menus, purchaseMenus, errorMsg} = this.state
         const placeholderTranslations = counterpart;
         const providername = this.providerName;
        

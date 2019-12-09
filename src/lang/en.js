@@ -40,7 +40,7 @@ export default {
         rateButton: 'Rate',
         seePurchaseMenusButton: 'See purchase menus',
         beAProvider: 'Be a Provider!',
-        viewMenus: 'View more menus'
+        seeMenusButton: 'See menus',
     },
 
     labels: {

@@ -40,7 +40,7 @@ export default {
         rateButton: 'Puntuar',
         seePurchaseMenusButton: 'Ver menús de la compra',
         beAProvider: 'Convertite en Proveedor!',
-        viewMenus: 'Ver mas menues'
+        seeMenusButton: 'Ver menús',
     },
 
     labels: {

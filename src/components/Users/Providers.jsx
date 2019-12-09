@@ -172,6 +172,7 @@ class Providers extends React.Component {
     componentDidMount() {
         this._refreshUsers();
         this.updateUserSearchingByEmail(this.state.loggedUser.email)
+        this.getLoggedClientId(this.state.loggedUser.email);
     }
 
     updateUserSearchingByEmail(email) {
@@ -427,6 +428,19 @@ class Providers extends React.Component {
 
     updateSearch(event) {
         this.setState({search: event.target.value.substr(0, 20)});
+    }
+
+    getLoggedClientId(email){
+        axios.get('http://localhost:8080/userId/' + email)
+        .then(response => {
+            this.setState({
+                loggedId: response.data
+            })
+        })
+        .catch(error => {
+            // console.log(error)
+            this.setState({errorMsg: 'Error retreiving data'})
+        })
     }
 
     //RENDER

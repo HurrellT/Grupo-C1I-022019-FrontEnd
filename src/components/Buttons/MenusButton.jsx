@@ -17,7 +17,7 @@ function MenusButton(props) {
     return (
         <Button color='warning' size='sm'
                 onClick={handleClick}>
-            <Translate content="buttons.viewMenus"/>
+            <Translate content="buttons.seeMenusButton"/>
         </Button>
     )
 }
