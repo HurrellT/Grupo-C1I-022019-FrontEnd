@@ -154,6 +154,11 @@ class Home extends React.Component {
                     becomeAProviderModal: false,
                 })
             })
+        this.refreshPage()
+    }
+
+    refreshPage() {
+        window.parent.location = window.parent.location.href;
     }
 
     render() {

@@ -216,7 +216,7 @@ class PurchaseHistory extends React.Component {
                          <Form>
                              {/* MESSAGE */}
                              <FormGroup row>
-                                 <Label sm={20}>{this.state.message}</Label>
+                                 <Label sm={20} style={{padding: 20}}>{this.state.message}</Label>
                              </FormGroup>
                          </Form>
 
@@ -241,7 +241,7 @@ class PurchaseHistory extends React.Component {
                          <Form>
                              {/* MESSAGE */}
                              <FormGroup row>
-                                 <Label sm={20}>{this.state.message}</Label>
+                                 <Label sm={20} style={{padding: 20}}>{this.state.message}</Label>
                              </FormGroup>
                          </Form>
 

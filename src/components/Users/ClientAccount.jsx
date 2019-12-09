@@ -1,32 +1,23 @@
 import React from 'react'
 import axios from 'axios'
-import {Button, Form, FormGroup} from 'reactstrap';
+import {Button, Form, FormGroup, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
 import Label from "reactstrap/es/Label";
 import Col from "reactstrap/es/Col";
 import Input from "reactstrap/es/Input";
 import Container from "reactstrap/es/Container";
 import Row from "reactstrap/es/Row";
 import Translate from "react-translate-component";
+import counterpart from "counterpart";
+import ModalAlert from "../Alerts/ModalAlert";
 
 class Users extends React.Component {
 
     constructor(props) {
         super(props)
 
-        this.homeRoute = this.homeRoute.bind(this);
-
         this.state = {
-            users: [],
+            loggedUser: props.loggedUser,
             newUserData: {
-                name: '',
-                lastname: '',
-                state: '',
-                address: '',
-                email: '',
-                phone: '',
-                accountCredit: 0.0,
-            },
-            editUserData: {
                 id: '',
                 name: '',
                 lastname: '',
@@ -36,189 +27,181 @@ class Users extends React.Component {
                 phone: '',
                 accountCredit: 0.0,
             },
-            newUserModal: false,
-            editUserModal: false,
-            errorMessage: []
+            accountCreditModal: false,
+            amount: '',
+            errorMessages: []
         }
     }
 
     //METHODS
 
     componentDidMount() {
-        this._refreshUsers();
+        this.getUserByEmail(this.state.loggedUser.email)
     }
 
-    toggleNewUserModal() {
-        this.setState({
-            newUserModal: !this.state.newUserModal
-        })
-    }
-
-    addClient() {
-        axios.post('http://localhost:8080/client', this.state.newUserData)
+    getUserByEmail(email) {
+        axios.get('http://localhost:8080/userWithEmail/' + email)
             .then((response) => {
-                //TODO: Get the alert render to work
-                if (!response.ok) {
-                    this.setState({errorMessage: response.data.errors})
-                    console.log(response)
-                } else {
-                    let {users} = this.state;
-                    users.push(response.data);
-                    this.setState(
-                        {
-                            users,
-                            newUserModal: false,
-                            newUserData: {
-                                name: '',
-                                lastname: '',
-                                state: '',
-                                address: '',
-                                email: '',
-                                phone: '',
-                                accountCredit: 0.0,
-                            }
-                        });
-                    this._refreshUsers();
-                }
-            })
-    }
-
-    editUser(id, name, lastname, state, address, email, phone, accountCredit) {
-        this.setState({
-            editUserData: {id, name, lastname, state, address, email, phone, accountCredit},
-            editUserModal: !this.state.editUserModal
-        })
-    }
-
-    updateClient() {
-        let {name, lastname, state, address, email, phone, accountCredit} = this.state.editUserData;
-
-        axios.put('http://localhost:8080/client/' + this.state.editUserData.id, {
-            name, lastname, state, address, email, phone, accountCredit
-        })
-            .then((response) => {
-                this._refreshUsers();
+                let user = response.data;
                 this.setState({
-                    editUserModal: false,
-                    editUserData: {
-                        id: '',
-                        name: '',
-                        lastname: '',
-                        state: '',
-                        address: '',
-                        email: '',
-                        phone: '',
-                        accountCredit: 0.0,
+                    newUserData: {
+                        id: user.id,
+                        name: user.name,
+                        lastname: user.lastname,
+                        state: user.state,
+                        address: user.address,
+                        email: user.email,
+                        phone: user.phone,
+                        accountCredit: user.accountCredit,
                     }
                 })
             })
     }
 
-    editAccountCredit(id, name, lastname, state, address, email, phone, accountCredit) {
+    updateClient() {
+        let {name, lastname, state, address, email, phone, accountCredit} = this.state.newUserData;
+
+        axios.put('http://localhost:8080/client/' + this.state.newUserData.id, {
+            name, lastname, state, address, email, phone, accountCredit
+        })
+        this.refreshPage()
+    }
+
+    withdrawCredit() {
+        axios.post('http://localhost:8080/withdrawCredit/' + this.state.newUserData.id + "/" + this.state.amount)
+            .then((response) => {
+                this.setState({
+                    accountCreditModal: false,
+                    amount: ''
+                })
+            })
+            .catch((error) => {
+                this.setState({
+                    errorMessages: [error.response.data.message]
+                })
+            })
+        this.refreshPage()
+    }
+
+    depositCredit() {
+        axios.post('http://localhost:8080/depositCredit/' + this.state.newUserData.id + "/" + this.state.amount)
+            .then((response) => {
+                this.setState({
+                    accountCreditModal: false,
+                    amount: ''
+                })
+            })
+            .catch((error) => {
+                this.setState({
+                    errorMessages: [error.response.data.message]
+                })
+            })
+        this.refreshPage()
+    }
+
+    editAccountCredit(id, name, lastname, state,
+                      address, email, phone, accountCredit) {
         this.setState({
-            editUserData: {
-                id, name, state, address, email, phone, accountCredit
-            },
+            newUserData: {id, name, lastname, state,
+                address, email, phone, accountCredit},
             accountCreditModal: !this.state.accountCreditModal
         })
     }
 
-    deleteUser(id) {
-        axios.delete('http://localhost:8080/user/' + id)
-            .then((response) => {
-                this._refreshUsers();
-            })
+    toggleAccountCreditModal() {
+        this.setState({
+            accountCreditModal: !this.state.accountCreditModal,
+            errorMessages: []
+        })
     }
-
-
-    _refreshUsers() {
-        //TODO: CHANGE THIS WITH THE HEROKU URL
-        // axios.get('http://viandas-ya.herokuapp.com/users')
-        axios.get('http://localhost:8080/users')
-            .then(response => {
-                this.setState({
-                    users: response.data
-                })
-            })
-    }
-
-    homeRoute() {
-        let path = `/`;
-        this.props.history.push(path);
-    }
-
-    //TODO: Depending on the user role (client, provider) you see the table with all
-    //      users, or your profile (with the according fields for each role).
-    //      The admin role sees a Users option.
-    //      SEE HOW TO DETERMINE WHICH PAGE YOU SEE DEPENDING ON YOUR ROLE PERMISSION
-    //      Maybe a flag userType in the json?
 
     //RENDER
 
+    updateField = (field) => (ev) => {
+        let {newUserData} = this.state;
+        newUserData[field] = ev.target.value;
+        this.setState({newUserData})
+    }
+
+    refreshPage() {
+        window.parent.location = window.parent.location.href;
+    }
+
     render() {
+
+        const placeholderTranslations = counterpart;
+        const username = this.state.newUserData.name;
+        const credit = this.state.newUserData.accountCredit;
+        let user = this.state.newUserData;
+
         return (
-            <Container>
+            <Container fluid={true}>
 
                 <Row>
                     <Col xs={8}>
-                        <h1 className="my-3">Mi Cuenta</h1>
+                        <h1 className="my-3">
+                            <Translate content="myAccount"/>
+                        </h1>
+                    </Col>
+                    <Col xs={2} className="my-3">
+                        <Button
+                            color="primary"
+                            onClick={this.editAccountCredit.bind(
+                                this, user.id, user.name, user.lastname,
+                                user.state, user.address, user.email,
+                                user.phone, user.accountCredit)}>
+                            <Translate content='buttons.accountCreditButton'/>
+                        </Button>
                     </Col>
                 </Row>
-                <Form>
+                <Form style={{padding:20}}>
                     {/* NAME */}
                     <FormGroup row>
-                        <Label for="name" sm={2}>Nombre</Label>
+                        <Label for="name" sm={2}>
+                            <Translate content='labels.nameLabel'/>
+                        </Label>
                         <Col sm={10}>
-                            <Input name="name" id="name" placeholder="Escriba su primer nombre"
-                                   value={this.state.editUserData.name}
-                                //TODO: how to extract this correctly?
-                                   onChange={(e) => {
-                                       let {editUserData} = this.state;
-                                       editUserData.name = e.target.value;
-                                       this.setState({editUserData})
-                                   }}/>
+                            <Input name="name" id="name" placeholder={placeholderTranslations.translate('placeholders.clientNamePlaceholder')}
+                                   value={this.state.newUserData.name}
+                                   onChange={this.updateField('name')}/>
                         </Col>
                     </FormGroup>
 
                     {/* LASTNAME */}
                     <FormGroup row>
-                        <Label for="lastname" sm={2}>Apellido</Label>
+                        <Label for="lastname" sm={2}>
+                            <Translate content='labels.lastNameLabel' />
+                        </Label>
                         <Col sm={10}>
-                            <Input name="lastname" id="lastname" placeholder="Escriba su apellido"
-                                   value={this.state.editUserData.lastname}
-                                   onChange={(e) => {
-                                       let {editUserData} = this.state;
-                                       editUserData.lastname = e.target.value;
-                                       this.setState({editUserData})
-                                   }}/>
+                            <Input name="lastname" id="lastname" placeholder={placeholderTranslations.translate('placeholders.clientLastnamePlaceholder')}
+                                   value={this.state.newUserData.lastname}
+                                   onChange={this.updateField('lastname')}/>
                         </Col>
                     </FormGroup>
 
                     {/* STATE */}
                     <FormGroup row>
-                        <Label for="state" sm={2}>Ciudad</Label>
+                        <Label for="state" sm={2}>
+                            <Translate content='labels.stateLabel'/>
+                        </Label>
                         <Col sm={10}>
-                            <Input name="state" id="state" placeholder="Escriba su ciudad de residencia"
-                                   value={this.state.editUserData.state}
-                                   onChange={(e) => {
-                                       let {editUserData} = this.state;
-                                       editUserData.state = e.target.value;
-                                       this.setState({editUserData})
-                                   }}/>
+                            <Input name="state" id="state"
+                                   placeholder={placeholderTranslations.translate('placeholders.statePlaceholder')}
+                                   value={this.state.newUserData.state}
+                                   onChange={this.updateField('state')}/>
                         </Col>
                     </FormGroup>
 
                     {/* ADDRESS */}
                     <FormGroup row>
-                        <Label for="address" sm={2}>Dirección</Label>
+                        <Label for="address" sm={2}>
+                            <Translate content='labels.addressLabel'/>
+                        </Label>
                         <Col sm={10}>
-                            <Input name="address" id="address" placeholder="Escriba su dirección"
-                                   value={this.state.editUserData.address}
-                                   onChange={(e) => {
-                                       let {editUserData} = this.state;
-                                       editUserData.address = e.target.value;
-                                       this.setState({editUserData})
-                                   }}/>
+                            <Input name="address" id="address"
+                                   placeholder={placeholderTranslations.translate('placeholders.addressPlaceholder')}
+                                   value={this.state.newUserData.address}
+                                   onChange={this.updateField('address')}/>
                         </Col>
                     </FormGroup>
 
@@ -226,61 +209,98 @@ class Users extends React.Component {
                     <FormGroup row>
                         <Label for="email" sm={2}>Email</Label>
                         <Col sm={10}>
-                            <Input type="email" name="email" id="email" placeholder="Escriba su email"
-                                   value={this.state.editUserData.email}
-                                   onChange={(e) => {
-                                       let {editUserData} = this.state;
-                                       editUserData.email = e.target.value;
-                                       this.setState({editUserData})
-                                   }}/>
+                            <Input type="email" name="email" id="email"
+                                   placeholder={placeholderTranslations.translate('placeholders.emailPlaceholder')}
+                                   value={this.state.newUserData.email}
+                                   onChange={this.updateField('email')}/>
                         </Col>
                     </FormGroup>
 
                     {/* PHONE */}
                     <FormGroup row>
-                        <Label for="phone" sm={2}>Telefono</Label>
+                        <Label for="phone" sm={2}>
+                            <Translate content='labels.phoneLabel'/>
+                        </Label>
                         <Col sm={10}>
-                            <Input name="phone" id="phone" placeholder="Escriba su telefono"
-                                   value={this.state.editUserData.phone}
-                                   onChange={(e) => {
-                                       let {editUserData} = this.state;
-                                       editUserData.phone = e.target.value;
-                                       this.setState({editUserData})
-                                   }}/>
+                            <Input name="phone" id="phone"
+                                   placeholder={placeholderTranslations.translate('placeholders.phonePlaceholder')}
+                                   value={this.state.newUserData.phone}
+                                   onChange={this.updateField('phone')}/>
                         </Col>
                     </FormGroup>
 
-                    {/* ACCOUNT CREDIT */}
                     <FormGroup row>
-                        <Label for="accountCredit" sm={2}>Credito</Label>
+                        <Label for="accountCredit" sm={2}>
+                            <Translate content='labels.accountCreditLabel' />
+                        </Label>
                         <Col sm={10}>
-                            <Input name="accountCredit" id="accountCredit" placeholder="Credito"
-                                   value={this.state.editUserData.accountCredit}
-                                   onChange={(e) => {
-                                       let {editUserData} = this.state;
-                                       editUserData.accountCredit = e.target.value;
-                                       this.setState({editUserData})
-                                   }}/>
+                            <Input plaintext value={user.accountCredit} />
                         </Col>
                     </FormGroup>
 
                 </Form>
 
+                <Modal isOpen={this.state.accountCreditModal} toggle={this.toggleAccountCreditModal.bind(this)}>
+                    <ModalHeader toggle={this.toggleAccountCreditModal.bind(this)}>
+                        <Translate content='accountCreditModalTitle' with={{username}}/>
+                    </ModalHeader>
+                    <ModalBody>
+                        <ModalAlert errorsToShow={this.state.errorMessages}/>
+                        <Form>
+
+                            {/* ACCOUNT CREDIT */}
+
+                            <FormGroup row>
+                                <Col sm={10}>
+                                    <h6><Translate content='labels.availableAccountCredit' with={{credit}}/></h6>
+                                </Col>
+                            </FormGroup>
+
+                            <FormGroup row>
+                                <Label for="accountCredit" sm={2}>
+                                    <Translate content='labels.accountCreditLabel'/>
+                                </Label>
+                                <Col sm={10}>
+                                    <Input name="accountCredit" id="accountCredit"
+                                           placeholder={placeholderTranslations.translate('placeholders.accountCreditPlaceholder')}
+                                           value={this.state.amount}
+                                           onChange={(e) => {
+                                               let {amount} = this.state.amount;
+                                               amount = e.target.value;
+                                               this.setState({amount: amount})
+                                           }}/>
+                                </Col>
+                            </FormGroup>
+
+                        </Form>
+
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button color="primary" onClick={this.depositCredit.bind(this)}>
+                            <Translate content='buttons.depositCredit'/>
+                        </Button>{' '}
+                        <Button color="primary" onClick={this.withdrawCredit.bind(this)}>
+                            <Translate content='buttons.withdrawCredit'/>
+                        </Button>{' '}
+                        <Button color="secondary" onClick={this.toggleAccountCreditModal.bind(this)}>
+                            <Translate content='buttons.cancelButton'/>
+                        </Button>
+                    </ModalFooter>
+
+                </Modal>
+
                 <Row>
-                    <Button color="primary" onClick={this.updateClient.bind(this)}>
-                        Editar Usuario
-                    </Button>{' '}
-                    {/*<Button color='primary' size='sm' className='mr-2'*/}
-                    {/*        onClick={this.editAccountCredit.bind(*/}
-                    {/*            this, this.state.editUserData.id, this.state.editUserData.name,*/}
-                    {/*            this.state.editUserData.lastname, this.state.editUserData.state,*/}
-                    {/*            this.state.editUserData.address, this.state.editUserData.email,*/}
-                    {/*            this.state.editUserData.phone, this.state.editUserData.accountCredit)}>*/}
-                    {/*    <Translate content='buttons.accountCreditButton'/>*/}
-                    {/*</Button>*/}
-                    <Button color="secondary" onClick={this.homeRoute.bind(this)}>
-                        Cancelar
-                    </Button>
+                    <Col xs={2} className="my-3">
+                        <Button color="primary" onClick={this.updateClient.bind(this)}>
+                            <Translate content="editClient"/>
+                        </Button>{' '}
+                    </Col>
+                    <Col xs={2} className="my-3">
+                        <Button color="secondary" href="/home">
+                            <Translate content="buttons.cancelButton" />
+                        </Button>
+                    </Col>
                 </Row>
 
             </Container>

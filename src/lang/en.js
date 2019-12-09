@@ -13,6 +13,7 @@ export default {
     newProviderModalTitle:'Add new provider',
 
     editProviderModalTitle:'Edit provider',
+    editClient:'Edit client',
 
     accountCreditModalTitle: 'Deposit / Withdraw credit for %(username)s',
 

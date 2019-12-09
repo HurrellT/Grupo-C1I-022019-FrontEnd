@@ -16,11 +16,28 @@ import UntranslatedModalAlert from "../Alerts/UntranslatedModalAlert";
 function AddMenuButton(props) {
     const enabled = props.enabled;
     const onClickFunction = props.onClick;
+    const owner = props.owner;
+
+    if (enabled && owner) {
+        return (
+            <Button className="my-3" color="primary" onClick={onClickFunction}>
+                <Translate content='buttons.newMenuButton'/>
+            </Button>
+        )
+    }
+    else {
+        return <div/>
+    }
+}
+
+function PurchasesButton(props) {
+    const enabled = props.enabled;
+    const onClickFunction = props.onClick;
 
     if (enabled) {
         return (
             <Button className="my-3" color="primary" onClick={onClickFunction}>
-                <Translate content='buttons.newMenuButton'/>
+                <Translate content='buttons.seePurchaseButton'/>
             </Button>
         )
     }
@@ -40,7 +57,6 @@ class ProviderMenus extends Menus {
                         loggedClientId: clientId
                         });
         super.getProviderName(provId);
-        this.getPendingScoredPurchases(clientId);
         this.getUserById(clientId);
         this._refreshMenus(provId);
     }
@@ -52,16 +68,8 @@ class ProviderMenus extends Menus {
                 this.setState({
                     user: user
                 }, () => {
-                    if (this.state.user.type === 'client') {
-                        axios.get('http://localhost:8080/pendingScoredPurchases/' + this.state.user.id)
-                            .then(response => {
-                                this.state.pendigScoredPurchases = response.data;
-                            })
-                            .catch(error => {
-                                // console.log(error)
-                                this.setState({errorMsg: 'Error retreiving data'})
-                            })
-                    }
+                    let isClient = this.state.user.type === 'client';
+                    if (isClient) {this.getPendingScoredPurchases(this.state.loggedClientId);}
                 })
             })
     }
@@ -79,7 +87,7 @@ class ProviderMenus extends Menus {
     //RENDER
 
     render() {
-        const {menus, purchaseMenus, errorMsg} = this.state
+        const {menus, purchaseMenus} = this.state
         const placeholderTranslations = counterpart;
         const providername = this.providerName;
        
@@ -90,6 +98,7 @@ class ProviderMenus extends Menus {
         );
 
         let isProvider = this.state.user.type === 'provider';
+        let isOwner = this.state.user.id === parseInt(this.props.match.params.provId);
 
         return (
             <Container>
@@ -111,12 +120,13 @@ class ProviderMenus extends Menus {
                     <Col xs={2} className="my-3">
                         <AddMenuButton
                             onClick={this.toggleNewMenuModal.bind(this)}
-                            enabled={isProvider} />
+                            enabled={isProvider}
+                            owner={isOwner} />
                     </Col>
                     <Col xs={2} className="my-3">
-                        <Button className="my-3" color="primary" onClick={this.seeMyPurchase.bind(this)}>
-                            <Translate content='buttons.seePurchaseButton'/>
-                        </Button>
+                        <PurchasesButton
+                            onClick={this.seeMyPurchase.bind(this)}
+                            enabled={!isProvider} />
                     </Col>
                 </Row>
 
@@ -406,7 +416,7 @@ class ProviderMenus extends Menus {
                                 <th><Translate content='labels.descriptionLabel'/></th>
                                 <th><Translate content='labels.categoryLabel'/></th>
                                 <th><Translate content='labels.priceLabel'/></th>
-                                <th><Translate content='labels.actionsLabel'/></th>
+                                {!isProvider && <th><Translate content='labels.actionsLabel'/></th>}
                             </tr>
                             </thead>
 
@@ -419,12 +429,12 @@ class ProviderMenus extends Menus {
                                     <td>{menu.description}</td>
                                     <td>{menu.category}</td>
                                     <td>{menu.price}</td>
-                                    <td>
+                                    {!isProvider && <td>
                                         <Button color='warning' size='sm'
                                                 onClick={this.askForQuantity.bind(this, menu.name, menu.providerId)}>
                                             <Translate content='buttons.addMenuToPurchaseButton'/>
                                         </Button>
-                                    </td>
+                                    </td>}
                                 </tr>
                             )}
                             </tbody>
