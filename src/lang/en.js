@@ -31,7 +31,7 @@ export default {
         withdrawCredit: 'Withdraw credit',
         depositCredit: 'Deposit credit',
         seePurchaseButton: 'See my purchase',
-        addMenuButton: 'Add to my purchase',
+        addMenuToPurchaseButton: 'Add to my purchase',
         changeQuantityButton: 'Change quantity',
         removeFromPurchaseButton: 'Remove from purchase',
         addMenuButton: 'Add menu',
@@ -39,11 +39,14 @@ export default {
         selectPurchaseDataButton: 'Select date, time and type of delivery',
         rateButton: 'Rate',
         seePurchaseMenusButton: 'See purchase menus',
-        beAProvider: 'Be a Provider!'
+        beAProvider: 'Be a Provider!',
+        viewMenus: 'View more menus'
     },
 
     labels: {
         nameLabel: 'Name',
+        lastNameLabel: 'Lastname',
+
         stateLabel: 'State',
         addressLabel: 'Adress',
         phoneLabel: 'Phone number',
@@ -77,6 +80,9 @@ export default {
     },
 
     placeholders: {
+        clientNamePlaceholder: 'Type your name',
+        clientLastnamePlaceholder: 'Type your lastname',
+
         providerNamePlaceholder: 'Type your provider name',
         filterProviderNamePlaceholder: 'Type a provider name',
         filterMenuNamePlaceholder: 'Type a menu name',
@@ -117,5 +123,13 @@ export default {
         providerPurchaseTitle: 'My purchase for %(providername)s',
         purchaseMenusTitle: 'Purchase menus',
         selectScoreTitle: 'Select score',
+    },
+
+    validations: {
+        invalidPhoneNumber: 'Please, insert a valid phone number',
+        invalidEmail: 'Please, insert a valid email address',
+        address: 'Please, insert your address',
+        state: 'Please, insert your state',
+        name: 'Please, insert your name'
     }
 }

@@ -6,19 +6,7 @@ import Col from "reactstrap/es/Col";
 import Input from "reactstrap/es/Input";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-
-function ModalAlert({errorsToShow}) {
-    const hasErrorsToShow = errorsToShow.length > 0
-
-    if (hasErrorsToShow) {
-        return (
-            <Alert color="danger">
-                {errorsToShow.map(error => <div>{error}</div>)}
-            </Alert>
-        )
-    }
-    return <div/>
-}
+import ModalAlert from "./ModalAlert";
 
 class Registration extends React.Component {
 
@@ -125,7 +113,7 @@ class Registration extends React.Component {
                                 <Translate content='labels.nameLabel'/>
                             </Label>
                             <Col sm={10}>
-                                <Input name="name" id="name" placeholder={placeholderTranslations.translate('placeholders.providerNamePlaceholder')}
+                                <Input name="name" id="name" placeholder={placeholderTranslations.translate('placeholders.clientNamePlaceholder')}
                                        value={this.state.newUserData.name}
                                        onChange={this.updateField('name')}/>
                             </Col>
@@ -133,43 +121,39 @@ class Registration extends React.Component {
 
                         {/* LASTNAME */}
                         <FormGroup row>
-                            <Label for="lastname" sm={2}>Apellido</Label>
+                            <Label for="lastname" sm={2}>
+                                <Translate content='labels.lastNameLabel' />
+                            </Label>
                             <Col sm={10}>
-                                <Input name="lastname" id="lastname" placeholder="Escriba su apellido"
+                                <Input name="lastname" id="lastname" placeholder={placeholderTranslations.translate('placeholders.clientLastnamePlaceholder')}
                                        value={this.state.newUserData.lastname}
-                                       onChange={(e) => {
-                                           let {newUserData} = this.state;
-                                           newUserData.lastname = e.target.value;
-                                           this.setState({newUserData})
-                                       }}/>
+                                       onChange={this.updateField('lastname')}/>
                             </Col>
                         </FormGroup>
 
                         {/* STATE */}
                         <FormGroup row>
-                            <Label for="state" sm={2}>Ciudad</Label>
+                            <Label for="state" sm={2}>
+                                <Translate content='labels.stateLabel'/>
+                            </Label>
                             <Col sm={10}>
-                                <Input name="state" id="state" placeholder="Escriba su ciudad de residencia"
+                                <Input name="state" id="state"
+                                       placeholder={placeholderTranslations.translate('placeholders.statePlaceholder')}
                                        value={this.state.newUserData.state}
-                                       onChange={(e) => {
-                                           let {newUserData} = this.state;
-                                           newUserData.state = e.target.value;
-                                           this.setState({newUserData})
-                                       }}/>
+                                       onChange={this.updateField('state')}/>
                             </Col>
                         </FormGroup>
 
                         {/* ADDRESS */}
                         <FormGroup row>
-                            <Label for="address" sm={2}>Dirección</Label>
+                            <Label for="address" sm={2}>
+                                <Translate content='labels.addressLabel'/>
+                            </Label>
                             <Col sm={10}>
-                                <Input name="address" id="address" placeholder="Escriba su dirección"
+                                <Input name="address" id="address"
+                                       placeholder={placeholderTranslations.translate('placeholders.addressPlaceholder')}
                                        value={this.state.newUserData.address}
-                                       onChange={(e) => {
-                                           let {newUserData} = this.state;
-                                           newUserData.address = e.target.value;
-                                           this.setState({newUserData})
-                                       }}/>
+                                       onChange={this.updateField('address')}/>
                             </Col>
                         </FormGroup>
 
@@ -177,27 +161,23 @@ class Registration extends React.Component {
                         <FormGroup row>
                             <Label for="email" sm={2}>Email</Label>
                             <Col sm={10}>
-                                <Input type="email" name="email" id="email" placeholder="Escriba su email"
+                                <Input type="email" name="email" id="email"
+                                       placeholder={placeholderTranslations.translate('placeholders.emailPlaceholder')}
                                        value={this.state.newUserData.email}
-                                       onChange={(e) => {
-                                           let {newUserData} = this.state;
-                                           newUserData.email = e.target.value;
-                                           this.setState({newUserData})
-                                       }}/>
+                                       onChange={this.updateField('email')}/>
                             </Col>
                         </FormGroup>
 
                         {/* PHONE */}
                         <FormGroup row>
-                            <Label for="phone" sm={2}>Telefono</Label>
+                            <Label for="phone" sm={2}>
+                                <Translate content='labels.phoneLabel'/>
+                            </Label>
                             <Col sm={10}>
-                                <Input name="phone" id="phone" placeholder="Escriba su telefono"
+                                <Input name="phone" id="phone"
+                                       placeholder={placeholderTranslations.translate('placeholders.phonePlaceholder')}
                                        value={this.state.newUserData.phone}
-                                       onChange={(e) => {
-                                           let {newUserData} = this.state;
-                                           newUserData.phone = e.target.value;
-                                           this.setState({newUserData})
-                                       }}/>
+                                       onChange={this.updateField('phone')}/>
                             </Col>
                         </FormGroup>
 
