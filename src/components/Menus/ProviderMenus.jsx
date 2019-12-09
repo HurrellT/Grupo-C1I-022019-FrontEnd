@@ -11,19 +11,7 @@ import Menus from "./Menus";
 import counterpart from 'counterpart';
 import Translate from 'react-translate-component';
 import {useAuth0} from "../../react-auth0-spa";
-
-function ModalAlert({ errorsToShow }) {
-    const hasErrorsToShow = errorsToShow.length > 0
-
-    if (hasErrorsToShow) {
-        return (
-            <Alert color="danger">
-                {errorsToShow.map(error => <div>{error}</div>)}
-            </Alert>
-        )
-    }
-    return <div />
-}
+import UntranslatedModalAlert from "../Alerts/UntranslatedModalAlert";
 
 function AddMenuButton(props) {
     const enabled = props.enabled;
@@ -139,7 +127,7 @@ class ProviderMenus extends Menus {
                         <Translate content='titles.addMenuTitle'/>
                     </ModalHeader>
                     <ModalBody>
-                        <ModalAlert errorsToShow={this.state.errorMessages} />
+                        <UntranslatedModalAlert errorsToShow={this.state.errorMessages} />
 
                         {/* ADD CLIENT MODAL FORM */}
                         <Form>
@@ -225,13 +213,13 @@ class ProviderMenus extends Menus {
                         <Translate content='titles.informationTitle'/>
                     </ModalHeader>
                     <ModalBody>
-                         <ModalAlert errorsToShow={this.state.errorMessages} />
+                         <UntranslatedModalAlert errorsToShow={this.state.errorMessages} />
 
                          {/* ADD MENU MODAL FORM */}
                          <Form>
                              {/* NAME */}
                              <FormGroup row>
-                                 <Label sm={20}>{this.state.message}</Label>
+                                 <Label sm={20} style={{padding: 20}}>{this.state.message}</Label>
                              </FormGroup>
                          </Form>
 
@@ -250,7 +238,7 @@ class ProviderMenus extends Menus {
                         <Translate content='titles.selectQuantityTitle'/>
                     </ModalHeader>
                     <ModalBody>
-                         <ModalAlert errorsToShow={this.state.errorMessages} />
+                         <UntranslatedModalAlert errorsToShow={this.state.errorMessages} />
 
                          {/* ADD MENU MODAL FORM */}
                          <Form>
@@ -285,7 +273,7 @@ class ProviderMenus extends Menus {
                         <Translate content='titles.providerPurchaseTitle' with={{providername}}/>
                     </ModalHeader>
                     <ModalBody>
-                         <ModalAlert errorsToShow={this.state.errorMessages} />
+                         <UntranslatedModalAlert errorsToShow={this.state.errorMessages} />
 
                          <Row>
                              <Col>
@@ -348,7 +336,7 @@ class ProviderMenus extends Menus {
                         <Translate content='buttons.selectPurchaseDataButton'/>
                     </ModalHeader>
                     <ModalBody>
-                        <ModalAlert errorsToShow={this.state.errorMessages} />
+                        <UntranslatedModalAlert errorsToShow={this.state.errorMessages} />
 
                         {/* PURCHASE DATA FORM */}
                         <Form>

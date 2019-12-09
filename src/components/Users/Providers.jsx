@@ -1010,12 +1010,12 @@ class Providers extends React.Component {
                                 {/*<th>Logo</th> TODO: ver como la imagen del logo que elijas*/}
                                 <th><Translate content='labels.descriptionLabel'/></th>
                                 <th><Translate content='labels.websiteLabel'/></th>
-                                <th><Translate content='labels.hoursFromLabel'/></th>
-                                <th><Translate content='labels.hoursToLabel'/></th>
-                                <th><Translate content='labels.officeDaysFromLabel'/></th>
-                                <th><Translate content='labels.officeDaysToLabel'/></th>
+                                {/*<th><Translate content='labels.hoursFromLabel'/></th>*/}
+                                {/*<th><Translate content='labels.hoursToLabel'/></th>*/}
+                                {/*<th><Translate content='labels.officeDaysFromLabel'/></th>*/}
+                                {/*<th><Translate content='labels.officeDaysToLabel'/></th>*/}
                                 {/*<th>Hace Delivery</th>*/}
-                                <th><Translate content='labels.accountCreditLabel'/></th>
+                                {/*<th><Translate content='labels.accountCreditLabel'/></th>*/}
                                 <th><Translate content='labels.actionsLabel'/></th>
                             </tr>
                             </thead>
@@ -1033,12 +1033,12 @@ class Providers extends React.Component {
                                     {/*<td>{user.logo}</td> TODO: Fetch image*/}
                                     <td>{user.description}</td>
                                     <td>{user.website}</td>
-                                    <td>{user.officeHoursFrom}</td>
-                                    <td>{user.officeHoursTo}</td>
-                                    <td>{user.officeDaysFrom}</td>
-                                    <td>{user.officeDaysTo}</td>
+                                    {/*<td>{user.officeHoursFrom}</td>*/}
+                                    {/*<td>{user.officeHoursTo}</td>*/}
+                                    {/*<td>{user.officeDaysFrom}</td>*/}
+                                    {/*<td>{user.officeDaysTo}</td>*/}
                                     {/*<td>{user.delivery ? "Si" : "No"}</td>*/}
-                                    <td>{user.accountCredit}</td>
+                                    {/*<td>{user.accountCredit}</td>*/}
 
                                     <td>
                                         <MenusButton

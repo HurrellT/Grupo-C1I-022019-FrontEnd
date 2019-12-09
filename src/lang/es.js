@@ -46,7 +46,6 @@ export default {
     labels: {
         nameLabel: 'Nombre',
         lastNameLabel: 'Apellido',
-
         stateLabel: 'Ciudad',
         addressLabel: 'Dirección',
         phoneLabel: 'Telefono',
@@ -82,7 +81,6 @@ export default {
     placeholders: {
         clientNamePlaceholder: 'Escriba su nombre',
         clientLastnamePlaceholder: 'Escriba su apellido',
-
         providerNamePlaceholder: 'Escriba el nombre de Proveedor',
         filterProviderNamePlaceholder: 'Escriba un nombre de proveedor',
         filterMenuNamePlaceholder: 'Escriba un nombre de menú',
@@ -130,6 +128,7 @@ export default {
         invalidEmail: 'Por favor, escriba un email valido',
         address: 'Por favor, escriba su direccion',
         state: 'Por favor, escriba su ciudad',
-        name: 'Por favor, escriba su nombre'
+        name: 'Por favor, escriba su nombre',
+        menuName: 'Por favor, escriba un nombre para el menu'
     }
 }

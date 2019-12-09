@@ -17,7 +17,7 @@ import CardDeck from "reactstrap/es/CardDeck";
 import Translate from 'react-translate-component';
 import Col from "reactstrap/es/Col";
 import Container from "reactstrap/es/Container";
-import ModalAlert from "./ModalAlert";
+import ModalAlert from "./Alerts/ModalAlert";
 import MenusButton from "./Buttons/MenusButton";
 
 function BecomeAProvider(props) {
@@ -26,12 +26,12 @@ function BecomeAProvider(props) {
 
     if (enabled) {
         return (
-            <Col sm={4}>
+            <Col sm={4} style={{textAlign: 'center', padding: 20}}>
                 <Card>
                     <CardImg top width="100%" src="/assets/provider.jpg" alt=""/>
                     <CardBody>
                         <CardTitle>
-                            <Translate content='buttons.beAProvider'/>
+                            <Translate style={{fontSize: '130%'}} content='buttons.beAProvider'/>
                         </CardTitle>
                         {/*<CardText>*/}
                         {/*    Translated Text*/}
@@ -163,17 +163,14 @@ class Home extends React.Component {
 
         return (
             <Container fluid={true}>
-                <CardDeck style={{padding: 20}}>
-                    <BecomeAProvider
-                        onClick={this.toggleBecomeAProviderModal.bind(this)}
-                        enabled={!isProvider}/>
+                <CardDeck>
                     {menus.map(menu =>
-                        <Col sm={4}>
+                        <Col sm={4} style={{textAlign: 'center', padding: 20}}>
                             <Card>
                                 <CardImg top width="100%" src="/assets/pizza1.jpg" alt=""/>
                                 <CardBody>
-                                    <CardTitle>{menu.name}</CardTitle>
-                                    <CardSubtitle>{menu.category}</CardSubtitle>
+                                    <CardTitle style={{fontSize: '130%'}}>{menu.name}</CardTitle>
+                                    <CardSubtitle style={{fontSize: '70%'}}>{menu.category}</CardSubtitle>
                                     <CardText>{menu.description}</CardText>
                                     <MenusButton
                                         userId={menu.providerId}
@@ -182,6 +179,9 @@ class Home extends React.Component {
                             </Card>
                         </Col>
                     )}
+                    <BecomeAProvider
+                        onClick={this.toggleBecomeAProviderModal.bind(this)}
+                        enabled={!isProvider}/>
                 </CardDeck>
 
                 <Modal isOpen={this.state.becomeAProviderModal} toggle={this.toggleBecomeAProviderModal.bind(this)}>
