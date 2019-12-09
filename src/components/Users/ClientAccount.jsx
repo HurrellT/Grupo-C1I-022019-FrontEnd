@@ -6,6 +6,7 @@ import Col from "reactstrap/es/Col";
 import Input from "reactstrap/es/Input";
 import Container from "reactstrap/es/Container";
 import Row from "reactstrap/es/Row";
+import Translate from "react-translate-component";
 
 class Users extends React.Component {
 
@@ -111,6 +112,15 @@ class Users extends React.Component {
                     }
                 })
             })
+    }
+
+    editAccountCredit(id, name, lastname, state, address, email, phone, accountCredit) {
+        this.setState({
+            editUserData: {
+                id, name, state, address, email, phone, accountCredit
+            },
+            accountCreditModal: !this.state.accountCreditModal
+        })
     }
 
     deleteUser(id) {
@@ -260,6 +270,14 @@ class Users extends React.Component {
                     <Button color="primary" onClick={this.updateClient.bind(this)}>
                         Editar Usuario
                     </Button>{' '}
+                    {/*<Button color='primary' size='sm' className='mr-2'*/}
+                    {/*        onClick={this.editAccountCredit.bind(*/}
+                    {/*            this, this.state.editUserData.id, this.state.editUserData.name,*/}
+                    {/*            this.state.editUserData.lastname, this.state.editUserData.state,*/}
+                    {/*            this.state.editUserData.address, this.state.editUserData.email,*/}
+                    {/*            this.state.editUserData.phone, this.state.editUserData.accountCredit)}>*/}
+                    {/*    <Translate content='buttons.accountCreditButton'/>*/}
+                    {/*</Button>*/}
                     <Button color="secondary" onClick={this.homeRoute.bind(this)}>
                         Cancelar
                     </Button>

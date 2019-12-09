@@ -30,7 +30,6 @@ export default {
         logoutButton: 'Log out',
         withdrawCredit: 'Withdraw credit',
         depositCredit: 'Deposit credit',
-        logoutButton: 'Log out',
         seePurchaseButton: 'See my purchase',
         addMenuButton: 'Add to my purchase',
         changeQuantityButton: 'Change quantity',

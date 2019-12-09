@@ -23,14 +23,49 @@ function ModalAlert({ errorsToShow }) {
     return <div />
 }
 
+function AddMenuButton(props) {
+    const enabled = props.enabled;
+    const onClickFunction = props.onClick;
+
+    if (enabled) {
+        return (
+            <Button className="my-3" color="primary" onClick={onClickFunction}>
+                <Translate content='buttons.newMenuButton'/>
+            </Button>
+        )
+    }
+    else {
+        return <div/>
+    }
+}
+
+function SeePurchasesButton(props) {
+    const enabled = props.enabled;
+    const onClickFunction = props.onClick;
+
+    if (enabled) {
+        return (
+            <Button className="my-3" color="primary" onClick={onClickFunction}>
+                <Translate content='buttons.seePurchaseButton'/>
+            </Button>
+        )
+    }
+    else {
+        return <div/>
+    }
+}
+
 class Menus extends React.Component {
 
     constructor(props) {
         super(props)
 
+        this.providerName = '';
+        this.pendigScoredPurchases = '0';
         this.state = {
             loggedUser: props.loggedUser,
             loggedClientId: '0',
+            user: '',
             menus: [],
             menuNames: [],
             purchases: [],
@@ -111,7 +146,27 @@ class Menus extends React.Component {
     componentDidMount() {
         this.setState({purchaseMaked : false});
         this.getLoggedClientId(this.state.loggedUser.email);
+        this.getUserByEmail(this.state.loggedUser.email);
         this._refreshMenus();
+    }
+
+    getUserByEmail(email) {
+        axios.get('http://localhost:8080/userWithEmail/' + email)
+            .then((response) => {
+                let user = response.data
+                this.setState({
+                    user: user
+                }, () => {
+                    axios.get('http://localhost:8080/pendingScoredPurchases/' + this.state.user.id)
+                        .then(response => {
+                            this.pendigScoredPurchases = response.data;
+                        })
+                        .catch(error => {
+                            // console.log(error)
+                            this.setState({errorMsg: 'Error retreiving data'})
+                        })
+                })
+            })
     }
 
     toggleNewMenuModal() {
@@ -458,6 +513,8 @@ class Menus extends React.Component {
             }
         );
 
+        let isProvider = this.state.user.type === 'provider';
+
         return (
             <Container>
                 <Row>
@@ -474,14 +531,14 @@ class Menus extends React.Component {
                                onChange = {this.updateSearch.bind(this)}/>
                     </Col>
                     <Col xs={2} className="my-3">
-                        <Button className="my-3" color="primary" onClick={this.toggleNewMenuModal.bind(this)}>
-                            <Translate content='buttons.newMenuButton'/>
-                        </Button>
+                        <AddMenuButton
+                            onClick={this.toggleNewMenuModal.bind(this)}
+                            enabled={isProvider} />
                     </Col>
                     <Col xs={2} className="my-3">
-                        <Button className="my-3" color="primary" onClick={this.seeMyPurchase.bind(this)}>
-                            <Translate content='buttons.seePurchaseButton'/>
-                        </Button>
+                        <SeePurchasesButton
+                            onClick={this.seeMyPurchase.bind(this)}
+                            enabled={!isProvider} />
                     </Col>
                 </Row>
 
@@ -798,7 +855,7 @@ class Menus extends React.Component {
                                 <th><Translate content='labels.categoryLabel'/></th>
                                 <th><Translate content='labels.priceLabel'/></th>
                                 <th><Translate content='labels.providerLabel'/></th>
-                                <th><Translate content='labels.actionsLabel'/></th>
+                                {!isProvider && <th><Translate content='labels.actionsLabel'/></th>}
                             </tr>
                             </thead>
 
@@ -812,12 +869,12 @@ class Menus extends React.Component {
                                     <td>{menu.category}</td>
                                     <td>{menu.price}</td>
                                     <td>{menu.providerName}</td>
-                                    <td>
+                                    {!isProvider && <td>
                                         <Button color='warning' size='sm'
                                                 onClick={this.askForQuantity.bind(this, menu.name, menu.providerId)}>
                                             <Translate content='buttons.addMenuButton'/>
                                         </Button>
-                                    </td>
+                                    </td>}
                                 </tr>
                             )}
                             </tbody>

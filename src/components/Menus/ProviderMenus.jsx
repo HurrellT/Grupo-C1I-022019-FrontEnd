@@ -10,6 +10,7 @@ import NumericInput from 'react-numeric-input';
 import Menus from "./Menus";
 import counterpart from 'counterpart';
 import Translate from 'react-translate-component';
+import {useAuth0} from "../../react-auth0-spa";
 
 function ModalAlert({ errorsToShow }) {
     const hasErrorsToShow = errorsToShow.length > 0
@@ -24,26 +25,59 @@ function ModalAlert({ errorsToShow }) {
     return <div />
 }
 
-class ProviderMenus extends Menus {
+function AddMenuButton(props) {
+    const enabled = props.enabled;
+    const onClickFunction = props.onClick;
 
-    //constructor(props) {
-    //    super(props)
-    //}
+    if (enabled) {
+        return (
+            <Button className="my-3" color="primary" onClick={onClickFunction}>
+                <Translate content='buttons.newMenuButton'/>
+            </Button>
+        )
+    }
+    else {
+        return <div/>
+    }
+}
+
+class ProviderMenus extends Menus {
 
     //METHODS
 
     componentDidMount() {
-        let {provId} = this.props.match.params;
-        let {loggedId} = this.props.match.params;
+        let {provId, clientId} = this.props.match.params;
         this.setState({
                         purchaseMaked: false,
-                        loggedClientId: loggedId
+                        loggedClientId: clientId
                         });
         super.getProviderName(provId);
-        //this.getLoggedClientId(this.state.loggedUser.email);
-        this.getPendingScoredPurchases(loggedId);
+        this.getPendingScoredPurchases(clientId);
+        this.getUserById(clientId);
         this._refreshMenus(provId);
     }
+
+    getUserById(id) {
+        axios.get('http://localhost:8080/userById/' + id)
+            .then((response) => {
+                let user = response.data
+                this.setState({
+                    user: user
+                }, () => {
+                    if (this.state.user.type === 'client') {
+                        axios.get('http://localhost:8080/pendingScoredPurchases/' + this.state.user.id)
+                            .then(response => {
+                                this.state.pendigScoredPurchases = response.data;
+                            })
+                            .catch(error => {
+                                // console.log(error)
+                                this.setState({errorMsg: 'Error retreiving data'})
+                            })
+                    }
+                })
+            })
+    }
+
 
     _refreshMenus(provId) {
         axios.get('http://localhost:8080/menusp/' + provId)
@@ -60,12 +94,14 @@ class ProviderMenus extends Menus {
         const {menus, purchaseMenus, errorMsg} = this.state
         const placeholderTranslations = counterpart;
         const providername = this.providerName;
-
+       
         let filteredMenus = menus.filter(
             (menu) => {
                 return menu.name.toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1;
             }
         );
+
+        let isProvider = this.state.user.type === 'provider';
 
         return (
             <Container>
@@ -85,9 +121,9 @@ class ProviderMenus extends Menus {
                                onChange = {this.updateSearch.bind(this)}/>
                     </Col>
                     <Col xs={2} className="my-3">
-                        <Button className="my-3" color="primary" onClick={this.toggleNewMenuModal.bind(this)}>
-                            <Translate content='buttons.newMenuButton'/>
-                        </Button>
+                        <AddMenuButton
+                            onClick={this.toggleNewMenuModal.bind(this)}
+                            enabled={isProvider} />
                     </Col>
                     <Col xs={2} className="my-3">
                         <Button className="my-3" color="primary" onClick={this.seeMyPurchase.bind(this)}>

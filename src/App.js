@@ -68,8 +68,8 @@ function App() {
                     <PrivateRoute path="/providers" component={() => <Providers loggedUser={user} />} />
                     {/*<PrivateRoute path="/beAProvider" component={() => <BecomeAProvider loggedUser={user} />} />*/}
                     <PrivateRoute path="/menus" component={() => <Menus loggedUser={user} />} />
-                    <PrivateRoute path="/providerMenus/:provId:loggedId" exact strict component={ProviderMenus} />
-                    <PrivateRoute path="/purchaseHistory" component={PurchaseHistory} />
+                    <PrivateRoute path="/providerMenus/:provId/:clientId" exact strict component={ProviderMenus} />
+                    <PrivateRoute path="/purchaseHistory" component={() => <PurchaseHistory loggedUser={user} />} />
                 </Switch>
 
                 {/*<footer style={*/}

@@ -47,7 +47,7 @@ function AddProviderButton(props) {
                 </Button>
             </Col>)
     } else {
-        return <div></div>
+        return <div/>
     }
 }
 
@@ -102,13 +102,13 @@ function EditAccountButton(props) {
 
 function MenusButton(props) {
 
-    const userId = props.userId;
-    const loggedId = props.loggedId;
+    const providerId = props.userId;
+    const clientId = props.clientId;
 
     let history = useHistory();
 
     function handleClick() {
-        history.push('/providerMenus/' + userId + loggedId);
+        history.push('/providerMenus/' + providerId + '/' + clientId);
     }
 
     return (
@@ -126,7 +126,7 @@ class Providers extends React.Component {
 
         this.state = {
             loggedUser: props.loggedUser,
-            loggedId: 0,
+            loggedUserId: '',
             search: '',
             users: [],
             newUserData: {
@@ -188,16 +188,17 @@ class Providers extends React.Component {
 
     componentDidMount() {
         this._refreshUsers();
-        this.updateUserTypeSearchingByEmail(this.state.loggedUser.email);
+        this.updateUserSearchingByEmail(this.state.loggedUser.email)
         this.getLoggedClientId(this.state.loggedUser.email);
-         }
+    }
 
-    updateUserTypeSearchingByEmail(email) {
-        return axios.get('http://localhost:8080/userWithEmail/' + email)
+    updateUserSearchingByEmail(email) {
+        axios.get('http://localhost:8080/userWithEmail/' + email)
             .then((response) => {
                 let user = response.data
                 this.setState({
-                    userType:user.type
+                    userType:user.type,
+                    loggedUserId:user.id
                 })
             })
     }
@@ -462,7 +463,7 @@ class Providers extends React.Component {
     //RENDER
 
     render() {
-        const {users, loggedId} = this.state;
+        const {users} = this.state;
 
         const placeholderTranslations = counterpart;
 
@@ -1059,7 +1060,7 @@ class Providers extends React.Component {
                                     <td>
                                         <MenusButton
                                             userId={user.id}
-                                            loggedId={loggedId}/>
+                                            clientId={this.state.loggedUserId}/>
 
                                         <EditAccountButton
                                             onClick={this.editUser.bind(this, user.id, user.name,
