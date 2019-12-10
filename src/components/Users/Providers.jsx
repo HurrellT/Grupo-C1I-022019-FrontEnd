@@ -99,7 +99,7 @@ class Providers extends React.Component {
     }
 
     updateUserSearchingByEmail(email) {
-        axios.get('http://localhost:8080/userWithEmail/' + email)
+        axios.get('http://viandas-ya.herokuapp.com/userWithEmail/' + email)
             .then((response) => {
                 let user = response.data
                 this.setState({
@@ -132,7 +132,7 @@ class Providers extends React.Component {
     }
 
     addProvider() {
-        axios.post('http://localhost:8080/provider', this.state.newUserData)
+        axios.post('http://viandas-ya.herokuapp.com/provider', this.state.newUserData)
             .then((response) => {
                 let {users} = this.state;
                 users.push(response.data);
@@ -206,7 +206,7 @@ class Providers extends React.Component {
             description, website, officeHoursFrom, officeHoursTo, officeDaysFrom, officeDaysTo, menus, delivery
         } = this.state.editUserData;
 
-        axios.put('http://localhost:8080/provider/' + this.state.editUserData.id, {
+        axios.put('http://viandas-ya.herokuapp.com/provider/' + this.state.editUserData.id, {
             name, state, address, email, phone, accountCredit, logo, latitude, longitude,
             description, website, officeHoursFrom, officeHoursTo, officeDaysFrom, officeDaysTo, menus, delivery
         })
@@ -239,7 +239,7 @@ class Providers extends React.Component {
     }
 
     withdrawCredit() {
-        axios.post('http://localhost:8080/withdrawCredit/' + this.state.editUserData.id + "/" + this.state.amount)
+        axios.post('http://viandas-ya.herokuapp.com/withdrawCredit/' + this.state.editUserData.id + "/" + this.state.amount)
             .then((response) => {
                 this._refreshUsers();
                 this.setState({
@@ -276,7 +276,7 @@ class Providers extends React.Component {
     }
 
     depositCredit() {
-        axios.post('http://localhost:8080/depositCredit/' + this.state.editUserData.id + "/" + this.state.amount)
+        axios.post('http://viandas-ya.herokuapp.com/depositCredit/' + this.state.editUserData.id + "/" + this.state.amount)
             .then((response) => {
                 this._refreshUsers();
                 this.setState({
@@ -313,7 +313,7 @@ class Providers extends React.Component {
     }
 
     deleteProvider(id) {
-        axios.delete('http://localhost:8080/user/' + id)
+        axios.delete('http://viandas-ya.herokuapp.com/user/' + id)
             .then((response) => {
                 this._refreshUsers();
             })
@@ -323,7 +323,7 @@ class Providers extends React.Component {
     _refreshUsers() {
         //TODO: CHANGE THIS WITH THE HEROKU URL
         // axios.get('http://viandas-ya.herokuapp.com/users')
-        axios.get('http://localhost:8080/providers?page=' + this.state.selectedPage + '&size=5')
+        axios.get('http://viandas-ya.herokuapp.com/providers?page=' + this.state.selectedPage + '&size=5')
             .then(response => {
                 this.setState({
                     users: response.data

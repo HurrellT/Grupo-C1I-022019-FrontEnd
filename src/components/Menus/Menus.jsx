@@ -112,13 +112,13 @@ class Menus extends React.Component {
     }
 
     getUserByEmail(email) {
-        axios.get('http://localhost:8080/userWithEmail/' + email)
+        axios.get('http://viandas-ya.herokuapp.com/userWithEmail/' + email)
             .then((response) => {
                 let user = response.data
                 this.setState({
                     user: user
                 }, () => {
-                    axios.get('http://localhost:8080/pendingScoredPurchases/' + this.state.user.id)
+                    axios.get('http://viandas-ya.herokuapp.com/pendingScoredPurchases/' + this.state.user.id)
                         .then(response => {
                             this.pendigScoredPurchases = response.data;
                         })
@@ -165,7 +165,7 @@ class Menus extends React.Component {
             let {newMenuData} = this.state;
             newMenuData.providerId = this.state.loggedUserId;
             this.setState({newMenuData});
-            axios.post('http://localhost:8080/menu', this.state.newMenuData)
+            axios.post('http://viandas-ya.herokuapp.com/menu', this.state.newMenuData)
                 .then((response) => {
                     let {menus} = this.state;
                     menus.push(response.data);
@@ -207,14 +207,14 @@ class Menus extends React.Component {
         }
 
     deleteMenu(id) {
-        axios.delete('http://localhost:8080/menu/' + id)
+        axios.delete('http://viandas-ya.herokuapp.com/menu/' + id)
             .then(() => {
                 this._refreshMenus();
             })
     }
 
     _refreshMenus() {
-        axios.get('http://localhost:8080/menus')
+        axios.get('http://viandas-ya.herokuapp.com/menus')
             .then(response => {
                 this.setState({
                     menus: response.data
@@ -223,7 +223,7 @@ class Menus extends React.Component {
     }
 
     getProviderName(id){
-        axios.get('http://localhost:8080/providerName/' + id)
+        axios.get('http://viandas-ya.herokuapp.com/providerName/' + id)
             .then(response => {
                 this.providerName = response.data;
              })
@@ -231,7 +231,7 @@ class Menus extends React.Component {
 
 
     makePurchase() {
-        axios.post('http://localhost:8080/makePurchase/' + this.state.loggedClientId, this.state.purchases)
+        axios.post('http://viandas-ya.herokuapp.com/makePurchase/' + this.state.loggedClientId, this.state.purchases)
             .then(() => {
                 this.setState({
                     message: counterpart.translate('messages.successfulPurchaseMessage'),
@@ -259,7 +259,7 @@ class Menus extends React.Component {
     }
 
     getPendingScoredPurchases(id){
-        axios.get('http://localhost:8080/pendingScoredPurchases/' + id)
+        axios.get('http://viandas-ya.herokuapp.com/pendingScoredPurchases/' + id)
         .then(response => {
                 this.pendigScoredPurchases = response.data;
         })
@@ -320,7 +320,7 @@ class Menus extends React.Component {
     }
 
     updateUserSearchingByEmail(email) {
-        axios.get('http://localhost:8080/userWithEmail/' + email)
+        axios.get('http://viandas-ya.herokuapp.com/userWithEmail/' + email)
             .then((response) => {
                 let user = response.data
                 this.setState({
@@ -447,7 +447,7 @@ class Menus extends React.Component {
     }
 
     getLoggedClientId(email){
-        axios.get('http://localhost:8080/userId/' + email)
+        axios.get('http://viandas-ya.herokuapp.com/userId/' + email)
         .then(response => {
             this.setState({
                 loggedClientId: response.data

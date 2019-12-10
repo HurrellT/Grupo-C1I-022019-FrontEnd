@@ -31,7 +31,7 @@ class ProviderMenus extends Menus {
     }
 
     getUserById(id) {
-        axios.get('http://localhost:8080/userById/' + id)
+        axios.get('http://viandas-ya.herokuapp.com/userById/' + id)
             .then((response) => {
                 let user = response.data
                 this.setState({
@@ -45,7 +45,7 @@ class ProviderMenus extends Menus {
 
 
     _refreshMenus(provId) {
-        axios.get('http://localhost:8080/menusp/' + provId)
+        axios.get('http://viandas-ya.herokuapp.com/menusp/' + provId)
             .then(response => {
                 this.setState({
                     menus: response.data

@@ -37,7 +37,7 @@ class Registration extends React.Component {
     }
 
     userIsRegistered() {
-        return axios.get('http://localhost:8080/clientIsRegistered/' + this.state.loggedUser.email)
+        return axios.get('http://viandas-ya.herokuapp.com/clientIsRegistered/' + this.state.loggedUser.email)
             .then(response => {
                 if (!response.data) {
 
@@ -48,7 +48,7 @@ class Registration extends React.Component {
                         newUserData: {
                             name: this.state.loggedUser.given_name,
                             lastname: this.state.loggedUser.family_name,
-                            state: this.state.loggedUser["http://localhost:8080/geoip"].city_name,
+                            state: this.state.loggedUser["http://viandas-ya.herokuapp.com/geoip"].city_name,
                             address: '',
                             email: this.state.loggedUser.email,
                             phone: '',
@@ -61,7 +61,7 @@ class Registration extends React.Component {
     }
 
     addClient() {
-        axios.post('http://localhost:8080/client', this.state.newUserData)
+        axios.post('http://viandas-ya.herokuapp.com/client', this.state.newUserData)
             .then((response) => {
                 this.setState(
                     {

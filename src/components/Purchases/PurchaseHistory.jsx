@@ -64,7 +64,7 @@ class PurchaseHistory extends React.Component {
     }
 
     _refreshPurchases(id) {
-        axios.get('http://localhost:8080/userWithEmail/' + this.state.loggedUser.email)
+        axios.get('http://viandas-ya.herokuapp.com/userWithEmail/' + this.state.loggedUser.email)
             .then((response) => {
                 let user = response.data
                 this.setState({
@@ -75,7 +75,7 @@ class PurchaseHistory extends React.Component {
                     if (isProvider) {
                         endpoint = 'ppurchases'
                     }
-                    axios.get('http://localhost:8080/' + endpoint + '/' + this.state.user.id)
+                    axios.get('http://viandas-ya.herokuapp.com/' + endpoint + '/' + this.state.user.id)
                         .then(response => {
                             this.setState({
                                 purchases: response.data
@@ -150,7 +150,7 @@ class PurchaseHistory extends React.Component {
            });
         }
         else{
-            axios.post('http://localhost:8080/setScore', this.state.purchaseScore)
+            axios.post('http://viandas-ya.herokuapp.com/setScore', this.state.purchaseScore)
                 .then((response) => {
                     this.setState({
                         message: counterpart.translate('messages.successfulScoreMessage')

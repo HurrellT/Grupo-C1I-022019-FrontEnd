@@ -62,8 +62,8 @@ class Home extends React.Component {
                 phone: '',
                 accountCredit: '',
                 logo: '',
-                latitude: props.loggedUser["http://localhost:8080/geoip"].latitude,
-                longitude: props.loggedUser["http://localhost:8080/geoip"].longitude,
+                latitude: props.loggedUser["http://viandas-ya.herokuapp.com/geoip"].latitude,
+                longitude: props.loggedUser["http://viandas-ya.herokuapp.com/geoip"].longitude,
                 description: '',
                 website: '',
                 officeHoursFrom: '',
@@ -82,7 +82,7 @@ class Home extends React.Component {
     }
 
     updateUserByEmail(email) {
-        return axios.get('http://localhost:8080/userWithEmail/' + email)
+        return axios.get('http://viandas-ya.herokuapp.com/userWithEmail/' + email)
             .then((response) => {
                 let user = response.data
                 this.setState({
@@ -96,8 +96,8 @@ class Home extends React.Component {
                         phone: user.phone,
                         accountCredit: user.accountCredit,
                         logo: '',
-                        latitude: this.state.loggedUser["http://localhost:8080/geoip"].latitude,
-                        longitude: this.state.loggedUser["http://localhost:8080/geoip"].longitude,
+                        latitude: this.state.loggedUser["http://viandas-ya.herokuapp.com/geoip"].latitude,
+                        longitude: this.state.loggedUser["http://viandas-ya.herokuapp.com/geoip"].longitude,
                         description: '',
                         website: '',
                         officeHoursFrom: '',
@@ -117,7 +117,7 @@ class Home extends React.Component {
     }
 
     _refreshMenus() {
-        axios.get('http://localhost:8080/menus')
+        axios.get('http://viandas-ya.herokuapp.com/menus')
             .then(response => {
                 this.setState({
                     menus: response.data
@@ -144,7 +144,7 @@ class Home extends React.Component {
             description, website, officeHoursFrom, officeHoursTo, officeDaysFrom, officeDaysTo, menus, delivery
         } = this.state.newUserData;
 
-        axios.post('http://localhost:8080/convertClientToProvider/' + this.state.newUserData.id, {
+        axios.post('http://viandas-ya.herokuapp.com/convertClientToProvider/' + this.state.newUserData.id, {
             name, state, address, email, phone, accountCredit, logo, latitude, longitude,
             description, website, officeHoursFrom, officeHoursTo, officeDaysFrom, officeDaysTo, menus, delivery
         })

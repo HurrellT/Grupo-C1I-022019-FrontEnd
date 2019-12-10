@@ -82,7 +82,7 @@ class Users extends React.Component {
     }
 
     addClient() {
-        axios.post('http://localhost:8080/client', this.state.newUserData)
+        axios.post('http://viandas-ya.herokuapp.com/client', this.state.newUserData)
             .then((response) => {
                 let {users} = this.state;
                 users.push(response.data);
@@ -119,7 +119,7 @@ class Users extends React.Component {
     updateClient() {
         let {name, lastname, state, address, email, phone, accountCredit} = this.state.editUserData;
 
-        axios.put('http://localhost:8080/client/' + this.state.editUserData.id, {
+        axios.put('http://viandas-ya.herokuapp.com/client/' + this.state.editUserData.id, {
             name, lastname, state, address, email, phone, accountCredit
         })
             .then((response) => {
@@ -141,7 +141,7 @@ class Users extends React.Component {
     }
 
     deleteUser(id) {
-        axios.delete('http://localhost:8080/user/' + id)
+        axios.delete('http://viandas-ya.herokuapp.com/user/' + id)
             .then((response) => {
                 this._refreshUsers();
             })
@@ -151,7 +151,7 @@ class Users extends React.Component {
     _refreshUsers() {
         //TODO: CHANGE THIS WITH THE HEROKU URL
         // axios.get('http://viandas-ya.herokuapp.com/users')
-        axios.get('http://localhost:8080/users?page='+ (this.state.selectedPage - 1) +'&size=5')
+        axios.get('http://viandas-ya.herokuapp.com/users?page='+ (this.state.selectedPage - 1) +'&size=5')
             .then(response => {
                 this.setState({
                     users: response.data,
@@ -173,7 +173,7 @@ class Users extends React.Component {
     }
 
     usersSize() {
-        return axios.get('http://localhost:8080/totalUsers')
+        return axios.get('http://viandas-ya.herokuapp.com/totalUsers')
             .then(response => {
                 this.setState({
                     usersSize:response.data

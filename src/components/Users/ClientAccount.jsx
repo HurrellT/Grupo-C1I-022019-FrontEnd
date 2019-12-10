@@ -40,7 +40,7 @@ class Users extends React.Component {
     }
 
     getUserByEmail(email) {
-        axios.get('http://localhost:8080/userWithEmail/' + email)
+        axios.get('http://viandas-ya.herokuapp.com/userWithEmail/' + email)
             .then((response) => {
                 let user = response.data;
                 this.setState({
@@ -61,14 +61,14 @@ class Users extends React.Component {
     updateClient() {
         let {name, lastname, state, address, email, phone, accountCredit} = this.state.newUserData;
 
-        axios.put('http://localhost:8080/client/' + this.state.newUserData.id, {
+        axios.put('http://viandas-ya.herokuapp.com/client/' + this.state.newUserData.id, {
             name, lastname, state, address, email, phone, accountCredit
         })
         this.refreshPage()
     }
 
     withdrawCredit() {
-        axios.post('http://localhost:8080/withdrawCredit/' + this.state.newUserData.id + "/" + this.state.amount)
+        axios.post('http://viandas-ya.herokuapp.com/withdrawCredit/' + this.state.newUserData.id + "/" + this.state.amount)
             .then((response) => {
                 this.setState({
                     accountCreditModal: false,
@@ -84,7 +84,7 @@ class Users extends React.Component {
     }
 
     depositCredit() {
-        axios.post('http://localhost:8080/depositCredit/' + this.state.newUserData.id + "/" + this.state.amount)
+        axios.post('http://viandas-ya.herokuapp.com/depositCredit/' + this.state.newUserData.id + "/" + this.state.amount)
             .then((response) => {
                 this.setState({
                     accountCreditModal: false,
