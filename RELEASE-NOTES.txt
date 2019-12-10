@@ -1,4 +1,31 @@
 ---------------------------------------------------------------------
+TAG Grupo-C1I-022019-FrontEnd-Entrega-3
+---------------------------------------------------------------------
+NEW FEATURES
+* Client registration
+* Added the possibility to convert your user from Client to Provider
+* Account edit and credit deposit/withdraw
+* As Client:
+    * Menu purchases
+    * Menu scoring
+    * Menu search
+    * View purchase history
+* As Provider:
+    * Add menus
+    * Edit menus
+    * View purchases made from clients
+* New home landing page showcasing menus from various providers
+* Scoring system
+* Distinguished functionality according to user type
+* Locale formatting for currently supported Spanish Argentina and English United States
+* Notifications when the purchase is made and scored
+
+KNOWN ISSUES
+* Some labels not refreshing after a language update here and there
+
+------------------------Previous Releases----------------------------
+
+---------------------------------------------------------------------
 TAG Grupo-C1I-022019-FrontEnd-Entrega-2
 ---------------------------------------------------------------------
 NEW FEATURES
@@ -18,9 +45,6 @@ KNOWN ISSUES
 NOTES
 * There's still no user type to differentiate between providers and normal clients
 * There's still no show notifications when the purchase is made
-
-
-------------------------Previous Releases----------------------------
 
 ---------------------------------------------------------------------
 TAG Grupo-C1I-022019-FrontEnd-Entrega-1
