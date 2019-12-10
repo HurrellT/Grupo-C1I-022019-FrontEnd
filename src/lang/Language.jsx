@@ -10,18 +10,31 @@ class Language extends React.Component {
         super(props);
 
         this.state = {
-            lang: localStorage.getItem('lang')
+            lang: localStorage.getItem('lang'),
+            locale: localStorage.getItem('locale'),
+            currency: localStorage.getItem('currency')
         }
     }
 
     onLangChange = (e) => {
-        this.setState({lang: localStorage.getItem('lang')});
-        localStorage.setItem('lang', e.target.value);
-        counterpart.setLocale(e.target.value);
+        let values = e.target.value.split(',');
+        this.setState({
+            lang: localStorage.getItem('lang'),
+            locale: localStorage.getItem('locale'),
+            currency: localStorage.getItem('currency')
+        });
+        localStorage.setItem('lang', values[0]);
+        localStorage.setItem('locale', values[1]);
+        localStorage.setItem('currency', values[2]);
+        counterpart.setLocale(values[0]);
     };
 
     componentDidMount() {
-        this.setState({lang: localStorage.getItem('lang')});
+        this.setState({
+            lang: localStorage.getItem('lang'),
+            locale: localStorage.getItem('locale'),
+            currency: localStorage.getItem('currency')
+        });
         counterpart.setLocale(this.state.lang);
     }
 
@@ -33,8 +46,8 @@ class Language extends React.Component {
                         <Translate content='language'/>
                     </DropdownToggle>
                     <DropdownMenu right>
-                        <DropdownItem value='es' onClick={this.onLangChange}>ES</DropdownItem>
-                        <DropdownItem value='en' onClick={this.onLangChange}>EN</DropdownItem>
+                        <DropdownItem value='es,es-AR,ARS' onClick={this.onLangChange}>ES</DropdownItem>
+                        <DropdownItem value='en,en-US,USD' onClick={this.onLangChange}>EN</DropdownItem>
                         {/*<DropdownItem divider />*/}
                     </DropdownMenu>
                 </UncontrolledDropdown>

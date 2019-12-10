@@ -1,12 +1,12 @@
 import React from 'react';
 import axios from "axios";
-import {Alert, Button, Form, FormGroup, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
+import {Button, Form, FormGroup, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import Label from "reactstrap/es/Label";
 import Col from "reactstrap/es/Col";
 import Input from "reactstrap/es/Input";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-import ModalAlert from "./ModalAlert";
+import ModalAlert from "./Alerts/ModalAlert";
 
 class Registration extends React.Component {
 
@@ -15,7 +15,7 @@ class Registration extends React.Component {
 
         this.state = {
             loggedUser: props.loggedUser,
-            // firstLogin: props.loggedUser["http://localhost:8080/is_new"],
+            userRegistered: '',
             newUserData: {
                 name: '',
                 lastname: '',
@@ -44,6 +44,7 @@ class Registration extends React.Component {
                     this.toggleNewUserModal()
 
                     this.setState({
+                        userRegistered: !response.data,
                         newUserData: {
                             name: this.state.loggedUser.given_name,
                             lastname: this.state.loggedUser.family_name,
@@ -74,7 +75,6 @@ class Registration extends React.Component {
                             phone: '',
                             accountCredit: 0.0,
                         },
-                        // firstLogin: false
                     });
             })
             .catch((error) => {
@@ -86,6 +86,14 @@ class Registration extends React.Component {
 
     componentDidMount() {
         this.userIsRegistered()
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevState.userRegistered !== this.state.userRegistered) {
+            this.setState({
+                userRegistered: this.props.userRegistered
+            })
+        }
     }
 
     updateField = (field) => (ev) => {
@@ -186,7 +194,7 @@ class Registration extends React.Component {
                 </ModalBody>
                 <ModalFooter>
                     <Button color="primary" onClick={this.addClient.bind(this)}>
-                        Confirmar
+                        <Translate content="buttons.confirmButton"/>
                     </Button>{' '}
                 </ModalFooter>
             </Modal>

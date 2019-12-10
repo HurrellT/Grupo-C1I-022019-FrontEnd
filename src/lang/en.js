@@ -13,6 +13,7 @@ export default {
     newProviderModalTitle:'Add new provider',
 
     editProviderModalTitle:'Edit provider',
+    editClient:'Edit client',
 
     accountCreditModalTitle: 'Deposit / Withdraw credit for %(username)s',
 
@@ -47,7 +48,7 @@ export default {
         nameLabel: 'Name',
         lastNameLabel: 'Lastname',
         stateLabel: 'State',
-        addressLabel: 'Adress',
+        addressLabel: 'Address',
         phoneLabel: 'Phone number',
         latitudeLabel: 'Latitude',
         longitudeLabel: 'Longitude',
@@ -83,7 +84,6 @@ export default {
     placeholders: {
         clientNamePlaceholder: 'Type your name',
         clientLastnamePlaceholder: 'Type your lastname',
-
         providerNamePlaceholder: 'Type your provider name',
         filterProviderNamePlaceholder: 'Type a provider name',
         filterMenuNamePlaceholder: 'Type a menu name',
@@ -132,6 +132,7 @@ export default {
         invalidEmail: 'Please, insert a valid email address',
         address: 'Please, insert your address',
         state: 'Please, insert your state',
-        name: 'Please, insert your name'
+        name: 'Please, insert your name',
+        menuName: 'Please, insert a name for the menu'
     }
 }
