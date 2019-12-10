@@ -65,6 +65,8 @@ class Menus extends React.Component {
         this.state = {
             loggedUser: props.loggedUser,
             loggedClientId: '0',
+            loggedUserId: '',
+            loggedProvider: '',
             user: '',
             menus: [],
             menuNames: [],
@@ -147,6 +149,7 @@ class Menus extends React.Component {
         this.setState({purchaseMaked : false});
         this.getLoggedClientId(this.state.loggedUser.email);
         this.getUserByEmail(this.state.loggedUser.email);
+        this.updateUserSearchingByEmail(this.state.loggedUser.email)
         this._refreshMenus();
     }
 
@@ -201,6 +204,9 @@ class Menus extends React.Component {
     }
 
     addMenu() {
+            let {newMenuData} = this.state;
+            newMenuData.providerId = this.state.loggedUserId;
+            this.setState({newMenuData});
             axios.post('http://localhost:8080/menu', this.state.newMenuData)
                 .then((response) => {
                     let {menus} = this.state;
@@ -352,6 +358,16 @@ class Menus extends React.Component {
                 this.changeQuantityOfMenu();
             }
         }
+    }
+
+    updateUserSearchingByEmail(email) {
+        axios.get('http://localhost:8080/userWithEmail/' + email)
+            .then((response) => {
+                let user = response.data
+                this.setState({
+                    loggedUserId: user.id
+                })
+            })
     }
 
     addMenuToPurchase(){
@@ -509,7 +525,9 @@ class Menus extends React.Component {
         const placeholderTranslations = counterpart;
         let filteredMenus = menus.filter(
             (menu) => {
-                return menu.name.toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1;
+                if(menu.name){
+                    return menu.name.toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1;
+                }
             }
         );
 
@@ -596,10 +614,15 @@ class Menus extends React.Component {
                                                this.setState({newMenuData})
                                            }}>
                                             <option value="">
-                                                {counterpart.translate('labels.chooseADayLabel')}
+                                                {counterpart.translate('labels.chooseACategoryLabel')}
                                             </option>
                                             <option>PIZZA</option>
                                             <option>BEER</option>
+                                            <option>HAMBURGER</option>
+                                            <option>SUSHI</option>
+                                            <option>EMPANADAS</option>
+                                            <option>GREEN</option>
+                                            <option>VEGAN</option>
                                      </CustomInput>
                                 </Col>
                             </FormGroup>
@@ -616,10 +639,11 @@ class Menus extends React.Component {
                                                this.setState({newMenuData})
                                            }}>
                                             <option value="">
-                                                {counterpart.translate('labels.chooseADayLabel')}
+                                                {counterpart.translate('labels.dayOrNightLabel')}
                                             </option>
                                             <option>DAY</option>
                                             <option>NIGHT</option>
+                                            <option>BOTH</option>
                                      </CustomInput>
                                 </Col>
                             </FormGroup>
@@ -632,10 +656,10 @@ class Menus extends React.Component {
                                 <Col sm={10}>
                                     <Input type="deliveryPrice" name="deliveryPrice" id="deliveryPrice"
                                            placeholder={placeholderTranslations.translate('placeholders.deliveryPricePlaceholder')}
-                                           value={this.state.newMenuData.deliveryPrice}
+                                           value={this.state.newMenuData.price}
                                            onChange={(e) => {
                                                let {newMenuData} = this.state;
-                                               newMenuData.deliveryPrice = e.target.value;
+                                               newMenuData.price = e.target.value;
                                                this.setState({newMenuData})
                                            }}/>
                                 </Col>

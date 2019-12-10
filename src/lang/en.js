@@ -46,7 +46,6 @@ export default {
     labels: {
         nameLabel: 'Name',
         lastNameLabel: 'Lastname',
-
         stateLabel: 'State',
         addressLabel: 'Adress',
         phoneLabel: 'Phone number',
@@ -61,6 +60,8 @@ export default {
         accountCreditLabel: 'Credit',
         actionsLabel: 'Actions',
         chooseADayLabel: 'Choose a day',
+        chooseACategoryLabel: 'Choose a category',
+        dayOrNightLabel: 'Day or night?',
         availableAccountCredit: 'Your available credit is %(credit)s USD',
         chooseADeliveryTypeLabel: 'Choose a delivery type',
         nameFilterLabel: 'Filter by name:',
@@ -103,6 +104,7 @@ export default {
     messages: {
         successfulPurchaseMessage: 'Your purchase has been made successfully',
         successfulScoreMessage: 'Your score was saved correctly',
+        failedScoreMessage: 'The score could not be made',
         failedPurchaseMessage: 'The purchase could not be made',
         menuInPurchaseMessage: 'This menu is already in purchase',
         quantityGreaterThan0Message: 'The quantity must be greater than 0',

@@ -61,6 +61,8 @@ export default {
         accountCreditLabel: 'Credito',
         actionsLabel: 'Acciones',
         chooseADayLabel: 'Elija un dia',
+        chooseACategoryLabel: 'Elija una categoría',
+        dayOrNightLabel: 'Dia o noche?',
         chooseADeliveryTypeLabel: 'Elegí el tipo de entrega',
         availableAccountCredit: 'Tu credito disponible es %(credit)s ARS',
         nameFilterLabel: 'Filtrar por nombre:',
@@ -103,6 +105,7 @@ export default {
     messages: {
         successfulPurchaseMessage: 'Su compra ha sido realizada con éxito',
         successfulScoreMessage: 'Tu puntaje fue guardado correctamente',
+        failedScoreMessage: 'No se pudo guardar el puntaje',
         failedPurchaseMessage: 'No se pudo realizar la compra',
         menuInPurchaseMessage: 'Este menú ya está en la compra',
         quantityGreaterThan0Message: 'La cantidad debe ser mayor a 0',
