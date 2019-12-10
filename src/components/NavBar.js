@@ -1,24 +1,14 @@
 import React, {useState} from 'react';
 import {useAuth0} from "../react-auth0-spa";
-// import {Link} from "react-router-dom";
 import {
-    Button, Collapse, DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    Nav,
+    Button, Collapse, Nav,
     Navbar,
     NavbarBrand, NavbarToggler,
     NavItem,
-    NavLink,
-    UncontrolledDropdown
+    NavLink
 } from "reactstrap";
 import Translate from 'react-translate-component';
 import Language from '../lang/Language'
-
-//TODO: voy a buscar el user para tener el type, despues verifico su tipo para mostrar o no
-// con el user se lo paso al beAProvider para usar su data (O MEJOR AGARRALO DE LA BASE QUE TIENE MAS INFO)
-// y le pongo las cosas en la view para pasar a ser proveedor
-// ARMAR METODO PARA CONVERTIR DE CLIENTE A PROVEEDOR
 
 const NavBar = () => {
     const {isAuthenticated, loginWithRedirect, logout} = useAuth0();
@@ -74,19 +64,19 @@ const NavBar = () => {
                                <Translate content='purchaseHistory'/>
                             </NavLink>
                         </NavItem>
-                        <UncontrolledDropdown nav inNavbar>
-                            <DropdownToggle nav caret>
-                                <Translate content='account'/>
-                            </DropdownToggle>
-                            <DropdownMenu right>
-                                {/*<DropdownItem href="/providerAccount">Proveedor</DropdownItem>*/}
-                                <DropdownItem href="/clientAccount">
-                                    <Translate content='myAccount'/>
-                                </DropdownItem>
-                                {/* TODO:AGREGAR EL ID PARA IDENTIFICAR AL USUARIO LOGGEADO */}
-                                {/*<DropdownItem divider />*/}
-                            </DropdownMenu>
-                        </UncontrolledDropdown>
+                        <NavItem>
+                            <NavLink href="/clientAccount">
+                                <Translate content='myAccount'/>
+                            </NavLink>
+                        </NavItem>
+                        {/*<UncontrolledDropdown nav inNavbar>*/}
+                        {/*    <DropdownToggle nav caret>*/}
+                        {/*        <Translate content='account'/>*/}
+                        {/*    </DropdownToggle>*/}
+                        {/*    <DropdownMenu right>*/}
+                        {/*        <DropdownItem divider />*/}
+                        {/*    </DropdownMenu>*/}
+                        {/*</UncontrolledDropdown>*/}
                     </Nav>
                     )}
 

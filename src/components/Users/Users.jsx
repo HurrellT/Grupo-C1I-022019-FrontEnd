@@ -8,6 +8,8 @@ import Container from "reactstrap/es/Container";
 import Row from "reactstrap/es/Row";
 import PaginationComponent from "react-reactstrap-pagination";
 
+//Legacy View - unused
+
 function ModalAlert({ errorsToShow }) {
     const hasErrorsToShow = errorsToShow.length > 0
 
@@ -82,7 +84,6 @@ class Users extends React.Component {
     addClient() {
         axios.post('http://localhost:8080/client', this.state.newUserData)
             .then((response) => {
-                //TODO: Get the alert render to work
                 let {users} = this.state;
                 users.push(response.data);
                 this.setState(
@@ -163,12 +164,6 @@ class Users extends React.Component {
             })
     }
 
-    //TODO: Depending on the user role (client, provider) you see the table with all
-    //      users, or your profile (with the according fields for each role).
-    //      The admin role sees a Users option.
-    //      SEE HOW TO DETERMINE WHICH PAGE YOU SEE DEPENDING ON YOUR ROLE PERMISSION
-    //      Maybe a flag userType in the json?
-
     //RENDER
 
     updateField = (field) => (ev) => {
@@ -224,7 +219,6 @@ class Users extends React.Component {
                                 <Col sm={10}>
                                     <Input name="name" id="name" placeholder="Escriba su primer nombre"
                                            value={this.state.newUserData.name}
-                                            //TODO: CHANGE THE REST
                                            onChange={this.updateField('name')}/>
                                 </Col>
                             </FormGroup>
@@ -328,7 +322,6 @@ class Users extends React.Component {
                                 <Col sm={10}>
                                     <Input name="name" id="name" placeholder="Escriba su primer nombre"
                                            value={this.state.editUserData.name}
-                                        //TODO: how to extract this correctly?
                                            onChange={(e) => {
                                                let {editUserData} = this.state;
                                                editUserData.name = e.target.value;

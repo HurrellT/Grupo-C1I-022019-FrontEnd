@@ -9,7 +9,6 @@ import {
     ModalFooter,
     Form,
     FormGroup,
-    Alert,
     CustomInput,
     Label,
     Col,
@@ -21,89 +20,11 @@ import counterpart from 'counterpart';
 import Translate from 'react-translate-component';
 import PaginationComponent from "react-reactstrap-pagination";
 import MenusButton from "../Buttons/MenusButton";
-
-function ModalAlert({errorsToShow}) {
-    const hasErrorsToShow = errorsToShow.length > 0;
-
-    if (hasErrorsToShow) {
-        return (
-            <Alert color="danger">
-                {errorsToShow.map(error => <div>{
-                    <Translate content={error} />
-                }</div>)}
-            </Alert>
-        )
-    }
-    return <div/>
-}
-
-function AddProviderButton(props) {
-    const enabled = props.enabled
-    const onClickFunction = props.onClick
-
-    if (enabled) {
-        return (
-            <Col xs={2} className="my-3">
-                <Button className="my-3" color="primary" onClick={onClickFunction}>
-                    <Translate content='buttons.newProviderButton'/>
-                </Button>
-            </Col>)
-    } else {
-        return <div/>
-    }
-}
-
-function EditAccountCreditButton(props) {
-    const enabled = props.enabled;
-    const onClickFunction = props.onClick;
-    const owner = props.owner;
-
-    if (enabled && owner) {
-        return (
-            <Button color='primary' size='sm' className='mr-2'
-                    onClick={onClickFunction}>
-                <Translate content='buttons.accountCreditButton'/>
-            </Button>)
-    } else {
-        return <div></div>
-    }
-}
-
-function DeleteAccountButton(props) {
-    const enabled = props.enabled;
-    const onClickFunction = props.onClick;
-    const owner = props.owner;
-
-    if (enabled && owner) {
-        return (
-            <Button color='danger' size='sm'
-                    onClick={onClickFunction}>
-                <Translate content='buttons.deleteButton'/>
-            </Button>
-        )
-    }
-    else {
-        return <div></div>
-    }
-}
-
-function EditAccountButton(props) {
-    const enabled = props.enabled;
-    const onClickFunction = props.onClick;
-    const owner = props.owner;
-
-    if (enabled && owner) {
-        return (
-            <Button color='success' size='sm' className='mr-2'
-                    onClick={onClickFunction}>
-                <Translate content='buttons.editButton'/>
-            </Button>
-        )
-    }
-    else {
-        return <div></div>
-    }
-}
+import ModalAlert from "../Alerts/ModalAlert";
+import AddProviderButton from "../Buttons/AddProviderButton";
+import EditAccountButton from "../Buttons/EditAccountButton";
+import EditAccountCreditButton from "../Buttons/EditAccountCreditButton";
+import DeleteAccountButton from "../Buttons/DeleteAccountButton";
 
 class Providers extends React.Component {
 
@@ -410,11 +331,6 @@ class Providers extends React.Component {
             })
     }
 
-    //TODO: Depending on the user role (client, provider) you see the table with all
-    //      users, or your profile (with the according fields for each role).
-    //      The admin role sees a Users option.
-    //      SEE HOW TO DETERMINE WHICH PAGE YOU SEE DEPENDING ON YOUR ROLE PERMISSION
-    //      Maybe a flag userType in the json?
 
     updateNewUserField = (field) => (ev) => {
         let {newUserData} = this.state;

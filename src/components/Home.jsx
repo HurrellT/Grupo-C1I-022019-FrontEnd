@@ -2,7 +2,6 @@ import React from 'react';
 import counterpart from "counterpart";
 import axios from "axios";
 import {
-    Alert,
     Button,
     Card,
     CardBody,

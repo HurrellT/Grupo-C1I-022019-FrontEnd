@@ -12,39 +12,8 @@ import counterpart from 'counterpart';
 import Translate from 'react-translate-component';
 import {useAuth0} from "../../react-auth0-spa";
 import UntranslatedModalAlert from "../Alerts/UntranslatedModalAlert";
-
-function AddMenuButton(props) {
-    const enabled = props.enabled;
-    const onClickFunction = props.onClick;
-    const owner = props.owner;
-
-    if (enabled && owner) {
-        return (
-            <Button className="my-3" color="primary" onClick={onClickFunction}>
-                <Translate content='buttons.newMenuButton'/>
-            </Button>
-        )
-    }
-    else {
-        return <div/>
-    }
-}
-
-function PurchasesButton(props) {
-    const enabled = props.enabled;
-    const onClickFunction = props.onClick;
-
-    if (enabled) {
-        return (
-            <Button className="my-3" color="primary" onClick={onClickFunction}>
-                <Translate content='buttons.seePurchaseButton'/>
-            </Button>
-        )
-    }
-    else {
-        return <div/>
-    }
-}
+import PurchasesButton from "../Buttons/PurchasesButton";
+import AddMenuButton from "../Buttons/AddMenuButton";
 
 class ProviderMenus extends Menus {
 
@@ -99,6 +68,8 @@ class ProviderMenus extends Menus {
 
         let isProvider = this.state.user.type === 'provider';
         let isOwner = this.state.user.id === parseInt(this.props.match.params.provId);
+        let locale = localStorage.getItem('locale');
+        let currency = localStorage.getItem('currency');
 
         return (
             <Container>
@@ -304,7 +275,11 @@ class ProviderMenus extends Menus {
                                          <tr key={menu.name}>
                                              <td>{menu.name}</td>
                                              <td>{menu.quantity}</td>
-                                             <td>{menu.price}</td>
+                                             <td>{new Intl.NumberFormat(locale, {
+                                                     style: 'currency',
+                                                     currency: currency,
+                                                     currencyDisplay:'code',
+                                                 }).format(menu.price)}</td>
                                              <td>
                                                 <Button color='warning' size='sm'
                                                          onClick={this.askForQuantity.bind(this, menu.name, menu.providerId)}>
@@ -428,7 +403,11 @@ class ProviderMenus extends Menus {
                                     <td>{menu.name}</td>
                                     <td>{menu.description}</td>
                                     <td>{menu.category}</td>
-                                    <td>{menu.price}</td>
+                                    <td>{new Intl.NumberFormat(locale, {
+                                        style: 'currency',
+                                        currency: currency,
+                                        currencyDisplay:'code',
+                                    }).format(menu.price)}</td>
                                     {!isProvider && <td>
                                         <Button color='warning' size='sm'
                                                 onClick={this.askForQuantity.bind(this, menu.name, menu.providerId)}>

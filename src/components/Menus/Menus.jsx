@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Alert, CustomInput} from 'reactstrap';
+import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, CustomInput} from 'reactstrap';
 import Label from "reactstrap/es/Label";
 import Col from "reactstrap/es/Col";
 import Input from "reactstrap/es/Input";
@@ -10,38 +10,8 @@ import counterpart from 'counterpart';
 import Translate from 'react-translate-component';
 import NumericInput from 'react-numeric-input';
 import UntranslatedModalAlert from "../Alerts/UntranslatedModalAlert";
-
-function AddMenuButton(props) {
-    const enabled = props.enabled;
-    const onClickFunction = props.onClick;
-
-    if (enabled) {
-        return (
-            <Button className="my-3" color="primary" onClick={onClickFunction}>
-                <Translate content='buttons.newMenuButton'/>
-            </Button>
-        )
-    }
-    else {
-        return <div/>
-    }
-}
-
-function SeePurchasesButton(props) {
-    const enabled = props.enabled;
-    const onClickFunction = props.onClick;
-
-    if (enabled) {
-        return (
-            <Button className="my-3" color="primary" onClick={onClickFunction}>
-                <Translate content='buttons.seePurchaseButton'/>
-            </Button>
-        )
-    }
-    else {
-        return <div/>
-    }
-}
+import PurchasesButton from "../Buttons/PurchasesButton";
+import AddMenuButton from "../Buttons/AddMenuButton";
 
 class Menus extends React.Component {
 
@@ -149,7 +119,7 @@ class Menus extends React.Component {
                         .then(response => {
                             this.pendigScoredPurchases = response.data;
                         })
-                        .catch(error => {
+                        .catch(() => {
                             // console.log(error)
                             this.setState({errorMsg: 'Error retreiving data'})
                         })
@@ -232,7 +202,7 @@ class Menus extends React.Component {
 
     deleteMenu(id) {
         axios.delete('http://localhost:8080/menu/' + id)
-            .then((response) => {
+            .then(() => {
                 this._refreshMenus();
             })
     }
@@ -256,13 +226,13 @@ class Menus extends React.Component {
 
     makePurchase() {
         axios.post('http://localhost:8080/makePurchase/' + this.state.loggedClientId, this.state.purchases)
-            .then((response) => {
+            .then(() => {
                 this.setState({
                     message: counterpart.translate('messages.successfulPurchaseMessage'),
                     purchaseMaked: true
                 })
             })
-            .catch((error) => {
+            .catch(() => {
                 this.setState({
                     message: counterpart.translate('messages.failedPurchaseMessage')
                 })
@@ -287,7 +257,7 @@ class Menus extends React.Component {
         .then(response => {
                 this.pendigScoredPurchases = response.data;
         })
-        .catch(error => {
+        .catch(() => {
             // console.log(error)
             this.setState({errorMsg: 'Error retreiving data'})
         })
@@ -305,6 +275,7 @@ class Menus extends React.Component {
             this.toggleMessageModal();
         }
         else{
+            // eslint-disable-next-line array-callback-return
             this.state.purchases.map(p => {if(p.menuName === menuName){addedToPurchase = true}});
             if(addedToPurchase && !this.state.purchaseModal){
                 this.setState({
@@ -417,6 +388,7 @@ class Menus extends React.Component {
         let {totalAmount} = this.state;
         let {purchaseRequest} = this.state;
         totalAmount = 0;
+        // eslint-disable-next-line array-callback-return
         purchases.map(p => {if(p.menuName === purchaseRequest.menuName) {
                                p.quantity = this.state.purchaseRequest.quantity
                            }});
@@ -439,8 +411,6 @@ class Menus extends React.Component {
     setPurchaseData(){
         let {purchases} = this.state;
         let {purchaseRequest} = this.state;
-        let {errorMessages} = this.state;
-
         purchases.map(p => { p.deliveryTime = purchaseRequest.deliveryTime;
                              p.deliveryDate = purchaseRequest.deliveryDate;
                              p.deliveryType = purchaseRequest.deliveryType; });
@@ -468,7 +438,7 @@ class Menus extends React.Component {
             })
             this.getPendingScoredPurchases(this.state.loggedClientId);
         })
-        .catch(error => {
+        .catch(() => {
             // console.log(error)
             this.setState({errorMsg: 'Error retreiving data'})
         })
@@ -493,7 +463,7 @@ class Menus extends React.Component {
     }
 
     render() {
-        const {menus, purchaseMenus, errorMsg} = this.state;
+        const {menus, purchaseMenus} = this.state;
         const placeholderTranslations = counterpart;
         let filteredMenus = menus.filter(
             (menu) => {
@@ -502,6 +472,8 @@ class Menus extends React.Component {
         );
 
         let isProvider = this.state.user.type === 'provider';
+        let locale = localStorage.getItem('locale');
+        let currency = localStorage.getItem('currency');
 
         return (
             <Container>
@@ -521,10 +493,11 @@ class Menus extends React.Component {
                     <Col xs={2} className="my-3">
                         <AddMenuButton
                             onClick={this.toggleNewMenuModal.bind(this)}
-                            enabled={isProvider} />
+                            enabled={isProvider}
+                            owner={true}/>
                     </Col>
                     <Col xs={2} className="my-3">
-                        <SeePurchasesButton
+                        <PurchasesButton
                             onClick={this.seeMyPurchase.bind(this)}
                             enabled={!isProvider} />
                     </Col>
@@ -731,7 +704,11 @@ class Menus extends React.Component {
                                              <td>{menu.name}</td>
                                              <td>{menu.providerName}</td>
                                              <td>{menu.quantity}</td>
-                                             <td>{menu.price}</td>
+                                             <td>{new Intl.NumberFormat(locale, {
+                                                     style: 'currency',
+                                                     currency: currency,
+                                                     currencyDisplay:'code',
+                                                 }).format(menu.price)}</td>
                                              <td>
                                                 <Button color='warning' size='sm'
                                                         onClick={this.askForQuantity.bind(this, menu.name, menu.providerId)}>
@@ -752,7 +729,12 @@ class Menus extends React.Component {
                             <FormGroup row>
                                 <Label for="total" sm={2}><b>Total:</b></Label>
                                 <Col sm={5}>
-                                    <Label sm={10}><b>{this.state.totalAmount}</b></Label>
+                                    <Label sm={10}><b>{
+                                        new Intl.NumberFormat(locale, {
+                                            style: 'currency',
+                                            currency: currency,
+                                            currencyDisplay:'code',
+                                        }).format(this.state.totalAmount)}</b></Label>
                                 </Col>
                             </FormGroup>
                          </Form>
@@ -855,7 +837,12 @@ class Menus extends React.Component {
                                     <td>{menu.name}</td>
                                     <td>{menu.description}</td>
                                     <td>{menu.category}</td>
-                                    <td>{menu.price}</td>
+                                    <td>{
+                                        new Intl.NumberFormat(locale, {
+                                            style: 'currency',
+                                            currency: currency,
+                                            currencyDisplay:'code',
+                                        }).format(menu.price)}</td>
                                     <td>{menu.providerName}</td>
                                     {!isProvider && <td>
                                         <Button color='warning' size='sm'

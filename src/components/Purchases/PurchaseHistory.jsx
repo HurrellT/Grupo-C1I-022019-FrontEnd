@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Alert} from 'reactstrap';
+import {Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup} from 'reactstrap';
 import Label from "reactstrap/es/Label";
 import Col from "reactstrap/es/Col";
 import Container from "reactstrap/es/Container";
@@ -8,19 +8,7 @@ import Row from "reactstrap/es/Row";
 import counterpart from 'counterpart';
 import Translate from 'react-translate-component';
 import NumericInput from 'react-numeric-input';
-
-function ModalAlert({ errorsToShow }) {
-    const hasErrorsToShow = errorsToShow.length > 0
-
-    if (hasErrorsToShow) {
-        return (
-            <Alert color="danger">
-                {errorsToShow.map(error => <div>{error}</div>)}
-            </Alert>
-        )
-    }
-    return <div />
-}
+import UntranslatedModalAlert from "../Alerts/UntranslatedModalAlert";
 
 class PurchaseHistory extends React.Component {
 
@@ -211,7 +199,7 @@ class PurchaseHistory extends React.Component {
                         <Translate content='titles.informationTitle'/>
                     </ModalHeader>
                     <ModalBody>
-                         <ModalAlert errorsToShow={this.state.errorMessages} />
+                         <UntranslatedModalAlert errorsToShow={this.state.errorMessages} />
 
                          {/* MESSAGE FORM */}
                          <Form>
@@ -236,7 +224,7 @@ class PurchaseHistory extends React.Component {
                         <Translate content='titles.informationTitle'/>
                     </ModalHeader>
                     <ModalBody>
-                         <ModalAlert errorsToShow={this.state.errorMessages} />
+                         <UntranslatedModalAlert errorsToShow={this.state.errorMessages} />
 
                          {/* MESSAGE FORM */}
                          <Form>
@@ -262,7 +250,7 @@ class PurchaseHistory extends React.Component {
                         <Translate content='titles.purchaseMenusTitle'/>
                     </ModalHeader>
                     <ModalBody>
-                         <ModalAlert errorsToShow={this.state.errorMessages} />
+                         <UntranslatedModalAlert errorsToShow={this.state.errorMessages} />
 
                          <Row>
                              <Col>
@@ -284,7 +272,11 @@ class PurchaseHistory extends React.Component {
                                              <td>{menu.menuName}</td>
                                              {isProvider && <td>{menu.menu.providerName}</td>}
                                              <td>{menu.quantity}</td>
-                                             <td>{menu.menu.price}</td>
+                                             <td>{new Intl.NumberFormat(locale, {
+                                                     style: 'currency',
+                                                     currency: currency,
+                                                     currencyDisplay:'code',
+                                                 }).format(menu.menu.price)}</td>
                                          </tr>
                                      )}
                                      </tbody>
@@ -300,7 +292,7 @@ class PurchaseHistory extends React.Component {
                         <Translate content='titles.selectScoreTitle'/>
                     </ModalHeader>
                     <ModalBody>
-                         <ModalAlert errorsToShow={this.state.errorMessages} />
+                         <UntranslatedModalAlert errorsToShow={this.state.errorMessages} />
 
                          {/* ASK QUANTITY MODAL FORM */}
                          <Form>
