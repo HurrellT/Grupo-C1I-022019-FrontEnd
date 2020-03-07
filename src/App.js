@@ -30,7 +30,7 @@ var currency = localStorage.getItem('currency') === null ? 'ARS' : localStorage.
 localStorage.setItem('lang', lang);
 localStorage.setItem('locale', locale);
 localStorage.setItem('currency', currency);
-counterpart.setLocale(locale);
+counterpart.setLocale(lang);
 
 function App() {
 
