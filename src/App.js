@@ -21,9 +21,12 @@ import Translate from 'react-translate-component';
 import Registration from "./components/Registration";
 import Home from "./components/Home";
 
-counterpart.registerTranslations('es', es)
-counterpart.registerTranslations('en', en)
-counterpart.setLocale(localStorage.getItem('lang'))
+counterpart.registerTranslations('es', es);
+counterpart.registerTranslations('en', en);
+
+var locale = localStorage.getItem('locale') === null ? 'es' : localStorage.getItem('locale');
+counterpart.setLocale(locale);
+console.log(locale)
 
 function App() {
 
