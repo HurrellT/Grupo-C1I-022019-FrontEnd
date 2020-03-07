@@ -26,7 +26,7 @@ counterpart.registerTranslations('en', en);
 
 var locale = localStorage.getItem('locale') === null ? 'es' : localStorage.getItem('locale');
 counterpart.setLocale(locale);
-console.log(locale)
+localStorage.setItem(locale);
 
 function App() {
 
