@@ -41,6 +41,8 @@ class Registration extends React.Component {
             .then(response => {
                 if (!response.data) {
 
+                    console.log(this.state.loggedUser)
+
                     this.toggleNewUserModal()
 
                     this.setState({
@@ -48,7 +50,7 @@ class Registration extends React.Component {
                         newUserData: {
                             name: this.state.loggedUser.given_name,
                             lastname: this.state.loggedUser.family_name,
-                            state: this.state.loggedUser["http://viandas-ya.herokuapp.com/geoip"].city_name,
+                            state: this.state.loggedUser["http://localhost:8080/geoip"].city_name,
                             address: '',
                             email: this.state.loggedUser.email,
                             phone: '',

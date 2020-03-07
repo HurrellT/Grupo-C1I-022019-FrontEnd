@@ -24,9 +24,13 @@ import Home from "./components/Home";
 counterpart.registerTranslations('es', es);
 counterpart.registerTranslations('en', en);
 
-var locale = localStorage.getItem('locale') === null ? 'es' : localStorage.getItem('locale');
-counterpart.setLocale(locale);
+var locale = localStorage.getItem('locale') === null ? 'es-AR' : localStorage.getItem('locale');
+var lang = localStorage.getItem('lang') === null ? 'es' : localStorage.getItem('lang');
+var currency = localStorage.getItem('currency') === null ? 'ARS' : localStorage.getItem('currency');
+localStorage.setItem('lang', lang);
 localStorage.setItem('locale', locale);
+localStorage.setItem('currency', currency);
+counterpart.setLocale(locale);
 
 function App() {
 
